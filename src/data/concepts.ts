@@ -1,4 +1,8 @@
 import type { Level, Localized, Module, Section } from './types';
+// CHANGED (S2): M1–M3 authored from stubs.
+import { m1 } from './modules/m1-what-is-a-database';
+import { m2 } from './modules/m2-landscape';
+import { m3 } from './modules/m3-sql-vs-nosql';
 import { m13 } from './modules/m13-btree';
 
 /*
@@ -111,58 +115,10 @@ function stub(s: StubInput): Module {
 
 export const modules: Module[] = [
   // ── Section I · Foundations & the landscape ──────────────────────────────
-  stub({
-    id: 'm1-what-is-a-database',
-    num: 1,
-    section: 's1-foundations',
-    order: 1,
-    level: 'beginner',
-    title: { en: 'What a database is & why', uk: 'Що таке база даних і навіщо' },
-    tagline: {
-      en: 'DBMS vs files, OLTP vs OLAP, and the cost of getting the model wrong.',
-      uk: 'DBMS проти файлів, OLTP проти OLAP, і ціна неправильної моделі.',
-    },
-    readMins: 8,
-    mentalModel: {
-      en: "A DBMS is a contract over your data — concurrency, durability, integrity and querying you don't have to build yourself.",
-      uk: 'DBMS — це контракт над вашими даними: concurrency, durability, цілісність і запити, які не треба будувати самому.',
-    },
-  }),
-  stub({
-    id: 'm2-landscape',
-    num: 2,
-    section: 's1-foundations',
-    order: 2,
-    level: 'beginner',
-    signature: true,
-    title: { en: 'The database landscape', uk: 'Ландшафт баз даних' },
-    tagline: {
-      en: 'The families map — relational, document, key-value, wide-column, graph, vector, time-series, search, OLAP.',
-      uk: 'Карта родин — relational, document, key-value, wide-column, graph, vector, time-series, search, OLAP.',
-    },
-    readMins: 9,
-    mentalModel: {
-      en: 'Fit the data model to the access pattern, not to the hype.',
-      uk: 'Підбирайте модель даних під access pattern, а не під хайп.',
-    },
-  }),
-  stub({
-    id: 'm3-sql-vs-nosql',
-    num: 3,
-    section: 's1-foundations',
-    order: 3,
-    level: 'middle',
-    title: { en: 'SQL vs NoSQL — the real trade-offs', uk: 'SQL проти NoSQL — справжні компроміси' },
-    tagline: {
-      en: "What 'NoSQL' actually means, and the strengths & weaknesses of each family.",
-      uk: 'Що насправді означає «NoSQL», і сильні та слабкі сторони кожної родини.',
-    },
-    readMins: 10,
-    mentalModel: {
-      en: "'NoSQL' isn't 'no SQL' — it's trading joins and ACID for a specific shape and scale.",
-      uk: '«NoSQL» — це не «без SQL», а обмін joins та ACID на конкретну форму й масштаб.',
-    },
-  }),
+  // CHANGED (S2): M1–M3 now fully authored (imported above); M4–M5 remain stubs.
+  m1,
+  m2,
+  m3,
   stub({
     id: 'm4-relational-model',
     num: 4,

@@ -1089,33 +1089,223 @@
 
 /* ── Footer ───────────────────────────────────────────────────────────────*/
 .footer {
+  /* CHANGED (S2): full-width divider restored (user pref). */
   border-top: 1px solid var(--line);
   margin-top: 3rem;
   background: var(--bg);
 }
+/* CHANGED (S2): compact 2-row centred footer — shorter, smaller type. */
 .footer-inner {
-  max-width: var(--content-max);
+  max-width: 880px;
   margin: 0 auto;
-  padding: 2rem clamp(1rem, 4vw, 2.4rem);
+  padding: 1rem clamp(1rem, 4vw, 2rem);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.3rem;
+}
+.footer-brand {
   display: flex;
   flex-wrap: wrap;
-  gap: 1rem 2rem;
-  align-items: baseline;
+  justify-content: center;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0;
+  font-size: 0.82rem;
+}
+.footer-meta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0;
+  font-size: 0.74rem;
+}
+.footer-sep {
+  color: var(--tx3);
+}
+
+/* ── S2: Landing "Start here" path + level filter + refined cards ──────────*/
+.map-path {
+  margin-bottom: 2.4rem;
+}
+.path-row {
+  list-style: none;
+  margin: 1rem 0 0;
+  padding: 0 0 0.5rem;
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+}
+.path-step {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.path-step:not(:last-child)::after {
+  content: '→';
+  color: var(--tx3);
+  font-size: 0.95rem;
+}
+.path-node {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  min-width: 134px;
+  max-width: 184px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  padding: 0.6rem 0.7rem;
+  color: var(--tx);
+  transition: border-color var(--dur-fast) var(--ease), transform var(--dur-fast) var(--ease);
+}
+.path-node:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+  text-decoration: none;
+}
+.path-num {
+  font-size: 0.66rem;
+  color: var(--tx3);
+}
+.path-title {
+  font-size: 0.84rem;
+  font-weight: 600;
+  line-height: 1.25;
+}
+.path-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.map-sec-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.map-sec-head .levelseg {
+  flex: none;
+}
+
+.fam-top {
+  display: flex;
+  width: 100%;
+  align-items: center;
   justify-content: space-between;
 }
-.footer-tag {
-  margin: 0.3rem 0 0;
-  max-width: 420px;
-  font-size: 0.86rem;
+.fam-when {
+  font-size: 0.78rem;
+  color: var(--tx2);
+  line-height: 1.35;
 }
-.footer-stats {
+.fam-card.dimmed,
+.ov-mod.dimmed {
+  opacity: 0.34;
+}
+.fam-card,
+.ov-mod {
+  transition: opacity var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease),
+    transform var(--dur-fast) var(--ease), background var(--dur-fast) var(--ease);
+}
+.ov-mod-level {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex: none;
+}
+
+/* shared level dots (landing path, family cards, overview rows) */
+.path-level,
+.fam-level {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+  flex: none;
+}
+.path-level[data-level='beginner'],
+.fam-level[data-level='beginner'],
+.ov-mod-level[data-level='beginner'] {
+  background: var(--lv-beginner);
+}
+.path-level[data-level='middle'],
+.fam-level[data-level='middle'],
+.ov-mod-level[data-level='middle'] {
+  background: var(--lv-middle);
+}
+.path-level[data-level='senior'],
+.fam-level[data-level='senior'],
+.ov-mod-level[data-level='senior'] {
+  background: var(--lv-senior);
+}
+.path-level[data-level='staff'],
+.fam-level[data-level='staff'],
+.ov-mod-level[data-level='staff'] {
+  background: var(--lv-staff);
+}
+
+/* ── S2: M2 embedded "families map" sim ───────────────────────────────────*/
+.fammap-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(118px, 1fr));
+  gap: 0.5rem;
+}
+.fammap-node {
   display: flex;
-  gap: 1.2rem;
-  font-size: 0.84rem;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.25rem;
+  background: var(--bg);
+  border: 1px solid var(--line2);
+  border-top: 2px solid var(--fam);
+  border-radius: var(--r-md);
+  padding: 0.55rem 0.6rem;
+  color: var(--tx);
+  text-align: left;
+  transition: border-color var(--dur-fast) var(--ease), background var(--dur-fast) var(--ease);
 }
-.footer-built {
-  width: 100%;
-  font-size: 0.76rem;
+.fammap-node:hover {
+  border-color: var(--fam);
+}
+.fammap-node.on {
+  border-color: var(--fam);
+  background: color-mix(in srgb, var(--fam) 13%, var(--bg));
+  box-shadow: inset 0 0 0 1px var(--fam);
+}
+.fammap-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--fam);
+}
+.fammap-name {
+  font-weight: 600;
+  font-size: 0.82rem;
+}
+.fammap-eng {
+  font-size: 0.68rem;
+}
+.fammap-detail {
+  margin-top: 0.8rem;
+  padding: 0.8rem 0.9rem;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  min-height: 70px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  align-items: flex-start;
+}
+.fammap-detail h4 {
+  margin: 0;
 }
 
 /* ── Responsive ───────────────────────────────────────────────────────────*/

@@ -455,3 +455,37 @@ Footer: **"Vasyl Krupka · Senior Fullstack Engineer"** + 🇺🇦. Dark is prim
   **Next (S2):** Foundations core — M1 What a database is; M2 The landscape (+ Landscape-Map polish);
   M3 SQL vs NoSQL. **Pending user:** create repo `database-comprehensive-guide` @ `endorrfin`; after first
   push set Settings → Pages → Source = GitHub Actions.
+
+- **2026-06-23 · S2 Foundations core** *(branch `s2-foundations-core`)* — Authored the three Section-I
+  on-ramp modules **fully EN+UA** to the M13 depth bar, lifting authored modules from 1 → **4**.
+  **M1 · What a database is** (4 topics: files→DBMS · OLTP vs OLAP · cost of getting it wrong · the
+  vocabulary; new **files-vs-DBMS** SVG figure, OLTP/OLAP compare, 9-row vocabulary table, 2 callouts,
+  5 keyPoints, 3 pitfalls, 3 interview Q&A, 5 web-verified sources). **M2 · The landscape** *(signature)*
+  (4 topics: the families · shape-of-data drives choice · engines on the map 2026 · how to read the
+  guide; new embeddable **★ FamiliesMap** sim + a `family→engines→when` table **derived from** the shared
+  data so it can't drift, senior/“boring is a feature” callout, full endcaps, 5 sources). **M3 · SQL vs
+  NoSQL** (5 topics incl. the requirement-2 centerpiece **strengths/weaknesses-per-family** table; new
+  **SQL↔NoSQL positioning-quadrant** figure, relational-vs-non-relational compare, convergence section,
+  polyglot-persistence callout, 5 sources). **Refactor:** extracted the family taxonomy into shared
+  **`src/data/families.ts`** (added `level`); `LandscapeMap` now consumes it. **Landing polish:** guided
+  **“Start here”** path (M1→…→MVCC, level-coded), a **level filter** wired to the *global* app-state
+  (in sync with the TopBar), refined family cards (when-it-fits peek + level dot), dimming on the
+  overview grid. New components: `figures/FilesVsDbms`, `figures/SqlNoSqlQuadrant`, `sims/FamiliesMap`
+  (all registered); 2 new `ui.ts` strings; CSS for path/level-filter/fammap appended to `components.css`.
+  **Web-verified this session** (sources in module `sources[]`): DB-Engines H1 2026 — PostgreSQL the
+  fastest-growing engine (+21.97), MySQL still #1 by score, top-4 static >1yr; OLTP/OLAP (IBM/AWS);
+  Postgres durability via WAL + Redis persistence opt-in (M1); MongoDB multi-doc ACID 4.0(2018)→sharded
+  4.2(2019), Postgres JSON 9.2/JSONB 9.4 ≥ SQL:2023 native JSON (M3 convergence).
+  **Verification (repo + scratch, linux-arm64):** `tsc -b --noEmit` ✓ · ESLint ✓ · `check:data` ✓
+  (**8 sections, 36 modules [4 authored, 32 stubs], 493 Localized EN+UA pairs**, 2 sims + 3 figures,
+  all registry keys resolve, cross-links valid) · `test:btree` ✓ (346 checks) · `vite build` ✓
+  (**54 modules**, JS 119 KB gzip / CSS 6.18 KB gzip).
+  **Sandbox gotchas hit (expected, §12):** the repo `node_modules` is **darwin-arm64** → `tsc`/`eslint`
+  ran fine but `tsx`/`vite` need linux binaries; added `@esbuild/linux-arm64@0.28.1` +
+  `@rolldown/binding-linux-arm64-gnu@1.1.2` with `--no-save --no-package-lock` (additive; user’s darwin
+  install + lock untouched). Built into fresh `dist-s2/` (unlink still blocked → can’t delete it in-sandbox;
+  added `dist-s2/` to `.gitignore`). Stale **`.git/index.lock`** persists — **user must `rm -f
+  ".git/index.lock"` locally before committing**, then `npm install` (darwin-arm64) + `npm run verify`.
+  **Next (S3):** Relational foundations — M4 Relational model & SQL foundations; M5 Anatomy of a query
+  (+ query-lifecycle sim). **Pending user:** create repo `database-comprehensive-guide` @ `endorrfin`;
+  set Pages → Source = GitHub Actions after first push.

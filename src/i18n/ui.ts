@@ -31,6 +31,12 @@ export const ui = {
 
   landscapeMap: { en: 'Landscape Map', uk: 'Карта ландшафту' },
   startHere: { en: 'Start here', uk: 'Почати тут' },
+  // CHANGED (S2): landing "Start here" guided path.
+  suggestedPath: { en: 'Suggested path', uk: 'Рекомендований шлях' },
+  suggestedPathLede: {
+    en: 'A guided route from first principles to the internals — skip ahead any time.',
+    uk: 'Орієнтовний шлях від основ до internals — пропускайте вперед будь-коли.',
+  },
   mentalModels: { en: 'Mental Models', uk: 'Ментальні моделі' },
   glossary: { en: 'Glossary', uk: 'Глосарій' },
   decide: { en: 'Database Picker', uk: 'Підбір бази даних' },
@@ -63,6 +69,7 @@ export const ui = {
   back: { en: 'Back', uk: 'Назад' },
 
   footerRole: { en: 'Senior Fullstack Engineer', uk: 'Senior Fullstack Engineer' },
+  footerCountry: { en: 'Ukraine', uk: 'Україна' }, // CHANGED (S2): footer brand line
   footerTagline: {
     en: 'Deep, interactive, bilingual guide to how databases actually work.',
     uk: 'Глибокий інтерактивний двомовний посібник про те, як насправді працюють бази даних.',
