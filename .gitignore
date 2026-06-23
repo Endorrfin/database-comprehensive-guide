@@ -13,3 +13,7 @@ _examples/
 # IDE
 .idea/
 .vscode/
+
+#Temp
+_arhive/
+
