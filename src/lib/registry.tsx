@@ -16,6 +16,9 @@ import { RelationalModel } from '../components/figures/RelationalModel';
 // CHANGED (S4): M6 ER-notation legend + M7 update-anomalies figure.
 import { ErNotation } from '../components/figures/ErNotation';
 import { UpdateAnomalies } from '../components/figures/UpdateAnomalies';
+// CHANGED (S5): M8 referential-actions + M9 float-trap figures.
+import { ReferentialActions } from '../components/figures/ReferentialActions';
+import { FloatTrap } from '../components/figures/FloatTrap';
 
 /*
  * Registry — content references figures and sims by KEY (CLAUDE.md §4), resolved here.
@@ -36,6 +39,8 @@ export const figures: Record<string, ComponentType> = {
   'relational-model': RelationalModel, // CHANGED (S3)
   'er-notation': ErNotation, // CHANGED (S4)
   'update-anomalies': UpdateAnomalies, // CHANGED (S4)
+  'referential-actions': ReferentialActions, // CHANGED (S5)
+  'float-trap': FloatTrap, // CHANGED (S5)
 };
 
 export const getSim = (key: string): ComponentType | undefined => sims[key];
