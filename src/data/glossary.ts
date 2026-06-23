@@ -334,4 +334,69 @@ export const glossary: GlossaryEntry[] = [
     },
     seeAlso: ['window function'],
   },
+  // CHANGED (S7): M12 storage + M14 index-toolbox terms.
+  {
+    term: 'TOAST',
+    def: {
+      en: 'The Oversized-Attribute Storage Technique: when a row exceeds ~2 kB, PostgreSQL compresses large variable-length values and/or moves them out-of-line to a side table, leaving an 18-byte pointer in the main tuple. Transparent on read.',
+      uk: 'The Oversized-Attribute Storage Technique: коли рядок перевищує ~2 кБ, PostgreSQL стискає великі значення змінної довжини і/або виносить їх out-of-line у побічну таблицю, лишаючи 18-байтовий покажчик у головному tuple. Прозоро на читанні.',
+    },
+    seeAlso: ['page', 'heap'],
+  },
+  {
+    term: 'fillfactor',
+    def: {
+      en: 'How full to pack a page on load (heap default 100, B-Tree default 90). Leaving free space lets an UPDATE write the new row version on the same page — a HOT update that avoids touching the indexes.',
+      uk: 'Наскільки щільно пакувати page при завантаженні (дефолт heap 100, B-Tree 90). Вільне місце дозволяє UPDATE записати нову версію рядка на ту саму page — HOT-оновлення, що оминає indexes.',
+    },
+    seeAlso: ['page', 'heap'],
+  },
+  {
+    term: 'GIN',
+    def: {
+      en: 'Generalized Inverted Index — maps each element/key inside a value to the rows containing it, so it indexes many-valued columns: arrays, jsonb containment (@>), and full-text (tsvector). Slower to build/update than a B-Tree.',
+      uk: 'Generalized Inverted Index — зіставляє кожен елемент/ключ усередині значення з рядками, що його містять, тож індексує багатозначні колонки: масиви, containment jsonb (@>) і full-text (tsvector). Повільніший на build/update, ніж B-Tree.',
+    },
+    seeAlso: ['GiST', 'jsonb'],
+  },
+  {
+    term: 'GiST',
+    def: {
+      en: 'Generalized Search Tree — a balanced tree of bounding predicates for data with extent or distance: geometry, range types, nearest-neighbor (ORDER BY … <-> …), full-text, and exclusion constraints. Lossy, so it rechecks the heap.',
+      uk: 'Generalized Search Tree — збалансоване дерево обмежувальних предикатів для даних з протяжністю чи відстанню: геометрія, range-типи, nearest-neighbor (ORDER BY … <-> …), full-text та exclusion constraints. Lossy, тож перевіряє heap повторно.',
+    },
+    seeAlso: ['GIN'],
+  },
+  {
+    term: 'BRIN',
+    def: {
+      en: 'Block Range Index — stores a tiny min/max summary per range of physical blocks instead of one entry per row, so a billion-row table gets a kilobyte-sized index. Effective only when the table’s physical order correlates with the column (e.g. append-only timestamps).',
+      uk: 'Block Range Index — зберігає крихітне min/max-резюме на діапазон фізичних блоків замість запису на рядок, тож таблиця на мільярд рядків отримує index у кілобайти. Ефективний лише коли фізичний порядок таблиці корелює з колонкою (напр. append-only позначки часу).',
+    },
+    seeAlso: ['page'],
+  },
+  {
+    term: 'covering index',
+    def: {
+      en: 'An index that carries the query’s payload columns in its leaves (via INCLUDE, since PostgreSQL 11), so the query can be answered from the index alone — an index-only scan that skips the heap fetch when the visibility map allows.',
+      uk: 'Index, що несе payload-колонки запиту у своїх leaves (через INCLUDE, від PostgreSQL 11), тож запит можна відповісти лише з index — index-only scan, що оминає похід у heap, коли дозволяє visibility map.',
+    },
+    seeAlso: ['index-only scan'],
+  },
+  {
+    term: 'partial index',
+    def: {
+      en: 'An index built over only the rows matching a WHERE clause (e.g. WHERE status = ‘open’). Smaller and cheaper to maintain than a full index, and it skips indexing rows you never query.',
+      uk: 'Index, побудований лише над рядками, що відповідають WHERE (напр. WHERE status = ‘open’). Менший і дешевший в обслуговуванні за повний index, і не індексує рядки, які ви ніколи не запитуєте.',
+    },
+    seeAlso: ['covering index'],
+  },
+  {
+    term: 'bitmap index scan',
+    def: {
+      en: 'A runtime strategy (not a stored index type): PostgreSQL builds in-memory bitmaps of matching row locations from one or more indexes, combines them with BitmapAnd/BitmapOr, then visits the heap in physical page order. How separate indexes cooperate on one query.',
+      uk: 'Runtime-стратегія (не збережений тип index): PostgreSQL будує bitmap-и розташувань відповідних рядків у памʼяті з одного чи кількох indexes, поєднує їх через BitmapAnd/BitmapOr, а тоді відвідує heap у фізичному порядку pages. Так окремі indexes співпрацюють над одним запитом.',
+    },
+    seeAlso: ['index-only scan'],
+  },
 ];
