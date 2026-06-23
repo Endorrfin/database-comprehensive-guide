@@ -3,6 +3,9 @@ import type { Level, Localized, Module, Section } from './types';
 import { m1 } from './modules/m1-what-is-a-database';
 import { m2 } from './modules/m2-landscape';
 import { m3 } from './modules/m3-sql-vs-nosql';
+// CHANGED (S3): M4–M5 authored from stubs.
+import { m4 } from './modules/m4-relational-model';
+import { m5 } from './modules/m5-anatomy-of-a-query';
 import { m13 } from './modules/m13-btree';
 
 /*
@@ -115,45 +118,12 @@ function stub(s: StubInput): Module {
 
 export const modules: Module[] = [
   // ── Section I · Foundations & the landscape ──────────────────────────────
-  // CHANGED (S2): M1–M3 now fully authored (imported above); M4–M5 remain stubs.
+  // CHANGED (S3): M1–M5 now fully authored (imported above); Section I complete.
   m1,
   m2,
   m3,
-  stub({
-    id: 'm4-relational-model',
-    num: 4,
-    section: 's1-foundations',
-    order: 4,
-    level: 'beginner',
-    title: { en: 'The relational model & SQL foundations', uk: 'Реляційна модель та основи SQL' },
-    tagline: {
-      en: 'Tables, keys, relationships, and the relational algebra behind SELECT.',
-      uk: 'Таблиці, ключі, звʼязки та relational algebra за SELECT.',
-    },
-    readMins: 11,
-    mentalModel: {
-      en: 'Think in sets, not loops: you declare what you want, not how to fetch it.',
-      uk: 'Мисліть множинами, а не циклами: ви декларуєте що хочете, а не як це дістати.',
-    },
-  }),
-  stub({
-    id: 'm5-anatomy-of-a-query',
-    num: 5,
-    section: 's1-foundations',
-    order: 5,
-    level: 'middle',
-    signature: true,
-    title: { en: 'Anatomy of a query', uk: 'Анатомія запиту' },
-    tagline: {
-      en: 'Parse → plan → execute → storage → result: the lifecycle every later module hangs off.',
-      uk: 'Parse → plan → execute → storage → result: життєвий цикл, на якому тримається решта модулів.',
-    },
-    readMins: 10,
-    mentalModel: {
-      en: 'SQL is a request, not a recipe — the planner decides how.',
-      uk: 'SQL — це запит, а не рецепт: planner вирішує як.',
-    },
-  }),
+  m4,
+  m5,
 
   // ── Section II · Relational design & SQL mastery ─────────────────────────
   stub({

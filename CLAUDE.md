@@ -489,3 +489,43 @@ Footer: **"Vasyl Krupka · Senior Fullstack Engineer"** + 🇺🇦. Dark is prim
   **Next (S3):** Relational foundations — M4 Relational model & SQL foundations; M5 Anatomy of a query
   (+ query-lifecycle sim). **Pending user:** create repo `database-comprehensive-guide` @ `endorrfin`;
   set Pages → Source = GitHub Actions after first push.
+
+- **2026-06-23 · S3 Relational foundations** *(branch `s3-relational-foundations`)* — Authored the two
+  remaining Section-I modules **fully EN+UA** to the M13 depth bar, **completing Section I** and lifting
+  authored modules from 4 → **6**. **M4 · The relational model & SQL foundations** `[beginner]` (5 topics:
+  tables/rows/columns/domains · keys & relationships · the relational algebra behind SELECT · SELECT/
+  WHERE/GROUP BY/ORDER BY · declarative vs imperative; new **relational-model** SVG figure [two relations
+  with PK/FK + 1:N arrow], a 6-row formal↔SQL↔everyday vocabulary table, a relationship-shapes table, the
+  **relational-algebra → SQL** table [σ/π/⋈/∪/−/×], the **SQL logical processing order** table, worked DDL
+  + SELECT code blocks, tip/security/senior callouts, 5 keyPoints, 3 pitfalls, 3 interview Q&A, 5
+  web-verified sources). **M5 · Anatomy of a query** `[middle]` *(signature)* (4 topics: the lifecycle ·
+  logical vs physical plan · where time goes · why this matters; embeds the **★ query-lifecycle sim**,
+  a stage→job table, a logical-vs-physical compare, a where-the-time-goes cost ladder, a stage→later-module
+  map, senior/tip callouts, 5 keyPoints, 3 pitfalls, 3 interview Q&A, 5 sources).
+  **★ Query-lifecycle stepper** (`sims/QueryLifecycleSim.tsx`, registry key `query-lifecycle`): a fixed SQL
+  statement walks Parser → Rewriter → Planner → Executor → Storage → Result; per-stage artifact (parse tree,
+  plan tree, page reads) + a single **"index on customer_id?" toggle** that flips the planner between Seq
+  Scan and Index Scan and the pages-read meter between ~1,300 and ~3 — the payoff of "same SQL, many physical
+  plans". Deterministic, click-any-stage, play/pause/step, reduced-motion fallback (Play hidden), ARIA live
+  region — mirrors BTreeSim. New CSS `.qlife*` block appended to `components.css`; both assets registered.
+  **Web-verified this session** (sources in module `sources[]`): the PostgreSQL 18 docs **"The Path of a
+  Query"** (parser → rewrite system → planner/optimizer → executor; the planner's own seq-scan-vs-index-scan
+  cost example; the executor's recursive plan-tree pull from the storage system) — confirms PG latest
+  **18.4**, **19 Beta 1** (2026-06-04); **Codd 1970** "A Relational Model of Data for Large Shared Data
+  Banks" + the relational algebra (σ/π/⋈/set ops); the **SQL logical clause order** enumerated in the PG
+  SELECT reference; primary/foreign keys from the PG constraints docs; EXPLAIN as logical-vs-physical.
+  **Verification (repo + scratch, linux):** `tsc -b --noEmit` ✓ · ESLint ✓ · `check:data` ✓ (**8 sections,
+  36 modules [6 authored, 30 stubs], 731 Localized EN+UA pairs**, **3 sims + 4 figures**, all registry keys
+  resolve, cross-links valid) · `test:btree` ✓ (346 checks) · `vite build` ✓ (**58 modules**, JS 142 KB
+  gzip / CSS 6.66 KB gzip) · **new: render smoke** (`react-dom/server` renderToStaticMarkup of the sim +
+  figure inside `LangProvider`) ✓ — catches hook/JSX runtime errors the typecheck/build miss.
+  **Sandbox gotchas (expected, §12):** linux binaries from S2 (`@esbuild/linux-arm64`,
+  `@rolldown/binding-linux-arm64-gnu`) still present → all tooling ran; built into fresh `dist-s3/`. tsx
+  defaults JSX to the **classic** runtime, so the render smoke must run with `--tsconfig tsconfig.app.json`
+  (which sets `jsx: react-jsx`); harmless for the real Vite build. The render-smoke file is neutralized +
+  gitignored (`scripts/_smoke-*.ts`) since the sandbox can't unlink — **user can `rm scripts/_smoke-s3.ts`
+  locally**. Stale **`.git/index.lock`** likely persists — **`rm -f ".git/index.lock"` before committing**,
+  then `npm install` (darwin-arm64) + `npm run verify`.
+  **Next (S4):** Design — M6 ER modeling (+ ER interactive); M7 Normalization (+ Normalization sim).
+  **Pending user:** create repo `database-comprehensive-guide` @ `endorrfin`; set Pages → Source = GitHub
+  Actions after first push.
