@@ -410,7 +410,14 @@ Footer: **"Vasyl Krupka · Senior Fullstack Engineer"** + 🇺🇦. Dark is prim
   drift off the exact decimal and the rounding error accumulate row by row. Follow BTreeSim conventions
   (deterministic, play/pause/step, `prefers-reduced-motion` fallback, ARIA live region); register under a new
   sim key and flip M9's `float-trap` block from `figure` → `sim`. Slot opportunistically (S8 storage, or S19–S20).
-- **Bundle code-split / per-module lazy-load (≈S10–S12)** — JS is ~197 KB gzip at 10 authored modules and grows
+- **★ Window-frame stepper (M10)** — promote the static `window-frame` figure into a real interactive: step a
+  window's frame across partitioned/ordered rows, contrast `ROWS` vs the default `RANGE … CURRENT ROW` (watch tied
+  peers lump together), watch a running aggregate update per row, and toggle `PARTITION BY` to see the total reset
+  at each boundary. Window functions are the single highest-insight SQL concept to animate; **flagged (not built)
+  in S6** to keep the two dense modules tight and avoid bundle growth before the code-split below. Follow BTreeSim
+  conventions (deterministic, play/pause/step, reduced-motion fallback, ARIA); register a sim key and flip M10's
+  `window-frame` block from `figure` → `sim`. Slot opportunistically (S19–S20).
+- **Bundle code-split / per-module lazy-load (≈S10–S12)** — JS is ~230 KB gzip at 12 authored modules and grows
   with bilingual content; before it gets heavy, route-split so each module's data/figures/sims load on demand
   (dynamic `import()` per module in the hash router + `React.lazy` for sims). Must keep `check:data`, the render
   smoke, and SSR/route smoke working across the split, and preserve global search (which currently indexes all
@@ -635,3 +642,58 @@ Footer: **"Vasyl Krupka · Senior Fullstack Engineer"** + 🇺🇦. Dark is prim
   **Next (S6):** SQL mastery cont. — M10 SQL in depth (joins/CTE/window/NULL logic); M11 Views, procedural SQL &
   triggers. **Pending user:** repo is already live (§11) — S5 appears live once committed & **merged to `main`**;
   locally `npm install` (darwin-arm64) + `npm run verify`; optional cleanup `rm -rf dist-s2 dist-s3 dist-s4 dist-s5`.
+
+- **2026-06-23 · S6 SQL mastery (SQL-in-depth / views-triggers)** *(branch `s6-sql-in-depth-views-triggers`)* —
+  Authored the two remaining Section-II modules **fully EN+UA** to the M13 depth bar, **completing Section II**
+  (all 6 of M6–M11) and lifting authored modules from 10 → **12**. **Scope decision (recorded, user delegated):**
+  kept S6 **figures-only — no new hero sim**. M10/M11 are non-signature in the locked plan (§6 reserves sims for
+  the 8 signature spots + the ER/Normalization/Sharding opportunistic set); this matches the S5 precedent and the
+  bundle/scope discipline, given two text-dense modules. The genuinely high-insight interactive here — a
+  **window-frame stepper** — is captured statically by the new `window-frame` figure and **added to the §13
+  backlog** (slot S19–S20), exactly as S5 did for the FLOAT drift stepper.
+  **M10 · SQL in depth** `[senior]` (5 topics: joins & how they actually run · subqueries & CTEs · window functions ·
+  aggregation beyond GROUP BY · NULL three-valued logic; new **window-frame** SVG figure; join-types table,
+  three-join-algorithms table, window-function catalog, three-valued-logic truth table; CTE-vs-subquery compare;
+  recursive-CTE / running-total+rank+lag / ROLLUP+GROUPING() code blocks; senior/senior/senior/tip/warn callouts;
+  5 keyPoints, 3 pitfalls, 3 interview Q&A [senior/senior/staff], **6 web-verified sources**). **M11 · Views,
+  procedural SQL & triggers** `[senior]` (4 topics: views as an interface · materialized views · functions/
+  procedures/PL-pgSQL · triggers & where logic should live; new **view-vs-matview** SVG figure; trigger
+  timing×granularity table; view↔matview compare; IMMUTABLE-function+expression-index and AFTER audit-trigger
+  code; security/warn/senior/warn callouts; 5 keyPoints, 3 pitfalls, 3 interview Q&A [senior/senior/staff], 6
+  sources).
+  **Web-verified this session** (sources in module `sources[]`): the three physical join algorithms (nested loop /
+  hash / merge — PG planner-optimizer §51.5); **CTE inlining since PostgreSQL 12** (non-recursive, side-effect-free,
+  single-reference) + `MATERIALIZED`/`NOT MATERIALIZED`; `WITH RECURSIVE` (anchor `UNION ALL` recursive term);
+  window frame units **ROWS/RANGE/GROUPS + EXCLUDE since PG 11**, and the **default frame is `RANGE … CURRENT ROW`
+  (includes tied peers, NOT ROWS)**; **GROUPING SETS/CUBE/ROLLUP since PG 9.5** + `GROUPING()`; three-valued logic
+  (any NULL comparison = UNKNOWN; `IS DISTINCT FROM`; the `NOT IN`-with-NULL trap; **`GREATEST`/`LEAST` ignore NULL
+  inputs — a deviation from the SQL standard**); `security_invoker` view option **added PG 15, default false**
+  (owner's privileges); `CREATE MATERIALIZED VIEW` (PG 9.3) + **`REFRESH … CONCURRENTLY` needs a UNIQUE index**
+  (PG 9.4); **`CREATE PROCEDURE`/`CALL` + transaction control added PG 11**; volatility VOLATILE(default)/STABLE/
+  IMMUTABLE; triggers BEFORE/AFTER/INSTEAD OF × ROW/STATEMENT + **transition tables since PG 10**;
+  `WHEN (OLD.* IS DISTINCT FROM NEW.*)`. (Confirmed PG latest stable **18.4**, 19 Beta 1. **MERGE / upsert
+  deliberately left out of M10** per the locked curriculum — read-query depth, not DML; PG18's RETURNING OLD/NEW
+  aliases noted for a possible future module.)
+  **Wiring:** `concepts.ts` imports m10/m11 (stubs replaced, header + CHANGED(S6) notes); `registry.tsx` **+2
+  figures** (`window-frame`, `view-vs-matview`); glossary **+6 terms** (window function, common table expression,
+  materialized view, trigger, PL/pgSQL, three-valued logic) → **41**. **No CSS added** (figures are pure SVG) — CSS
+  gzip unchanged at 7.32 KB.
+  **Verification (repo, linux-arm64):** `tsc -b --noEmit` ✓ · ESLint ✓ · `check:data` ✓ (**8 sections, 36 modules
+  [12 authored, 24 stubs], 1333 Localized EN+UA pairs**, **5 sims + 10 figures**, 41 glossary terms, all registry
+  keys resolve, cross-links valid) · `test:btree` ✓ (346 checks) · **render+content smoke** ✓ (`react-dom/server`
+  renderToStaticMarkup via the registry — asserts `window-frame` shows `PARTITION BY region` + `running_total` +
+  the `230` running total + partition `resets`, and `view-vs-matview` shows `materialized view` + `REFRESH` +
+  `always fresh` + `stale until REFRESH`) · `vite build` ✓ (**72 modules**, JS **230 KB gzip** / CSS 7.32 KB gzip,
+  relative `./assets/` base).
+  **Caught before commit:** (1) an unescaped `'active'` inside a single-quoted EN interview string in M10 (the UA
+  side was escaped) → `TS1005` parse error; fixed by escaping. (2) Unused `softOf` helper in `WindowFrame`
+  (noUnusedLocals / ESLint `no-unused-vars`) → removed.
+  **Bundle watch:** JS gzip jumped **197 → 230 KB (+33)** for two text-dense bilingual modules — reinforces the §13
+  code-split backlog item (updated to "12 modules"); worth doing around S10–S12 as planned.
+  **Sandbox gotchas (expected, §12):** linux helpers from S2 (`@esbuild/linux-arm64`,
+  `@rolldown/binding-linux-arm64-gnu`) still present → all tooling ran; built into fresh `dist-s6/` (unlink blocked;
+  `dist-*/` gitignored). Render-smoke file gitignored (`scripts/_smoke-*.ts`) — **user can `rm scripts/_smoke-s6.ts`**
+  (and any stale `_smoke-s3/4/5`). **No stale `.git/index.lock` this session** (checked — absent).
+  **Next (S7):** Storage internals — M12 How data is stored; M14 The index toolbox *(M13 done in S1)*. **Pending
+  user:** repo is live (§11) — S6 appears live once committed & **merged to `main`**; locally `npm install`
+  (darwin-arm64) + `npm run verify`; optional cleanup `rm -rf dist-s2 dist-s3 dist-s4 dist-s5 dist-s6`.
