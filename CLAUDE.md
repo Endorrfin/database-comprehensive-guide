@@ -421,3 +421,37 @@ Footer: **"Vasyl Krupka · Senior Fullstack Engineer"** + 🇺🇦. Dark is prim
   **Open / to confirm:** (a) the referenced `list of concepts.txt` is not in the folder — proceed with
   the `CURRICULUM.md` concept map, or the user adds the file; (b) module count 36 vs a tighter 32 band;
   (c) golden = M13 B-Tree (recommended) vs a more foundational opener (M5 query lifecycle / M2 landscape).
+
+- **2026-06-23 · S1 Scaffold + golden module** *(branch `s1-scaffold-btree-golden`)* — Built the full
+  app on **Vite 8.1 + React 19.2 + TS 6.0 (strict)**, pinned latest stable (also ESLint 10.5 flat config,
+  typescript-eslint 8.62, `@vitejs/plugin-react` 6, tsx 4.22; versions web/npm-verified at scaffold).
+  **Delivered:** DB-dark theme + DB-family palette (`tokens.css`/`global.css`/`components.css`, Fraunces/
+  Inter/JetBrains Mono); tiny **hash router** (`#/map`, `#/m/<mod>/<topic>`, `#/decide`, `#/mental-models`,
+  `#/glossary`); **EN/UA i18n** (split `lang.ts` hook + `LangProvider`/`T`, `ui.ts` chrome strings,
+  localStorage persist, `<html lang>` sync); layout (**TopBar** with live search + level filter + EN/UA
+  toggle + mobile drawer, collapsible **Sidebar** with level-dimming + persisted open-state, **ProgressBar**,
+  **Footer** brand+🇺🇦); the **Landscape-Map landing** (clickable families → Drawer → module + a full
+  section/module overview grid); the **full navigable skeleton of all 8 sections / 36 modules** (titles,
+  taglines, mental models authored EN+UA for every module; topics/sources stubbed); study surfaces
+  (**mental-models gallery** = all 36, **bilingual glossary** = 24 terms seeded); the data contract in
+  `src/data/types.ts` + SSOT `concepts.ts` + figure/sim **registry**. **Golden module M13 fully authored
+  EN+UA** (5 topics, node-anatomy SVG figure, complexity table, B-Tree↔B+Tree compare, 2 callouts, 5 key
+  points, 3 pitfalls, 3 interview Q&A, **5 web-verified sources** — PG nbtree README / Lehman&Yao 1981,
+  PG index-only-scan + visibility-map docs, Comer 1979, Use-The-Index-Luke). **★ B-Tree/B+Tree visualizer:**
+  pure engine extracted to `src/lib/btree.ts` (deterministic rebuild), component does insert/search/range-scan,
+  B-Tree↔B+Tree toggle, demo play/pause/step, reduced-motion fallback (Play hidden, Step only), ARIA + live
+  region. **Deploy:** `.github/workflows/deploy.yml` (Node 22 · npm ci · typecheck · lint · check:data ·
+  test:btree · build · Pages), `public/.nojekyll`, `vite base:'./'`, favicon, README, `package-lock.json`.
+  **Verification (scratch build, linux-x64):** `tsc -b --noEmit` ✓ · ESLint ✓ · `check:data` ✓ (8 sections,
+  36 modules [1 authored, 35 stubs], **267 Localized EN+UA pairs**, registry keys resolve, cross-links valid)
+  · `test:btree` ✓ (**346 invariant checks** across B-Tree & B+Tree on DEMO/ascending/descending/duplicates)
+  · `vite build` ✓ (47 modules, JS 95 KB gzip / CSS 5.7 KB gzip, relative `./assets/` base for Pages).
+  **Challenge surfaced & fixed by the test:** incremental B+Tree leaf `next`-links went stale across splits
+  (left sibling pointed at a detached pre-split node) — replaced with a `relinkLeaves()` pass that rebuilds
+  the leaf chain in structural order after each build; all 346 checks then pass.
+  **Sandbox gotcha hit (expected, §12):** the live repo now has a stale **`.git/index.lock`** (sandbox
+  `unlink` is blocked) — **user must `rm -f ".git/index.lock"` locally before committing**; then
+  `npm install` (darwin-arm64) + `npm run verify`.
+  **Next (S2):** Foundations core — M1 What a database is; M2 The landscape (+ Landscape-Map polish);
+  M3 SQL vs NoSQL. **Pending user:** create repo `database-comprehensive-guide` @ `endorrfin`; after first
+  push set Settings → Pages → Source = GitHub Actions.

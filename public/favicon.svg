@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Databases guide">
+  <rect width="64" height="64" rx="14" fill="#0E1217" />
+  <g fill="none" stroke="#5B9BD5" stroke-width="3.2">
+    <ellipse cx="32" cy="18" rx="16" ry="6.5" fill="#336791" fill-opacity="0.35" />
+    <path d="M16 18 V46 c0 3.6 7.2 6.5 16 6.5 s16 -2.9 16 -6.5 V18" />
+    <path d="M16 32 c0 3.6 7.2 6.5 16 6.5 s16 -2.9 16 -6.5" />
+  </g>
+  <circle cx="46.5" cy="44" r="6.5" fill="#0E1217" stroke="#86BCEA" stroke-width="3" />
+  <path d="M51 48.5 L58 55.5" stroke="#86BCEA" stroke-width="3.4" stroke-linecap="round" />
+</svg>
