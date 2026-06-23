@@ -2,28 +2,47 @@ import { COUNTS } from '../../data/concepts';
 import { useLang } from '../../i18n/lang';
 import { ui } from '../../i18n/ui';
 
+// CHANGED (S2): footer brand links.
+const LINKEDIN = 'https://www.linkedin.com/in/vasyl-krupka/';
+const GITHUB = 'https://github.com/Endorrfin/database-comprehensive-guide';
+
+const Sep = () => (
+  <span className="footer-sep" aria-hidden="true">
+    ·
+  </span>
+);
+
 export function Footer() {
   const { t } = useLang();
   return (
     <footer className="footer">
+      {/* CHANGED (S2): compact 2-row footer — brand + links on row 1, meta on row 2. */}
       <div className="footer-inner">
-        <div className="footer-brand">
+        <p className="footer-brand">
           <strong>Vasyl Krupka</strong>
-          <span className="muted"> · {t(ui.footerRole)} · 🇺🇦</span>
-          <p className="muted footer-tag">{t(ui.footerTagline)}</p>
-        </div>
-        <div className="footer-stats muted">
+          <Sep />
+          <span className="muted">{t(ui.footerRole)}</span>
+          <Sep />
+          <span className="muted">{t(ui.footerCountry)} 🇺🇦</span>
+          <Sep />
+          <a href={LINKEDIN} target="_blank" rel="noopener noreferrer">
+            LinkedIn ↗
+          </a>
+          <Sep />
+          <a href={GITHUB} target="_blank" rel="noopener noreferrer">
+            GitHub ↗
+          </a>
+        </p>
+        <p className="footer-meta dim">
+          <span>{t(ui.footerTagline)}</span>
+          <Sep />
           <span>
-            {COUNTS.sections} {t(ui.sectionsLabel)}
-          </span>
-          <span>
-            {COUNTS.modules} {t(ui.modulesLabel)}
-          </span>
-          <span>
+            {COUNTS.sections} {t(ui.sectionsLabel)} · {COUNTS.modules} {t(ui.modulesLabel)} ·{' '}
             {COUNTS.sims} {t(ui.simsLabel)}
           </span>
-        </div>
-        <p className="footer-built dim">{t(ui.builtWith)}</p>
+          <Sep />
+          <span>{t(ui.builtWith)}</span>
+        </p>
       </div>
     </footer>
   );

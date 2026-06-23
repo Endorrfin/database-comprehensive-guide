@@ -1,125 +1,44 @@
 import { useState } from 'react';
-import { modulesBySection, sections } from '../../data/concepts';
-import type { Localized } from '../../data/types';
+import { getModule, modulesBySection, sections } from '../../data/concepts';
+// CHANGED (S2): families now come from the shared single source of truth (data/families.ts),
+// reused by both this landing and M2's embedded interactive map — they can never drift apart.
+import { families } from '../../data/families';
+import type { Family } from '../../data/families';
+import type { Level } from '../../data/types';
 import { useLang } from '../../i18n/lang';
 import { ui } from '../../i18n/ui';
+import { useAppState } from '../../lib/appState';
 import { hrefModule, navigate } from '../../lib/hashRouter';
+import { cx } from '../../lib/utils';
 import { Drawer } from './Drawer';
 
-type Family = {
-  id: string;
-  name: Localized;
-  when: Localized;
-  engines: string[];
-  color: string;
-  moduleId: string;
-};
-
-const FAMILIES: Family[] = [
-  {
-    id: 'relational',
-    name: { en: 'Relational', uk: 'Relational' },
-    when: {
-      en: 'Strong consistency, joins, ad-hoc queries, ACID — the safe default.',
-      uk: 'Сувора consistency, joins, ad-hoc запити, ACID — безпечний default.',
-    },
-    engines: ['PostgreSQL', 'MySQL', 'SQLite'],
-    color: 'var(--e-postgres)',
-    moduleId: 'm4-relational-model',
-  },
-  {
-    id: 'document',
-    name: { en: 'Document', uk: 'Document' },
-    when: {
-      en: 'Flexible, nested data you read together as one object.',
-      uk: 'Гнучкі, вкладені дані, які читаєте разом як один обʼєкт.',
-    },
-    engines: ['MongoDB'],
-    color: 'var(--e-mongodb-bright)',
-    moduleId: 'm25-document',
-  },
-  {
-    id: 'kv',
-    name: { en: 'Key-value', uk: 'Key-value' },
-    when: {
-      en: 'Lowest-latency lookups, caching, counters, queues.',
-      uk: 'Найнижча latency для пошуку, кешування, лічильники, черги.',
-    },
-    engines: ['Redis', 'Valkey'],
-    color: 'var(--e-redis)',
-    moduleId: 'm26-key-value',
-  },
-  {
-    id: 'wide-column',
-    name: { en: 'Wide-column', uk: 'Wide-column' },
-    when: {
-      en: 'Write-heavy workloads at linear, horizontal scale.',
-      uk: 'Write-heavy навантаження з лінійним горизонтальним масштабом.',
-    },
-    engines: ['Cassandra', 'ScyllaDB'],
-    color: 'var(--e-cassandra)',
-    moduleId: 'm27-wide-column',
-  },
-  {
-    id: 'graph',
-    name: { en: 'Graph', uk: 'Graph' },
-    when: {
-      en: 'When the relationships between entities are the data.',
-      uk: 'Коли звʼязки між сутностями і є даними.',
-    },
-    engines: ['Neo4j'],
-    color: 'var(--c-storage)',
-    moduleId: 'm28-graph',
-  },
-  {
-    id: 'vector',
-    name: { en: 'Vector', uk: 'Vector' },
-    when: {
-      en: 'Semantic / similarity search for AI and RAG.',
-      uk: 'Семантичний / similarity пошук для AI та RAG.',
-    },
-    engines: ['pgvector', 'Qdrant', 'Milvus'],
-    color: 'var(--e-vector)',
-    moduleId: 'm29-vector',
-  },
-  {
-    id: 'timeseries',
-    name: { en: 'Time-series', uk: 'Time-series' },
-    when: {
-      en: 'Append-only metrics and events with time-based queries.',
-      uk: 'Append-only метрики та події з запитами за часом.',
-    },
-    engines: ['TimescaleDB', 'InfluxDB'],
-    color: 'var(--c-analytics)',
-    moduleId: 'm31-analytics',
-  },
-  {
-    id: 'olap',
-    name: { en: 'Analytics / columnar', uk: 'Analytics / columnar' },
-    when: {
-      en: 'Large scans and aggregations over many rows (OLAP).',
-      uk: 'Великі scans та агрегації над багатьма рядками (OLAP).',
-    },
-    engines: ['ClickHouse', 'DuckDB'],
-    color: 'var(--e-clickhouse)',
-    moduleId: 'm31-analytics',
-  },
-  {
-    id: 'search',
-    name: { en: 'Search', uk: 'Search' },
-    when: {
-      en: 'Relevance-ranked full-text search over documents.',
-      uk: 'Повнотекстовий пошук із ранжуванням за релевантністю.',
-    },
-    engines: ['Elasticsearch', 'Postgres FTS'],
-    color: 'var(--c-query)',
-    moduleId: 'm14-index-toolbox',
-  },
+// CHANGED (S2): the guided beginner→staff route surfaced on the landing ("Start here" polish).
+const START_PATH: string[] = [
+  'm1-what-is-a-database',
+  'm2-landscape',
+  'm4-relational-model',
+  'm3-sql-vs-nosql',
+  'm5-anatomy-of-a-query',
+  'm13-btree',
+  'm17-acid-wal',
+  'm19-mvcc',
 ];
+
+const LEVELS: Level[] = ['beginner', 'middle', 'senior', 'staff'];
+const LEVEL_LABEL: Record<Level, (typeof ui)['beginner']> = {
+  beginner: ui.beginner,
+  middle: ui.middle,
+  senior: ui.senior,
+  staff: ui.staff,
+};
 
 export function LandscapeMap() {
   const { t, lang } = useLang();
+  // CHANGED (S2): reuse the GLOBAL level filter so the landing and the top bar stay in sync.
+  const { levelFilter, setLevelFilter } = useAppState();
   const [selected, setSelected] = useState<Family | null>(null);
+
+  const matches = (lv: Level) => levelFilter === 'all' || lv === levelFilter;
 
   return (
     <div className="content map">
@@ -142,24 +61,78 @@ export function LandscapeMap() {
         </div>
       </section>
 
-      <section className="map-families">
-        <h2>{t({ en: 'The families', uk: 'Родини' })}</h2>
-        <p className="muted">
-          {t({
-            en: 'Fit the data model to the access pattern. Tap a family to see when it fits.',
-            uk: 'Підбирайте модель даних під access pattern. Торкніться родини, щоб побачити, коли вона пасує.',
+      {/* CHANGED (S2): guided "Start here" learning path — beginner → staff, level-coded. */}
+      <section className="map-path">
+        <h2>{t(ui.suggestedPath)}</h2>
+        <p className="muted">{t(ui.suggestedPathLede)}</p>
+        <ol className="path-row">
+          {START_PATH.map((id, i) => {
+            const m = getModule(id);
+            if (!m) return null;
+            return (
+              <li className="path-step" key={id}>
+                <a className="path-node" href={hrefModule(id)}>
+                  <span className="path-num mono">{String(i + 1).padStart(2, '0')}</span>
+                  <span className="path-title">{t(m.title)}</span>
+                  <span className="path-meta">
+                    <span className="path-level" data-level={m.level} title={t(LEVEL_LABEL[m.level])} />
+                    {m.signature && <span className="star">★</span>}
+                  </span>
+                </a>
+              </li>
+            );
           })}
-        </p>
+        </ol>
+      </section>
+
+      <section className="map-families">
+        {/* CHANGED (S2): section header now carries a level filter that mirrors the top bar. */}
+        <div className="map-sec-head">
+          <div>
+            <h2>{t({ en: 'The families', uk: 'Родини' })}</h2>
+            <p className="muted">
+              {t({
+                en: 'Fit the data model to the access pattern. Tap a family to see when it fits.',
+                uk: 'Підбирайте модель даних під access pattern. Торкніться родини, щоб побачити, коли вона пасує.',
+              })}
+            </p>
+          </div>
+          <div className="levelseg" role="group" aria-label={t(ui.levelFilter)}>
+            <button
+              className={cx(levelFilter === 'all' && 'on')}
+              onClick={() => setLevelFilter('all')}
+            >
+              {t(ui.allLevels)}
+            </button>
+            {LEVELS.map((lv) => (
+              <button
+                key={lv}
+                className={cx('lvl', levelFilter === lv && 'on')}
+                data-level={lv}
+                onClick={() => setLevelFilter(lv)}
+                title={t(LEVEL_LABEL[lv])}
+              >
+                {t(LEVEL_LABEL[lv])}
+              </button>
+            ))}
+          </div>
+        </div>
         <div className="fam-grid">
-          {FAMILIES.map((f) => (
+          {families.map((f) => (
             <button
               key={f.id}
-              className="fam-card"
+              className={cx('fam-card', !matches(f.level) && 'dimmed')}
               style={{ ['--fam' as string]: f.color }}
               onClick={() => setSelected(f)}
+              aria-pressed={selected?.id === f.id}
             >
-              <span className="fam-dot" />
+              <span className="fam-top">
+                <span className="fam-dot" />
+                <span className="fam-level" data-level={f.level} title={t(LEVEL_LABEL[f.level])} />
+              </span>
               <span className="fam-name">{t(f.name)}</span>
+              {/* CHANGED (S2): refined card — a "when it fits" peek above the engine list. */}
+              <span className="fam-when">{t(f.when)}</span>
               <span className="fam-engines dim">{f.engines.join(' · ')}</span>
             </button>
           ))}
@@ -180,9 +153,11 @@ export function LandscapeMap() {
               <ul className="ov-mods">
                 {modulesBySection(s.id).map((m) => (
                   <li key={m.id}>
-                    <a className="ov-mod" href={hrefModule(m.id)}>
+                    {/* CHANGED (S2): modules outside the chosen level dim, matching the sidebar. */}
+                    <a className={cx('ov-mod', !matches(m.level) && 'dimmed')} href={hrefModule(m.id)}>
                       <span className="mono dim">{String(m.num).padStart(2, '0')}</span>
                       <span className="ov-mod-title">{t(m.title)}</span>
+                      <span className="ov-mod-level" data-level={m.level} />
                       {m.signature && <span className="star">★</span>}
                     </a>
                   </li>
