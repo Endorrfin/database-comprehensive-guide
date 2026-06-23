@@ -384,6 +384,7 @@ Footer: **"Vasyl Krupka · Senior Fullstack Engineer"** + 🇺🇦. Dark is prim
   M3 SQL vs NoSQL (strengths/weaknesses).
 - **S3 · Relational foundations** — M4 Relational model & SQL foundations; M5 Anatomy of a query (+ lifecycle sim).
 - **S4 · Design** — M6 ER modeling (+ ER interactive); M7 Normalization (+ **Normalization sim**).
+  **Both steppers are confirmed in-scope for S4 (user decision 2026-06-23) — not trimmed.**
 - **S5 · SQL mastery** — M8 Keys & constraints; M9 Data types done right.
 - **S6 · SQL mastery** — M10 SQL in depth (joins/CTE/window); M11 Views, procedural SQL & triggers.
 - **S7 · Storage internals** — M12 How data is stored; M14 The index toolbox. *(M13 done in S1.)*
