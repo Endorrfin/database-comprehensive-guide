@@ -341,7 +341,8 @@ reused). Sections carry an `accent` (the section colour); modules carry `level`,
 - **~6–8 signature interactives ★** (curated, no WASM): B-Tree/B+Tree visualizer (M13, golden) ·
   Query Planner/EXPLAIN (M16) · Isolation anomalies (M18) · MVCC (M19) · Replication & failover (M21) ·
   CAP/consistency (M23) · LSM-tree (M15) · Vector/ANN (M29). *(Trim the lighter ones — LSM, Vector,
-  Sharding, ER, Normalization steppers — if a session runs long.)*
+  Sharding — if a session runs long. **ER (M6) + Normalization (M7) steppers are confirmed for S4 —
+  user decision 2026-06-23, build both.**)*
 - **Interactive Database Landscape Map** as the landing (M2) + the **Database Picker** decision widget (M35).
 - **Diagram-first baseline everywhere else:** ≥1 diagram + ≥1 table per module; a mental model per
   module; opportunistic light interactives (ER builder M6, Normalization stepper M7, index access-path
