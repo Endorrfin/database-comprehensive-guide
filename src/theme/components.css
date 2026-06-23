@@ -1353,3 +1353,184 @@
     display: none;
   }
 }
+
+/* ── Query-lifecycle sim (M5, S3) ─────────────────────────────────────────── */
+.qlife-pipe {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.2rem 0.1rem;
+  list-style: none;
+  margin: 0.2rem 0 0.9rem;
+  padding: 0;
+}
+.qlife-pipe-item {
+  display: flex;
+  align-items: center;
+}
+.qlife-stage {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: var(--bg);
+  border: 1px solid var(--line2);
+  border-bottom: 2px solid var(--line2);
+  border-radius: var(--r-md);
+  padding: 0.32rem 0.55rem;
+  color: var(--tx2);
+  cursor: pointer;
+  transition:
+    border-color var(--dur-fast) var(--ease),
+    color var(--dur-fast) var(--ease),
+    background var(--dur-fast) var(--ease);
+}
+.qlife-stage:hover {
+  color: var(--tx);
+  border-color: var(--st);
+}
+.qlife-stage.done {
+  color: var(--tx);
+  border-bottom-color: var(--st);
+  opacity: 0.85;
+}
+.qlife-stage.on {
+  color: var(--tx);
+  background: var(--s2);
+  border-color: var(--st);
+  border-bottom-color: var(--st);
+  box-shadow: 0 0 0 1px var(--st);
+}
+.qlife-num {
+  display: inline-grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--st);
+  color: var(--bg);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+.qlife-label {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  letter-spacing: 0.01em;
+}
+.qlife-arrow {
+  color: var(--tx3);
+  padding: 0 0.18rem;
+  font-size: 1rem;
+  user-select: none;
+}
+
+.qlife-body {
+  display: grid;
+  grid-template-columns: 1fr minmax(180px, 0.5fr);
+  gap: 0.8rem;
+  align-items: stretch;
+}
+.qlife-detail {
+  min-width: 0;
+}
+.qlife-detail h4 {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin: 0 0 0.25rem;
+  font-family: var(--font-display);
+  font-size: 1.02rem;
+}
+.qlife-detail-num {
+  display: inline-grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 1px solid currentColor;
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+}
+.qlife-job {
+  margin: 0 0 0.2rem;
+  font-size: 0.92rem;
+  color: var(--tx);
+}
+.qlife-note {
+  margin: 0 0 0.5rem;
+  font-size: 0.82rem;
+}
+.qlife-art {
+  margin: 0;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-left: 2px solid var(--accent-deep);
+  border-radius: var(--r-sm);
+  padding: 0.6rem 0.7rem;
+  overflow-x: auto;
+  font-size: 0.8rem;
+  line-height: 1.45;
+  color: var(--tx);
+  white-space: pre;
+}
+
+.qlife-cost {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  background: var(--bg);
+  border: 1px solid var(--line2);
+  border-radius: var(--r-md);
+  padding: 0.7rem;
+}
+.qlife-cost-head {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.qlife-plan {
+  font-family: var(--font-mono);
+  font-size: 1.04rem;
+  font-weight: 700;
+  color: var(--tx3);
+}
+.qlife-plan.live {
+  color: var(--st);
+}
+.qlife-metrics {
+  display: flex;
+  gap: 0.9rem;
+  margin: 0.15rem 0 0.1rem;
+}
+.qlife-metrics dt {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.qlife-metrics dd {
+  margin: 0.1rem 0 0;
+  font-size: 0.96rem;
+  color: var(--tx);
+}
+.qlife-meter {
+  height: 7px;
+  background: var(--s2);
+  border-radius: 99px;
+  overflow: hidden;
+}
+.qlife-meter-fill {
+  height: 100%;
+  border-radius: 99px;
+  transition: width var(--dur) var(--ease);
+}
+.qlife-cost-foot {
+  margin: 0.1rem 0 0;
+  font-size: 0.72rem;
+  line-height: 1.35;
+}
+
+@media (max-width: 640px) {
+  .qlife-body {
+    grid-template-columns: 1fr;
+  }
+}
