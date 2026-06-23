@@ -1,0 +1,423 @@
+# CLAUDE.md — Databases: The Comprehensive Guide (Interactive)
+
+Working guide and **source of truth** for every session in this repo. **Read this file
+fully before starting any session.** Update the *Status / progress log* (§14) at the end of
+each session.
+
+> Author/brand: **Vasyl Krupka · Senior Fullstack Engineer · Ukraine 🇺🇦**.
+> Sibling projects & quality bar: `../Node-js guide` (the gold standard — Vite+React+TS, hero
+> simulators, data-driven chapters), `../Design Principles & Patterns guide` (the interactive
+> "map" form) and `../Claude guide` (most recent build of the same architecture). Match that
+> depth and polish; reuse the architecture and component patterns.
+
+---
+
+## 1. Mission
+
+A **deep, interactive guide to databases** — from a short beginner on-ramp to deep,
+professional, *staff-level* mastery of how databases actually work. Not a feature list and not a
+SQL cheat-sheet: the **internals + the mental models + practical interactive materials** that let a
+professional **understand, internalize and remember** which database to use, when, and why — like
+an expert (deep-dive mode). Concepts are taught with prose **plus** visual diagrams, tables, mental
+models and **signature interactive simulators** (B-Tree splits, query planning/EXPLAIN, MVCC,
+isolation anomalies, replication & failover, CAP, LSM compaction, vector/ANN search…).
+
+- **Audience:** primarily **professionals** (middle → senior → staff). Secondary: a short
+  **beginner on-ramp** (Section I). Focus chosen by user (2026-06-23): **internals-first**, taught
+  through concrete engines.
+- **Three emphases, reconciled as layers (user choice 2026-06-23 = "all three"):**
+  1. **Universal internals / theory** is the *teaching backbone* — storage, indexing, transactions,
+     concurrency, query processing, distribution. Engine-agnostic, transfers anywhere.
+  2. **PostgreSQL is the canonical worked example + its own deep-dive spine** (Sections II–V use
+     Postgres as the primary concrete example; it mirrors `info.txt`).
+  3. **NoSQL families get balanced, first-class coverage** (Section VI: document, key-value,
+     wide-column, graph) plus the modern/specialized engines (Section VII).
+  These are *layers, not competing tracks* — internals are taught once, then instantiated across
+  engines, so nothing is redundant.
+- **Levels:** every module tagged `beginner | middle | senior | staff`.
+- **Language:** **Bilingual EN / UA** with a runtime toggle (user choice 2026-06-23). **All technical
+  terminology stays in English** in both languages (SQL, B-Tree, MVCC, WAL, sharding, index,
+  transaction, replication, ACID, CAP, LSM, vector, embedding…); Ukrainian is used only where it
+  translates without loss of precision (explanations, analogies, mental models). EN authored first,
+  UA second.
+- **Deploy:** static site on **GitHub Pages**, public, auto-published by GitHub Actions.
+- **Source of curriculum:** `_examples/info.txt` (3 fact-checked video chapter lists — authoritative
+  *seed*: a beginner PostgreSQL/SQL course, a relational-design + indexing course, and an
+  internals/SQLite-from-scratch + cloud-PostgreSQL/HA course). Cover it all but **do not limit to
+  it** — go well beyond into modern engines and staff-level internals. (Note: the user referenced a
+  `list of concepts.txt`; it is **not yet present** in this folder — §5/`CURRICULUM.md` carry the
+  authoritative concept map until/unless he adds one.)
+- **Form/depth reference:** the Node guide's hero sims + the DPmap interactive map. That interactive,
+  data-driven, diagram-rich style is the target.
+- **Correctness mandate:** the database landscape moves (versions, licensing, the modern/vector/
+  distributed wave) and the build model's knowledge cutoff is older than the live date. **Web-search
+  and verify every version-sensitive fact** (versions, licensing, feature availability, benchmarks,
+  release dates) per module; fill `sources`; never trust memory for product facts.
+
+## 2. Stack & key decisions (with why)
+
+- **Vite + React 19 + TypeScript (strict)** — best fit for stateful interactive simulators
+  (step/play/pause), component reuse across ~36 modules, the user's stack, and it matches the proven
+  gold standard (Node guide) and the most recent build (Claude guide). *(Confirm latest stable
+  Vite/React at scaffold; pin them. Node guide is on Vite 8 + React 19.)*
+- **No router library** — small custom **hash router** (`#/m/<module>/<topic>`, `#/map`, `#/decide`,
+  `#/mental-models`, `#/glossary`). Hash routing + `vite base:'./'` makes the build work under **any**
+  GitHub Pages sub-path with zero config (proven across all sibling guides).
+- **All content static** (TS/JSON data modules imported at build time) — no runtime fetches; works
+  offline; deploys anywhere.
+- **Interactivity = curated simulations only (user choice 2026-06-23).** Hand-built deterministic
+  React sims (like the Node guide) — **no in-browser WASM SQL engine** (PGlite/sql.js deliberately
+  out of scope). Fully controlled, lighter payload, reduced-motion step fallback on every sim.
+- **Single source of truth for content:** `src/data/concepts.ts` (+ `interview.ts`, `mentalModels.ts`,
+  `glossary.ts`, `decide.ts`). Pages are *rendered from data*; we never hand-write page HTML.
+- **Bilingual at the data layer:** every human-readable string is a `Localized` value `{ en; uk }`.
+  UI chrome strings live in `src/i18n/ui.ts`. A `useLang()` context + `<T>`/`t()` helpers resolve them.
+- **Tooling/CI Node:** Node 22 LTS (user runs v22.17.0, npm 10.9.2, M1 Max).
+
+## 3. Repo layout (target)
+
+```
+database guide/                          # = git repo root; deploy publishes dist/ only
+  index.html                             # app shell (title, favicon, theme-color)
+  package.json  vite.config.ts  tsconfig.json  .eslintrc
+  .github/workflows/deploy.yml           # Actions → Pages (Node 22, npm ci, build, upload dist)
+  .gitignore                             # node_modules, dist, AND _examples/ (see §12)
+  public/  favicon.svg  .nojekyll
+  src/
+    main.tsx  App.tsx                    # layout + hash router
+    i18n/     ui.ts  LangContext.tsx     # EN/UA UI strings + language provider/toggle
+    theme/    tokens.css  global.css     # DB-dark tokens (slate base + DB-family palette)
+    data/
+      concepts.ts                        # SINGLE SOURCE OF TRUTH (sections + modules + topics), bilingual
+      interview.ts                       # senior/staff Q&A bank (tagged by module)
+      mentalModels.ts                    # "draw from memory" gallery
+      glossary.ts                        # bilingual term bank (terms stay English)
+      decide.ts                          # "which database for the job" decision data
+    components/
+      layout/  TopBar(search+lang) Sidebar Toc ProgressBar Footer(brand)
+      map/     LandscapeMap MapNode Drawer          # landing overview (clickable → module)
+      module/  ModulePage Topic Prose Figure CodeBlock DataTable Callout Compare LevelBadge
+      sims/    BTreeSim QueryPlannerSim MvccSim IsolationSim ReplicationSim CapSim LsmSim VectorSim …
+      figures/ (SVG diagram components, one per key)
+      study/   Flashcards Quiz InterviewBank DbPicker
+    lib/     hashRouter.ts  search.ts  registry.tsx(sim+figure registry)  utils.ts
+  scripts/   (QA data-integrity + optional PDF pipeline)
+  CLAUDE.md  CURRICULUM.md  PROJECT-BRIEF.md  README.md
+```
+
+## 4. Content / data model (the contract)
+
+Every module is **data**; renderers turn it into a page. Bilingual via `Localized`. (Identical to
+the proven Claude/Node guide contract — reuse it.)
+
+```ts
+type Localized = { en: string; uk: string };           // technical terms stay English in both
+type Level = 'beginner' | 'middle' | 'senior' | 'staff';
+
+type Section = { id: string; name: Localized; accent: string; blurb: Localized };   // the 8 blocks
+type Module  = {
+  id: string; section: string; order: number; level: Level;
+  title: Localized; tagline: Localized; readMins: number;
+  mentalModel: Localized;            // the one line/picture to recall from memory
+  topics: Topic[];                   // ordered, deep-linkable sub-units (3–6 typical)
+  keyPoints: Localized[];            // takeaways ("draw from memory")
+  pitfalls: { title: Localized; body: Localized }[];     // pro-level traps & misconceptions
+  interview?: { q: Localized; a: Localized; level?: Level }[];
+  seeAlso: string[];                 // related module ids (cross-links)
+  sources: { title: string; url: string }[];             // verification + on-page citations (English)
+};
+type Topic = { id: string; title: Localized; blocks: Block[] };
+type Block =
+  | { kind:'prose';   md: Localized }
+  | { kind:'figure';  fig: string; caption?: Localized }   // SVG/diagram component key
+  | { kind:'sim';     sim: string }                        // interactive widget registry key
+  | { kind:'table';   head: Localized[]; rows: Localized[][]; caption?: Localized }
+  | { kind:'code';    lang: string; code: string; note?: Localized }  // SQL/DDL etc. language-neutral
+  | { kind:'callout'; tone:'tip'|'warn'|'senior'|'security'; title: Localized; md: Localized }
+  | { kind:'compare'; a: Localized; b: Localized; rows: [Localized,Localized,Localized][] };
+```
+
+Figures and sims are referenced by **key** and resolved via `lib/registry.tsx`, so content stays
+declarative and widgets stay reusable. Content is edited **only** in `src/data/*`.
+
+## 5. Curriculum (seed = info.txt; cover all, not limited to it)
+
+> **Terminology:** **Section** (the 8 blocks) → **Module** (the navigable, skippable unit) →
+> **Topics** (variable per module) → content **blocks**. The **full module-by-module +
+> topic-by-topic + per-module visual-asset plan lives in `CURRICULUM.md`** (the detailed annex);
+> treat it as authoritative for topics. The list below is the section/module overview.
+
+Eight sections, **~36 modules**. Internals-first, Postgres as the worked spine, NoSQL & modern given
+first-class sections. Levels in brackets. ★ = signature interactive.
+
+**I · Foundations & the landscape** *(beginner on-ramp → middle)* — covers "types of DB" + "strengths/weaknesses"
+1. What a database is & why — DBMS vs files, OLTP vs OLAP, the cost of getting it wrong `[beginner]`
+2. The database landscape — the families map (relational · document · key-value · wide-column · graph · vector · time-series · search · OLAP) ★ **Landscape Map (landing)** `[beginner]`
+3. SQL vs NoSQL — the real trade-offs; strengths & weaknesses of each family `[middle]`
+4. The relational model & SQL foundations — tables, keys, relationships, the relational algebra behind SELECT `[beginner]`
+5. Anatomy of a query — parse → plan → execute → storage → result (the lifecycle overview) ★ `[middle]`
+
+**II · Relational design & SQL mastery** *(middle → senior)* — Postgres-centric spine begins
+6. ER modeling & schema design — entities, relationships, cardinality, strong/weak entities ★ **ER interactive** `[middle]`
+7. Normalization & denormalization — 1NF→BCNF, functional dependencies, when to denormalize ★ **Normalization sim** `[middle]`
+8. Keys & constraints — PK/FK/unique/candidate/super, referential actions, CHECK/NOT NULL/DEFAULT `[middle]`
+9. Data types done right — strings, the FLOAT disaster, numeric/decimal, date/time/zones, JSON, arrays, enums, custom types `[middle]`
+10. SQL in depth — joins (how they run), subqueries, CTEs, window functions, GROUPING/CUBE/ROLLUP, CASE/COALESCE/NULLIF `[senior]`
+11. Views, procedural SQL & triggers — views/materialized views, functions, PL/pgSQL, triggers; when to push logic into the DB `[senior]`
+
+**III · Storage & indexing internals** *(senior → staff)* — universal internals
+12. How data is stored — disk vs RAM, pages & heap, row vs columnar, TOAST, the access-cost mental model ★ `[senior]`
+13. B-Tree & B+Tree indexes — structure, search/insert/split, range scans, why O(log n) ★ **B-Tree/B+Tree visualizer** `[senior]` **(GOLDEN — built first in S1)**
+14. The index toolbox — hash, GIN/GiST/BRIN, full-text, bitmap, covering/partial/expression; choosing & maintaining indexes ★ `[senior]`
+15. LSM-trees & write-optimized storage — memtable/SSTable/compaction, read/write amplification ★ **LSM-tree sim** `[staff]`
+16. Query planning & optimization — cost model, statistics, EXPLAIN (ANALYZE), access paths, join order/algorithms ★ **Query Planner / EXPLAIN sim** `[staff]`
+
+**IV · Transactions & concurrency** *(senior → staff)* — universal internals
+17. ACID & durability — the four guarantees, the WAL, commit & crash recovery ★ **ACID/WAL** `[senior]`
+18. Isolation levels & anomalies — dirty/non-repeatable/phantom/write-skew; the SQL levels vs reality ★ **Isolation anomalies sim** `[staff]`
+19. Concurrency control — MVCC vs locking, 2PL, snapshot isolation, deadlocks, vacuum ★ **MVCC sim** `[staff]`
+20. Distributed transactions — 2PC, sagas, the outbox, idempotency, "exactly-once" myths `[staff]`
+
+**V · Distribution, scale & reliability** *(senior → staff)* — universal internals
+21. Replication — leader/follower, sync/async, physical vs logical, failover, replication lag ★ **Replication & failover sim** `[senior]`
+22. Partitioning & sharding — vertical/horizontal, partition keys, hotspots, rebalancing ★ **Sharding sim** `[senior]`
+23. CAP, PACELC & consensus — the real theorem, consistency models, quorum, Raft/Paxos ★ **CAP / consistency sim** `[staff]`
+24. High availability, backups & DR — Patroni, PITR, backup strategies, RPO/RTO `[senior]`
+
+**VI · The NoSQL families in depth** *(middle → senior)* — balanced SQL vs NoSQL
+25. Document databases — MongoDB model & internals, embed vs reference, aggregation pipeline, indexing `[middle]`
+26. Key-value & caching — Redis/Valkey data structures, eviction, persistence, caching patterns, the fork story `[middle]`
+27. Wide-column stores — Cassandra/ScyllaDB, the partition/clustering model, tunable consistency, LSM heritage `[senior]`
+28. Graph databases — property graph vs RDF, traversal, Cypher, when relationships ARE the data `[senior]`
+
+**VII · Modern & specialized engines** *(senior → staff)* — the full modern section
+29. Vector databases & AI — embeddings, ANN/HNSW, pgvector vs Qdrant/Pinecone/Milvus/Weaviate, RAG ★ **Vector/ANN search sim** `[senior]`
+30. Distributed SQL / NewSQL — CockroachDB, TiDB, YugabyteDB, Spanner, Aurora DSQL; "Postgres won the API" `[staff]`
+31. Analytics, columnar & time-series — ClickHouse, DuckDB, OLAP/columnar, TimescaleDB, InfluxDB, the lakehouse `[senior]`
+32. Cloud-native & the modern DBA — managed DBs, Docker/K8s operators, IaC (Terraform/Ansible), observability, autoscaling `[senior]`
+
+**VIII · Mastery**
+33. Security & data protection — authN/authZ, RBAC/RLS, hashing & encryption (rest/transit), SQL injection, least privilege `[senior]`
+34. Performance engineering — profiling, slow-query analysis, connection pooling, N+1, caching layers, capacity `[senior]`
+35. Choosing the right database — the decision framework ★ **Database Picker** `[senior]`
+36. Mental models gallery + glossary / cheat-sheet — the pictures to recall; bilingual glossary; one-page reference `[middle]`
+
+*(Scope is adjustable. Modules can merge/split; ~32–36 is the target band. Adding/removing modules
+is an "ask the user first" change per §10.)*
+
+## 6. Signature interactives (the differentiator) + diagram-first baseline
+
+**Policy (user choice 2026-06-23 = curated simulations only):** build a small, cheap, reusable
+sim/quiz framework; ship **~6–8 signature interactives** where they add real insight, and a **crisp
+SVG diagram + table** everywhere else ("maximal where useful"). **No WASM/real SQL engine.** Each sim
+has a non-animated step fallback (a11y / `prefers-reduced-motion`).
+
+Signature interactives (priority order):
+
+1. ★ **B-Tree / B+Tree visualizer** *(M13)* — insert/search keys; watch nodes fill, **split**, and the
+   tree grow; toggle B-Tree vs B+Tree (leaf links + range scan). The iconic "why databases are fast"
+   sim. **Golden-standard centerpiece (S1).**
+2. ★ **Query Planner / EXPLAIN** *(M16)* — pick a query + which indexes exist; watch the planner choose
+   seq-scan vs index-scan, the join algorithm and order, and the (simulated) cost/rows change.
+3. ★ **Isolation anomalies** *(M18)* — interleave two transactions on a timeline; toggle the isolation
+   level; watch dirty read / non-repeatable / phantom / write-skew appear and disappear.
+4. ★ **MVCC** *(M19)* — row versions, transaction snapshots, visibility, and vacuum reclaiming dead
+   tuples; contrast with lock-based concurrency.
+5. ★ **Replication & failover** *(M21)* — leader + followers, sync vs async, replication lag, and a
+   leader failure triggering failover; see the data-loss window for async.
+6. ★ **CAP / consistency** *(M23)* — partition the network, choose C or A, and watch reads/writes
+   succeed or block; extend to PACELC's latency-vs-consistency trade.
+7. ★ **LSM-tree compaction** *(M15)* — writes hit the memtable → flush to SSTable → leveled
+   compaction; visualize write/read/space amplification vs a B-Tree.
+8. ★ **Vector / ANN search** *(M29)* — points in 2-D embedding space; exact-kNN vs an HNSW graph walk;
+   recall-vs-speed trade-off.
+
+Plus the **Landscape Map** landing (clickable families → module, like DPmap) and the **Database
+Picker** decision widget *(M35, data in `decide.ts`)*. Opportunistic light interactives elsewhere
+(ER builder M6, Normalization stepper M7, Sharding/partition M22). *(8 signature listed; trim the
+lighter ones — LSM, Vector — if a session runs long. The B-Tree visualizer is the golden centerpiece.)*
+
+## 7. Theme / brand — **dark editorial + DB-family palette** (user choice 2026-06-23)
+
+Cool, engineered, editorial feel: a **deep slate/ink dark** base + **PostgreSQL-derived blue** primary
+accent + cream-cool text. Portfolio-cohesive with the sibling guides, but with a distinct "database"
+identity. Each engine keeps its **brand color** in diagrams for instant recognition.
+
+Core tokens (tune at scaffold; contrast-checked on dark):
+```
+--bg:#0E1217   --surface:#151B23   --s2:#1C242E   --line:#28323D  --line2:#384556
+--tx:#E9EEF3   --tx2:#A7B4C2       --tx3:#6B7886
+--accent:#5B9BD5          /* PostgreSQL-derived blue, brightened for dark — primary */
+--accent-deep:#336791     /* official Postgres "elephant" blue — fills / borders */
+--accent-bright:#86BCEA   /* headings / glow highlight */
+```
+**Two palettes, kept distinct (document both in `tokens.css`):**
+
+*Concept semantics* (used in most internals diagrams/sims):
+- **blue `#5B9BD5`** = query / read path / SQL / relational
+- **violet `#A78BFA`** = storage / index / pages / on-disk structures
+- **green `#6CC24A`** = transaction committed / durable / "safe" / success
+- **cyan `#38BDF8`** = distribution / replication / network / I/O
+- **amber `#F2A93B`** = analytics / columnar / warehouse / time-series
+- **red `#F87171`** = anomaly / conflict / deadlock / danger / security boundary
+
+*Engine brand chips* (only when labeling a specific product):
+- PostgreSQL `#336791` · MySQL `#00758F` + `#F29111` · MongoDB `#13AA52` (bright `#00ED64`) ·
+  Redis `#DC382D` (Valkey noted alongside) · Cassandra/wide-column `#1287B1` · SQLite `#0F80CC` ·
+  ClickHouse/analytics `#FFCC01` on dark · vector/AI `#A78BFA`.
+
+Fonts (all free/Google) — proposed for portfolio cohesion: **Fraunces** (display serif — editorial,
+optical sizing) · **Inter** (body) · **JetBrains Mono** (SQL/DDL/code/labels — extra important here).
+Favicon: inline SVG (a coral/blue spark or a stylized cylinder/index-node on dark).
+Footer: **"Vasyl Krupka · Senior Fullstack Engineer"** + 🇺🇦. Dark is primary; light optional later.
+
+## 8. Internationalization (EN / UA)
+
+- `Localized = { en; uk }` for all content; `src/i18n/ui.ts` for chrome strings; `useLang()` +
+  `<T value={...}/>` / `t(...)` to resolve. Toggle in TopBar; persist choice in `localStorage`
+  (standalone app, not a Claude.ai artifact — localStorage is fine here).
+- **Author EN first, UA second.** Keep ALL technical terms English in UA (SQL, B-Tree, B+Tree, index,
+  MVCC, WAL, transaction, isolation, sharding, replication, ACID, CAP, PACELC, LSM, SSTable, vector,
+  embedding, HNSW, OLAP/OLTP, JOIN, CTE, window function…). Translate only explanation/analogy.
+- `<html lang>` follows the toggle; search indexes both languages.
+
+## 9. Deliverables
+
+- **Web guide** (this app) — primary.
+- **README.md** — public overview + live link + local commands.
+- **CLAUDE.md** (this file) + **CURRICULUM.md** kept current.
+- **Deferred / optional:** per-concept deep-dive **PDF** booklet and **LinkedIn** assets (decide later;
+  not in scope for the core build).
+
+## 10. Conventions (incl. user rules)
+
+- TypeScript **strict** + `noUnusedLocals/Parameters`; **ESLint clean** (build fails otherwise) —
+  generate code with linters in mind (user rule 5).
+- Content edited **only** in `src/data/*`; never hand-edit rendered output.
+- **Correctness:** every non-trivial product claim must be verifiable — fill `sources`; **web-search
+  to confirm** version-sensitive facts (versions, licensing, availability, benchmarks, dates). Each
+  content session ends with a verification step (typecheck + build + data-integrity + fact spot-check).
+  High-stakes facts → double-check. Challenge the curriculum when verification contradicts it.
+- **Accessibility:** keyboard nav, focus rings, ARIA on sims, `prefers-reduced-motion` step fallback,
+  contrast-checked palette.
+- **User working rules (apply every session):** (1) specific solutions, not generic; (2) brief "why",
+  not long lectures unless asked; (3) describe change + why **before** doing it; (4) mark in-code edits
+  `// CHANGED:`; (5) lint-aware; (6) reliability/security/best-practice first; (7) ask when unclear;
+  (8) don't just agree — challenge wrong/partial reasoning with clarifying questions.
+- Be concise and direct (user preference).
+- **Session summary (end of EVERY session — user rule):** always close with **(1)** what was
+  done/implemented; **(2)** suggested **branch name** + **commit message** + **short description**;
+  **(3)** challenges/questions, if any. Branch convention `sN-short-topic`
+  (e.g. `s1-scaffold-btree-golden`); commit style: concise imperative.
+
+## 11. Deploy (GitHub Pages via Actions)
+
+- `.github/workflows/deploy.yml`: on push to `main` → `actions/checkout` → `setup-node@22` → `npm ci`
+  → `npm run build` → `upload-pages-artifact (dist)` → `deploy-pages`. Pages **Source = GitHub Actions**.
+- `vite base:'./'` + hash routing + `public/.nojekyll`. **Decided 2026-06-23 (user):** repo
+  **`database-comprehensive-guide`** on account **`endorrfin`** → live URL
+  **`https://endorrfin.github.io/database-comprehensive-guide/`** (base `'./'` keeps it sub-path-safe).
+- **Suggested GitHub "Description":** *"Deep, interactive, bilingual (EN/UA) guide to how databases
+  actually work — relational & NoSQL internals, indexing, transactions, distribution, and modern
+  engines, with hero simulators."* Suggested **topics/tags:** `databases · sql · nosql · postgresql ·
+  mongodb · indexing · b-tree · transactions · mvcc · replication · vector-database · vite · react ·
+  typescript · github-pages`.
+- **Pending (user):** create the repo `database-comprehensive-guide`, then (after S1 push) set
+  Settings → Pages → **Source = GitHub Actions**.
+
+## 12. Gotchas / constraints (read before building)
+
+- **`_examples/` must be excluded** from the git repo & deploy: it holds reference/seed material.
+  Add it to `.gitignore` (deploy ships only `dist/`, so it never reaches the live site anyway).
+- **Build tool:** recent Vite uses **Rolldown**. On **Apple-silicon (M1 Max)** an npm optional-dep bug
+  can leave the native binary missing (`Cannot find module …-darwin-arm64`); reinstall the platform
+  package if so. **CI on linux-x64 is unaffected.**
+- **This Linux sandbox blocks `unlink`** on the mounted FS → Vite `emptyOutDir` fails on a *rebuild*
+  into an existing dir (EPERM); and don't run git that needs `.git/index.lock` cleanup against the live
+  repo from the sandbox. Workaround in-sandbox: build into a fresh `--outDir` or set
+  `build.emptyOutDir:false`, and **verify in a scratch copy**. The user's Mac & CI are unaffected.
+- **No browser in the sandbox** → can't screenshot the running app. Validate via `tsc` + `vite build`
+  (must pass) + the data-integrity check + SSR/route smoke. Prefer `mv`/overwrite over `rm`.
+- **node_modules / native binaries:** the workspace holds **source only**; build in scratch to avoid a
+  darwin/linux binary mismatch — the user runs `npm install` locally for darwin-arm64.
+- **Product facts drift** — anything dated here is "verified 2026-06-23" and **must be re-checked** at
+  build time for the module that uses it.
+
+### Verified database facts (2026-06-23 — re-verify per module; sources in `CURRICULUM.md`/module `sources`)
+- **PostgreSQL:** latest stable **18.4** (2026-05-11); **19 Beta 1** out (2026-06-04), 19 GA expected
+  ~Sept/Oct 2026. PostgreSQL was the **standout DB-Engines growth in H1 2026** (+21.97). PG14 EOL
+  2026-11-12. `pgvector` is the leading vector solution for most RAG (~tens of millions of vectors).
+- **MySQL:** **8.4 LTS** (premier patches ~through 2032); **8.0 reached EOL in 2026**; **9.x Innovation**
+  track adds the HyperGraph optimizer and vector support. Calendar-versioned LTS/Innovation model.
+- **MariaDB:** **12.3.x LTS** (May 2026; supported to ~2029); 13.0 preview rolling; vector engine in
+  Enterprise Platform 2026.
+- **MongoDB:** latest **8.3** (8.0 shipped 45+ improvements: better throughput, faster bulk/concurrent
+  writes, queryable encryption, native vector search); MCP server + Atlas Performance Advisor. +11.24 H1.
+- **Redis / Valkey:** Redis relicensed BSD → SSPL/RSAL (Mar 2024), added **AGPLv3** as a third option
+  (May 2025, tri-license). **Valkey** = Linux-Foundation fork from Redis **7.2.4**, now the **default**
+  in Fedora 42 / Ubuntu 26.04 LTS / Debian 13 and in AWS ElastiCache; ~90% command-compatible and
+  beginning to diverge. Teach the licensing story explicitly (M26).
+- **DB-Engines top 4 (Jan 2026):** Oracle, MySQL, SQL Server, PostgreSQL — unchanged for >1 year;
+  Databricks/Snowflake/Microsoft Fabric rising on the analytics/AI wave.
+- **Vector / AI:** RAG is the primary driver; pgvector (HNSW/IVFFlat), Qdrant (Rust), Milvus (billions,
+  distributed), Pinecone (managed), Weaviate (hybrid search). HNSW is the dominant ANN index.
+- **Distributed SQL / NewSQL:** TiDB (TiKV/Raft + TiFlash HTAP), CockroachDB (Postgres-wire,
+  range-based), YugabyteDB, Spanner (TrueTime; on-prem GA 2025), Aurora DSQL. "**Postgres won the API**"
+  — many engines are Postgres-wire-compatible.
+- **Analytics / time-series:** **ClickHouse** + **DuckDB** lead analytics/OLAP; StarRocks, Druid for
+  real-time; **TimescaleDB** (PG extension) and **InfluxDB 3** for time-series.
+
+## 13. Session roadmap (step by step, ~18–20 sessions)
+
+> Pattern (from the gold standard): **lock a golden module first**, then batch. Each session ends with
+> typecheck + build + (after Pages is live) a push to confirm deploy. Bilingual = author EN then UA per module.
+
+- **S0 · Planning** *(this session)* — agree stack/structure/scope/theme; write `CLAUDE.md`,
+  `CURRICULUM.md`, `PROJECT-BRIEF.md`; task list. **Status: drafted, awaiting user approval before S1.**
+- **S1 · Scaffold + golden module** — Vite/React 19/TS app; DB-dark theme; hash router; i18n (EN/UA
+  toggle); layout (TopBar+search+lang, Sidebar, Footer); deploy workflow; `.gitignore`; favicon/footer;
+  finalize bilingual `concepts.ts` schema; **Landscape-Map landing** + **full sidebar skeleton of all
+  8 sections / 36 modules / topics** (bodies may stub) so the user can run it and see design + menu +
+  navigation; **golden module M13 Indexing & the B-Tree fully built + hero ★ B-Tree/B+Tree visualizer**.
+  Verify build + first Pages deploy.
+- **S2 · Foundations core** — M1 What a database is; M2 The landscape + **Landscape Map** polish;
+  M3 SQL vs NoSQL (strengths/weaknesses).
+- **S3 · Relational foundations** — M4 Relational model & SQL foundations; M5 Anatomy of a query (+ lifecycle sim).
+- **S4 · Design** — M6 ER modeling (+ ER interactive); M7 Normalization (+ **Normalization sim**).
+- **S5 · SQL mastery** — M8 Keys & constraints; M9 Data types done right.
+- **S6 · SQL mastery** — M10 SQL in depth (joins/CTE/window); M11 Views, procedural SQL & triggers.
+- **S7 · Storage internals** — M12 How data is stored; M14 The index toolbox. *(M13 done in S1.)*
+- **S8 · Storage internals** — M15 LSM-trees (+ **LSM sim**); M16 Query planning (+ **Query Planner sim**).
+- **S9 · Transactions** — M17 ACID & WAL; M18 Isolation anomalies (+ **Isolation sim**).
+- **S10 · Concurrency** — M19 MVCC (+ **MVCC sim**); M20 Distributed transactions.
+- **S11 · Distribution** — M21 Replication (+ **Replication sim**); M22 Partitioning & sharding (+ sim).
+- **S12 · Distribution** — M23 CAP/PACELC (+ **CAP sim**); M24 HA, backups & DR.
+- **S13 · NoSQL families** — M25 Document (MongoDB); M26 Key-value & caching (Redis/Valkey).
+- **S14 · NoSQL families** — M27 Wide-column (Cassandra); M28 Graph.
+- **S15 · Modern engines** — M29 Vector & AI (+ **Vector/ANN sim**); M30 Distributed SQL/NewSQL.
+- **S16 · Modern engines** — M31 Analytics/columnar/time-series; M32 Cloud-native & the modern DBA.
+- **S17 · Mastery** — M33 Security; M34 Performance engineering.
+- **S18 · Mastery + polish** — M35 Choosing the right database (+ **Database Picker**); M36 Mental
+  models gallery + glossary + cheat-sheet; global search, flashcards, mobile/a11y/perf, **bilingual QA**.
+- **S19–S20 · Buffer** — extra "maximal" interactives, full UA pass, final QA; optional PDF/LinkedIn pack.
+
+## 14. Status / progress log
+
+- **2026-06-23 · S0 Planning** — Reviewed the gold-standard sibling guides (`../Node-js guide` = gold
+  standard; `../Claude guide` = most recent build of the same architecture; `../Design Principles &
+  Patterns guide` = interactive-map form) + the database `_examples/info.txt` seed (beginner
+  SQL/PostgreSQL course · relational-design+indexing course · internals/SQLite-from-scratch +
+  cloud-PostgreSQL/HA course). **Web-verified the 2026 database landscape** (PostgreSQL 18.4/19-beta,
+  MySQL 8.4 LTS/9.x, MariaDB 12.3, MongoDB 8.3, Redis→Valkey licensing fork, DB-Engines top 4 +
+  analytics/AI risers, vector DBs/pgvector/HNSW, distributed SQL, ClickHouse/DuckDB — see §12).
+  **Decisions locked with user:** bilingual EN/UA · internals-first taught through engines with **all
+  three emphases** (universal internals backbone + PostgreSQL deep-dive spine + balanced SQL/NoSQL
+  families) · **full dedicated modern/specialized section** · **dark editorial + DB-family palette** ·
+  **curated simulations only** (no WASM SQL engine). Stack = Vite + React 19 + TS (mirrors gold
+  standard). This `CLAUDE.md` + `CURRICULUM.md` + `PROJECT-BRIEF.md` written; task list created.
+  Proposed **8 sections / 36 modules**, golden module **M13 Indexing & the B-Tree + the B-Tree/B+Tree
+  visualizer**, repo `database-comprehensive-guide` @ `endorrfin`.
+  **Next: on user approval of the plan → S1 scaffold + golden module.**
+  **Open / to confirm:** (a) the referenced `list of concepts.txt` is not in the folder — proceed with
+  the `CURRICULUM.md` concept map, or the user adds the file; (b) module count 36 vs a tighter 32 band;
+  (c) golden = M13 B-Tree (recommended) vs a more foundational opener (M5 query lifecycle / M2 landscape).
