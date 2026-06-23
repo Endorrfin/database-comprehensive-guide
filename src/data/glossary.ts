@@ -195,6 +195,47 @@ export const glossary: GlossaryEntry[] = [
       en: 'Organizing a schema so each fact lives in exactly one place (1NF→BCNF), removing redundancy and update anomalies.',
       uk: 'Організація схеми так, щоб кожен факт жив рівно в одному місці (1NF→BCNF), прибираючи надмірність та update-аномалії.',
     },
-    seeAlso: ['primary key', 'foreign key'],
+    seeAlso: ['functional dependency', 'BCNF', 'denormalization'],
+  },
+  // CHANGED (S4): M6/M7 terms.
+  {
+    term: 'functional dependency',
+    def: {
+      en: 'A rule X → Y meaning each value of X determines exactly one value of Y; the basis on which every normal form is defined.',
+      uk: 'Правило X → Y, що означає: кожне значення X визначає рівно одне значення Y; основа, на якій визначено кожну normal form.',
+    },
+    seeAlso: ['normalization', 'BCNF'],
+  },
+  {
+    term: 'cardinality',
+    def: {
+      en: 'How many entities take part on each side of a relationship — 1:1, 1:N, or M:N. It decides where the foreign key goes (or whether you need a junction table).',
+      uk: 'Скільки entities бере участь з кожного боку relationship — 1:1, 1:N чи M:N. Вирішує, де розміщується foreign key (чи потрібна окрема junction table).',
+    },
+    seeAlso: ['junction table', 'foreign key'],
+  },
+  {
+    term: 'junction table',
+    def: {
+      en: 'A table that resolves a many-to-many relationship by holding a foreign key to each side; also called an associative, link, or bridge table.',
+      uk: 'Таблиця, що розвʼязує many-to-many relationship, тримаючи foreign key до кожного боку; також associative, link чи bridge table.',
+    },
+    seeAlso: ['cardinality', 'foreign key'],
+  },
+  {
+    term: 'BCNF',
+    def: {
+      en: 'Boyce–Codd normal form — stricter than 3NF: every determinant of a non-trivial functional dependency must be a candidate key.',
+      uk: 'Boyce–Codd normal form — суворіша за 3NF: кожен determinant нетривіальної functional dependency має бути candidate key.',
+    },
+    seeAlso: ['normalization', 'functional dependency'],
+  },
+  {
+    term: 'denormalization',
+    def: {
+      en: 'Deliberately storing a fact in more than one place to make reads cheaper, accepting redundancy and the duty to keep the copies in sync.',
+      uk: 'Свідоме зберігання факту в кількох місцях, щоб читання було дешевшим, з прийняттям надмірності та обовʼязку синхронізувати копії.',
+    },
+    seeAlso: ['normalization'],
   },
 ];
