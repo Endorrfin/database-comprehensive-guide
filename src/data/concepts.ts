@@ -6,6 +6,9 @@ import { m3 } from './modules/m3-sql-vs-nosql';
 // CHANGED (S3): M4–M5 authored from stubs.
 import { m4 } from './modules/m4-relational-model';
 import { m5 } from './modules/m5-anatomy-of-a-query';
+// CHANGED (S4): M6–M7 authored from stubs.
+import { m6 } from './modules/m6-er-modeling';
+import { m7 } from './modules/m7-normalization';
 import { m13 } from './modules/m13-btree';
 
 /*
@@ -126,42 +129,9 @@ export const modules: Module[] = [
   m5,
 
   // ── Section II · Relational design & SQL mastery ─────────────────────────
-  stub({
-    id: 'm6-er-modeling',
-    num: 6,
-    section: 's2-relational',
-    order: 1,
-    level: 'middle',
-    signature: true,
-    title: { en: 'ER modeling & schema design', uk: 'ER-моделювання та дизайн схеми' },
-    tagline: {
-      en: 'Entities, relationships, cardinality, and the conceptual → logical → physical path.',
-      uk: 'Entities, звʼязки, cardinality і шлях conceptual → logical → physical.',
-    },
-    readMins: 11,
-    mentalModel: {
-      en: 'Model the nouns and their relationships first; tables come after.',
-      uk: 'Спершу моделюйте іменники та їхні звʼязки; таблиці — потім.',
-    },
-  }),
-  stub({
-    id: 'm7-normalization',
-    num: 7,
-    section: 's2-relational',
-    order: 2,
-    level: 'middle',
-    signature: true,
-    title: { en: 'Normalization & denormalization', uk: 'Нормалізація та денормалізація' },
-    tagline: {
-      en: '1NF→BCNF, functional dependencies, and when to denormalize on purpose.',
-      uk: '1NF→BCNF, functional dependencies і коли денормалізувати свідомо.',
-    },
-    readMins: 12,
-    mentalModel: {
-      en: 'One fact, one place — until read performance makes you copy it deliberately.',
-      uk: 'Один факт — одне місце, доки продуктивність читання не змусить свідомо його скопіювати.',
-    },
-  }),
+  // CHANGED (S4): M6–M7 now fully authored (imported above).
+  m6,
+  m7,
   stub({
     id: 'm8-keys-constraints',
     num: 8,

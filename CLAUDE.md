@@ -530,3 +530,48 @@ Footer: **"Vasyl Krupka · Senior Fullstack Engineer"** + 🇺🇦. Dark is prim
   **Next (S4):** Design — M6 ER modeling (+ ER interactive); M7 Normalization (+ Normalization sim).
   **Pending user:** create repo `database-comprehensive-guide` @ `endorrfin`; set Pages → Source = GitHub
   Actions after first push.
+
+- **2026-06-23 · S4 Design** *(branch `s4-design-er-normalization`)* — Authored the two Section-II design
+  modules **fully EN+UA** to the M13 depth bar, lifting authored modules from 6 → **8** and shipping **both
+  confirmed S4 steppers** (no trim). **M6 · ER modeling & schema design** `[middle]` *(signature)* (5 topics:
+  entities & attributes · relationships & cardinality · strong vs weak entities · conceptual→logical→physical ·
+  modeling smells & fixes; new **er-notation** SVG legend [Chen blocks + crow's-foot endings], the
+  **cardinality → schema** table, a strong-vs-weak compare, a design-lifecycle table, a smells→fixes table, a
+  worked M:N junction-table DDL code block, tip/senior/warn callouts incl. the **EAV anti-pattern**, 5
+  keyPoints, 3 pitfalls, 3 interview Q&A, 5 web-verified sources). **M7 · Normalization & denormalization**
+  `[middle]` *(signature)* (4 topics: functional dependencies & anomalies · 1NF→2NF→3NF · BCNF · denormalization
+  on purpose; new **update-anomalies** SVG figure [one duplicated fact → insert/update/delete chips], the
+  **normal-forms** table mapped to Kent's phrase, the classic `teaches` **BCNF-violation** table, a
+  normalized-vs-denormalized compare, senior/warn callouts, 5 keyPoints, 3 pitfalls, 3 interview Q&A incl. a
+  staff denormalization-safety answer, 5 sources).
+  **★ ER explorer** (`sims/ErExplorer.tsx`, key `er-explorer`): flip cardinality **1:1 · 1:N · M:N** → an SVG
+  ER diagram (crow's-foot endings) + the **resulting relational schema** rebuilds — the FK moves to the many
+  side, and for M:N a **junction table appears** (PK·FK badges, "new" tag). Toggle-driven, ARIA live region.
+  **★ Normalization stepper** (`sims/NormalizationSim.tsx`, key `normalization-stepper`): the classic
+  student/course/advisor table walks **0NF→1NF→2NF→3NF**; tables split, duplicated cells (red tint) vanish,
+  and four "one fact, one place" checks turn green. Deterministic, play/pause/step, clickable steps,
+  reduced-motion fallback (Play hidden), ARIA — mirrors BTreeSim. New CSS `.er-*` + `.nf-*` blocks appended to
+  `components.css`; both sims + both figures registered; glossary +5 terms (functional dependency, cardinality,
+  junction table, BCNF, denormalization).
+  **Web-verified this session** (sources in module `sources[]`): **Chen 1976** "The Entity-Relationship Model—
+  Toward a Unified View of Data" (ACM TODS 1:9-36, doi 320434.320440); crow's-foot cardinality (**Everest
+  1976**, per the ER-model literature); **PostgreSQL 18** foreign-key (3.3 `tutorial-fk`) + constraints
+  (`ddl-constraints`) docs for the cardinality→FK / M:N junction mapping; **Codd 1970** (introduced
+  normalization / 1NF) + **Codd 1971** SIGFIDET "Normalized Data Base Structure" (2NF/3NF); **Kent 1983** "A
+  Simple Guide to Five Normal Forms" (CACM 26(2):120-125, doi 358024.358054 — the "key, the whole key, and
+  nothing but the key" summary); **BCNF** = every determinant of a non-trivial FD is a candidate key, and the
+  3NF dependency-preservation trade.
+  **Verification (repo + scratch, linux):** `tsc -b --noEmit` ✓ · ESLint ✓ · `check:data` ✓ (**8 sections,
+  36 modules [8 authored, 28 stubs], 941 Localized EN+UA pairs**, **5 sims + 6 figures**, 29 glossary terms,
+  all registry keys resolve, cross-links valid) · `test:btree` ✓ (346 checks) · **render+content smoke** ✓
+  (`react-dom/server` renderToStaticMarkup of both new sims + both figures inside `LangProvider`, asserting
+  the deterministic default content — ErExplorer 1:N Customer/Order, NormalizationSim 0NF non-atomic cell) ·
+  `vite build` ✓ (**64 modules**, JS 169.56 KB gzip / CSS 7.32 KB gzip, relative `./assets/` base).
+  **Sandbox gotchas (expected, §12):** linux helper binaries from S2 (`@esbuild/linux-arm64`,
+  `@rolldown/binding-linux-arm64-gnu`) still present → all tooling ran; built into fresh `dist-s4/` (unlink
+  blocked → can't delete in-sandbox; `dist-*/` already gitignored). The render-smoke file is neutralized +
+  gitignored (`scripts/_smoke-*.ts`) — **user can `rm scripts/_smoke-s4.ts`** (and the stale `_smoke-s3.ts`).
+  Stale **`.git/index.lock`** likely persists — **`rm -f ".git/index.lock"` before committing**, then
+  `npm install` (darwin-arm64) + `npm run verify`.
+  **Next (S5):** SQL mastery — M8 Keys & constraints; M9 Data types done right. **Pending user:** create repo
+  `database-comprehensive-guide` @ `endorrfin`; set Pages → Source = GitHub Actions after first push.

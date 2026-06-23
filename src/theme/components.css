@@ -1534,3 +1534,278 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* ── M6 · ER explorer (CHANGED S4) ────────────────────────────────────────*/
+.er-verb {
+  font-size: 0.84rem;
+}
+.er-verb em {
+  color: var(--c-commit);
+  font-style: italic;
+}
+.er-schema-head {
+  margin: 0.7rem 0 0.4rem;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.er-schema {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  align-items: flex-start;
+}
+.er-table {
+  flex: 1 1 150px;
+  min-width: 148px;
+  background: var(--bg);
+  border: 1px solid var(--line2);
+  border-radius: var(--r-md);
+  padding: 0.5rem 0.55rem 0.6rem;
+}
+.er-table--new {
+  border-color: var(--c-commit);
+  box-shadow: 0 0 0 1px var(--c-commit-soft);
+}
+.er-table-name {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.4rem;
+  font-size: 0.86rem;
+  font-weight: 700;
+  color: var(--accent-bright);
+  padding-bottom: 0.35rem;
+  margin-bottom: 0.35rem;
+  border-bottom: 1px solid var(--line);
+}
+.er-new-tag,
+.nf-new-tag {
+  font-family: var(--font-body);
+  font-size: 0.62rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--c-commit);
+  background: var(--c-commit-soft);
+  border-radius: 99px;
+  padding: 0.06rem 0.4rem;
+}
+.er-cols {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.18rem;
+}
+.er-col {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  color: var(--tx);
+}
+.er-badge {
+  font-family: var(--font-body);
+  font-size: 0.6rem;
+  font-weight: 700;
+  font-style: normal;
+  letter-spacing: 0.03em;
+  border-radius: 4px;
+  padding: 0.05rem 0.32rem;
+  white-space: nowrap;
+}
+.er-badge--pk {
+  color: var(--accent-bright);
+  background: var(--accent-soft);
+  border: 1px solid var(--accent-deep);
+}
+.er-badge--fk {
+  color: var(--c-analytics);
+  background: var(--c-analytics-soft);
+  border: 1px solid var(--c-analytics);
+}
+.er-badge--pkfk {
+  color: var(--c-storage);
+  background: var(--c-storage-soft);
+  border: 1px solid var(--c-storage);
+}
+.er-badge--uq {
+  color: var(--c-commit);
+  background: var(--c-commit-soft);
+  border: 1px solid var(--c-commit);
+}
+.er-rule {
+  margin: 0.7rem 0 0;
+  padding: 0.5rem 0.7rem;
+  font-size: 0.86rem;
+  color: var(--tx);
+  background: var(--accent-soft);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--r-sm);
+}
+
+/* ── M7 · Normalization stepper (CHANGED S4) ──────────────────────────────*/
+.nf-steps {
+  display: inline-flex;
+  align-items: center;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  flex-wrap: wrap;
+}
+.nf-steps-item {
+  display: inline-flex;
+  align-items: center;
+}
+.nf-step {
+  background: var(--s2);
+  border: 1px solid var(--line2);
+  color: var(--tx2);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 0.32rem 0.62rem;
+  border-radius: var(--r-sm);
+}
+.nf-step.done {
+  color: var(--c-commit);
+  border-color: var(--c-commit);
+}
+.nf-step.on {
+  background: var(--accent-deep);
+  border-color: var(--accent-deep);
+  color: #fff;
+}
+.nf-arrow {
+  color: var(--tx3);
+  padding: 0 0.22rem;
+  user-select: none;
+}
+.nf-note {
+  display: flex;
+  gap: 0.5rem;
+  align-items: baseline;
+  margin: 0.2rem 0 0.7rem;
+  font-size: 0.88rem;
+  color: var(--tx);
+}
+.nf-note-tag {
+  flex: none;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--accent-bright);
+  background: var(--accent-soft);
+  border-radius: 4px;
+  padding: 0.08rem 0.36rem;
+}
+.nf-tables {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  align-items: flex-start;
+}
+.nf-table {
+  margin: 0;
+  background: var(--surface);
+  border: 1px solid var(--line2);
+  border-radius: var(--r-md);
+  padding: 0.45rem 0.5rem 0.55rem;
+}
+.nf-table--new {
+  border-color: var(--c-commit);
+  box-shadow: 0 0 0 1px var(--c-commit-soft);
+}
+.nf-table-name {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: var(--accent-bright);
+  margin-bottom: 0.35rem;
+}
+.nf-grid {
+  border-collapse: collapse;
+  font-size: 0.76rem;
+}
+.nf-grid th {
+  text-align: left;
+  padding: 0.2rem 0.45rem;
+  border-bottom: 1px solid var(--line2);
+  color: var(--tx2);
+  font-weight: 600;
+  white-space: nowrap;
+}
+.nf-grid th .mono {
+  font-size: 0.74rem;
+}
+.nf-grid td {
+  padding: 0.2rem 0.45rem;
+  border-bottom: 1px solid var(--line);
+  color: var(--tx);
+  font-family: var(--font-mono);
+  white-space: nowrap;
+}
+.nf-cell--dup {
+  background: var(--c-danger-soft);
+  color: var(--c-danger);
+  font-weight: 700;
+}
+.nf-badge {
+  display: inline-block;
+  margin-left: 0.3rem;
+  font-family: var(--font-body);
+  font-size: 0.56rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  color: var(--accent-bright);
+  background: var(--accent-soft);
+  border: 1px solid var(--accent-deep);
+  border-radius: 3px;
+  padding: 0.02rem 0.26rem;
+  vertical-align: middle;
+}
+.nf-badge--fk {
+  color: var(--c-analytics);
+  background: var(--c-analytics-soft);
+  border-color: var(--c-analytics);
+}
+.nf-badge--pkfk {
+  color: var(--c-storage);
+  background: var(--c-storage-soft);
+  border-color: var(--c-storage);
+}
+.nf-checks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  list-style: none;
+  margin: 0.8rem 0 0;
+  padding: 0;
+}
+.nf-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.34rem;
+  font-size: 0.76rem;
+  color: var(--tx3);
+  background: var(--s2);
+  border: 1px solid var(--line);
+  border-radius: 99px;
+  padding: 0.22rem 0.6rem;
+}
+.nf-check.ok {
+  color: var(--c-commit);
+  border-color: var(--c-commit);
+  background: var(--c-commit-soft);
+}
+.nf-check-mark {
+  font-weight: 700;
+}
+.nf-dot-dup {
+  background: var(--c-danger-soft);
+  border: 1px solid var(--c-danger);
+}
