@@ -1,0 +1,200 @@
+import type { GlossaryEntry } from './types';
+
+/*
+ * Bilingual glossary seed (terms stay English; the gloss is translated).
+ * Expanded across later sessions as modules are authored.
+ */
+export const glossary: GlossaryEntry[] = [
+  {
+    term: 'ACID',
+    def: {
+      en: 'Atomicity, Consistency, Isolation, Durability — the four guarantees a transactional database makes about a transaction.',
+      uk: 'Atomicity, Consistency, Isolation, Durability — чотири гарантії, які транзакційна база даних дає щодо транзакції.',
+    },
+    seeAlso: ['WAL', 'transaction'],
+  },
+  {
+    term: 'B-Tree',
+    def: {
+      en: 'A balanced, high-fan-out search tree whose nodes are disk pages; the default index structure in most relational databases.',
+      uk: 'Збалансоване пошукове дерево з високим fan-out, чиї nodes — disk pages; типова структура index у більшості реляційних БД.',
+    },
+    seeAlso: ['B+Tree', 'fan-out', 'page'],
+  },
+  {
+    term: 'B+Tree',
+    def: {
+      en: 'A B-Tree variant that keeps values only in linked leaf pages, giving higher fan-out and cheap ordered range scans. What real DB indexes use.',
+      uk: 'Варіант B-Tree, що тримає значення лише у звʼязаних leaf pages, даючи вищий fan-out і дешеві впорядковані range scans. Те, що використовують реальні DB-індекси.',
+    },
+    seeAlso: ['B-Tree', 'range scan'],
+  },
+  {
+    term: 'CAP theorem',
+    def: {
+      en: 'During a network partition a distributed store must choose between Consistency and Availability; you cannot have both while partitioned.',
+      uk: 'Під час network partition розподілене сховище мусить обрати між Consistency та Availability; обох одночасно під час partition мати не можна.',
+    },
+    seeAlso: ['PACELC', 'consensus'],
+  },
+  {
+    term: 'PACELC',
+    def: {
+      en: 'An extension of CAP: if Partitioned, trade C vs A; Else, trade Latency vs Consistency even in normal operation.',
+      uk: 'Розширення CAP: якщо Partitioned — компроміс C проти A; інакше (Else) — компроміс Latency проти Consistency навіть у звичайній роботі.',
+    },
+    seeAlso: ['CAP theorem'],
+  },
+  {
+    term: 'MVCC',
+    def: {
+      en: 'Multi-Version Concurrency Control — keeps multiple versions of a row so readers see a consistent snapshot without blocking writers.',
+      uk: 'Multi-Version Concurrency Control — тримає кілька версій рядка, щоб читачі бачили консистентний snapshot, не блокуючи записувачів.',
+    },
+    seeAlso: ['snapshot isolation', 'VACUUM'],
+  },
+  {
+    term: 'WAL',
+    def: {
+      en: 'Write-Ahead Log — changes are recorded to a durable log before the data pages are modified, giving atomicity and crash recovery.',
+      uk: 'Write-Ahead Log — зміни записуються у довговічний log до зміни data pages, що дає atomicity і відновлення після збою.',
+    },
+    seeAlso: ['ACID', 'checkpoint'],
+  },
+  {
+    term: 'index-only scan',
+    def: {
+      en: 'A plan that answers a query entirely from a covering index, skipping the heap — in Postgres still gated by the visibility map.',
+      uk: 'План, що відповідає на запит повністю з covering index, оминаючи heap — у Postgres усе одно залежить від visibility map.',
+    },
+    seeAlso: ['B+Tree', 'heap', 'visibility map'],
+  },
+  {
+    term: 'heap',
+    def: {
+      en: 'The unordered collection of pages where table rows physically live (in PostgreSQL); indexes point into it via a TID.',
+      uk: 'Невпорядкована сукупність pages, де фізично живуть рядки таблиці (у PostgreSQL); indexes вказують у неї через TID.',
+    },
+    seeAlso: ['page', 'TID'],
+  },
+  {
+    term: 'page',
+    def: {
+      en: 'The fixed-size block (8 KB by default in PostgreSQL) that is the unit of I/O between disk and memory.',
+      uk: 'Блок фіксованого розміру (8 KB за замовчуванням у PostgreSQL), що є одиницею I/O між диском і памʼяттю.',
+    },
+    seeAlso: ['heap', 'B-Tree'],
+  },
+  {
+    term: 'fan-out',
+    def: {
+      en: 'The number of children per tree node. High fan-out makes a B-Tree shallow, so lookups cost few page reads.',
+      uk: 'Кількість дітей на node дерева. Високий fan-out робить B-Tree неглибоким, тож пошук коштує мало читань page.',
+    },
+    seeAlso: ['B-Tree'],
+  },
+  {
+    term: 'TID',
+    def: {
+      en: 'Tuple Identifier — a (page, offset) pointer to a row in the heap, stored in PostgreSQL index leaves.',
+      uk: 'Tuple Identifier — вказівник (page, offset) на рядок у heap, що зберігається у leaves index PostgreSQL.',
+    },
+    seeAlso: ['heap', 'index-only scan'],
+  },
+  {
+    term: 'OLTP',
+    def: {
+      en: 'Online Transaction Processing — many small, fast, concurrent read/write transactions (the typical app database).',
+      uk: 'Online Transaction Processing — багато малих, швидких, конкурентних транзакцій читання/запису (типова app-база).',
+    },
+    seeAlso: ['OLAP'],
+  },
+  {
+    term: 'OLAP',
+    def: {
+      en: 'Online Analytical Processing — large scans and aggregations over many rows; favors columnar storage.',
+      uk: 'Online Analytical Processing — великі scans та агрегації над багатьма рядками; тяжіє до columnar storage.',
+    },
+    seeAlso: ['OLTP', 'columnar'],
+  },
+  {
+    term: 'sharding',
+    def: {
+      en: 'Horizontal partitioning of data across nodes by a shard key, to scale beyond one machine.',
+      uk: 'Горизонтальне partitioning даних між nodes за shard key, щоб масштабуватися за межі однієї машини.',
+    },
+    seeAlso: ['partitioning', 'replication'],
+  },
+  {
+    term: 'replication',
+    def: {
+      en: 'Keeping copies of data on multiple nodes for read scale, high availability and geo-locality.',
+      uk: 'Тримання копій даних на кількох nodes для масштабу читання, високої доступності та гео-локальності.',
+    },
+    seeAlso: ['failover', 'sharding'],
+  },
+  {
+    term: 'isolation level',
+    def: {
+      en: 'How much a transaction is protected from concurrent ones: read-uncommitted, read-committed, repeatable-read, serializable.',
+      uk: 'Наскільки транзакція захищена від конкурентних: read-uncommitted, read-committed, repeatable-read, serializable.',
+    },
+    seeAlso: ['MVCC', 'write-skew'],
+  },
+  {
+    term: 'write-skew',
+    def: {
+      en: 'A concurrency anomaly where two transactions each read a shared invariant and write disjoint rows, together breaking it. Allowed under snapshot isolation.',
+      uk: 'Аномалія конкурентності: дві транзакції читають спільний інваріант і пишуть неперетинні рядки, разом його порушуючи. Дозволена за snapshot isolation.',
+    },
+    seeAlso: ['isolation level', 'snapshot isolation'],
+  },
+  {
+    term: 'snapshot isolation',
+    def: {
+      en: 'Each transaction reads from a consistent snapshot taken at its start; prevents many anomalies but not write-skew.',
+      uk: 'Кожна транзакція читає з консистентного snapshot, зробленого на її старті; запобігає багатьом аномаліям, але не write-skew.',
+    },
+    seeAlso: ['MVCC', 'write-skew'],
+  },
+  {
+    term: 'LSM-tree',
+    def: {
+      en: 'Log-Structured Merge tree — buffers writes in an in-memory memtable, flushes to sorted SSTables, and merges them via compaction.',
+      uk: 'Log-Structured Merge tree — буферизує записи в memtable у памʼяті, скидає у відсортовані SSTables і зливає їх через compaction.',
+    },
+    seeAlso: ['SSTable', 'compaction'],
+  },
+  {
+    term: 'SSTable',
+    def: {
+      en: 'Sorted String Table — an immutable, sorted on-disk file of key/value pairs produced by an LSM-tree flush.',
+      uk: 'Sorted String Table — незмінний відсортований файл пар key/value на диску, створений flush у LSM-tree.',
+    },
+    seeAlso: ['LSM-tree', 'compaction'],
+  },
+  {
+    term: 'embedding',
+    def: {
+      en: 'A dense numeric vector representing the meaning of text, image or other data; nearby vectors are semantically similar.',
+      uk: 'Щільний числовий вектор, що подає зміст тексту, зображення чи інших даних; близькі вектори семантично схожі.',
+    },
+    seeAlso: ['HNSW', 'vector database'],
+  },
+  {
+    term: 'HNSW',
+    def: {
+      en: 'Hierarchical Navigable Small World — the dominant approximate-nearest-neighbor graph index for vector search.',
+      uk: 'Hierarchical Navigable Small World — домінантний graph-index approximate-nearest-neighbor для vector search.',
+    },
+    seeAlso: ['embedding', 'vector database'],
+  },
+  {
+    term: 'normalization',
+    def: {
+      en: 'Organizing a schema so each fact lives in exactly one place (1NF→BCNF), removing redundancy and update anomalies.',
+      uk: 'Організація схеми так, щоб кожен факт жив рівно в одному місці (1NF→BCNF), прибираючи надмірність та update-аномалії.',
+    },
+    seeAlso: ['primary key', 'foreign key'],
+  },
+];

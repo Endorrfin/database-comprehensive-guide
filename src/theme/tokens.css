@@ -1,0 +1,101 @@
+/*
+ * tokens.css — design tokens for "Databases: The Comprehensive Guide"
+ * Theme: dark editorial + DB-family palette (CLAUDE.md §7).
+ * Two distinct palettes are documented below:
+ *   1. Concept semantics  — used across internals diagrams/sims (meaning, not brand).
+ *   2. Engine brand chips  — only when labelling a specific product.
+ * Contrast checked on the dark base.
+ */
+
+:root {
+  /* ---- Base surfaces (deep slate / ink) ---- */
+  --bg: #0e1217;
+  --surface: #151b23;
+  --s2: #1c242e;
+  --s3: #222c38;
+  --line: #28323d;
+  --line2: #384556;
+
+  /* ---- Text (cream-cool) ---- */
+  --tx: #e9eef3;
+  --tx2: #a7b4c2;
+  --tx3: #6b7886;
+
+  /* ---- Primary accent: PostgreSQL-derived blue ---- */
+  --accent: #5b9bd5; /* brightened for dark — primary */
+  --accent-deep: #336791; /* official Postgres "elephant" blue — fills / borders */
+  --accent-bright: #86bcea; /* headings / glow highlight */
+  --accent-soft: rgba(91, 155, 213, 0.14); /* tints / hover wash */
+
+  /* ---- Concept semantics (meaning-based; most internals diagrams) ---- */
+  --c-query: #5b9bd5; /* query / read path / SQL / relational */
+  --c-storage: #a78bfa; /* storage / index / pages / on-disk structures */
+  --c-commit: #6cc24a; /* transaction committed / durable / safe / success */
+  --c-dist: #38bdf8; /* distribution / replication / network / I/O */
+  --c-analytics: #f2a93b; /* analytics / columnar / warehouse / time-series */
+  --c-danger: #f87171; /* anomaly / conflict / deadlock / danger / security */
+
+  /* semantic tints (low-alpha fills) */
+  --c-query-soft: rgba(91, 155, 213, 0.16);
+  --c-storage-soft: rgba(167, 139, 250, 0.16);
+  --c-commit-soft: rgba(108, 194, 74, 0.16);
+  --c-dist-soft: rgba(56, 189, 248, 0.16);
+  --c-analytics-soft: rgba(242, 169, 59, 0.16);
+  --c-danger-soft: rgba(248, 113, 113, 0.16);
+
+  /* ---- Engine brand chips (only when labelling a product) ---- */
+  --e-postgres: #336791;
+  --e-mysql: #00758f;
+  --e-mysql-2: #f29111;
+  --e-mongodb: #13aa52;
+  --e-mongodb-bright: #00ed64;
+  --e-redis: #dc382d;
+  --e-cassandra: #1287b1;
+  --e-sqlite: #0f80cc;
+  --e-clickhouse: #ffcc01;
+  --e-vector: #a78bfa;
+
+  /* ---- Level badges ---- */
+  --lv-beginner: #6cc24a;
+  --lv-middle: #5b9bd5;
+  --lv-senior: #f2a93b;
+  --lv-staff: #a78bfa;
+
+  /* ---- Callout tones ---- */
+  --tone-tip: #6cc24a;
+  --tone-warn: #f2a93b;
+  --tone-senior: #a78bfa;
+  --tone-security: #f87171;
+
+  /* ---- Typography ---- */
+  --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
+  --font-body:
+    'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+
+  /* ---- Spatial / radii / shadow ---- */
+  --r-sm: 6px;
+  --r-md: 10px;
+  --r-lg: 16px;
+  --r-xl: 22px;
+  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-2: 0 6px 24px rgba(0, 0, 0, 0.36);
+  --shadow-glow: 0 0 0 1px rgba(91, 155, 213, 0.4), 0 8px 30px rgba(51, 103, 145, 0.22);
+
+  /* ---- Layout metrics ---- */
+  --sidebar-w: 290px;
+  --topbar-h: 58px;
+  --content-max: 940px;
+  --reading-max: 760px;
+
+  /* ---- Motion ---- */
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --dur-fast: 120ms;
+  --dur: 240ms;
+  --dur-slow: 480ms;
+
+  color-scheme: dark;
+}
+
+/* Light theme is optional/future (dark is primary, CLAUDE.md §7).
+   We keep a single token set; a future [data-theme="light"] block can override. */

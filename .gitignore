@@ -2,6 +2,8 @@
 node_modules
 dist
 .vite
+*.tsbuildinfo
+.eslintcache
 
 # reference / seed material — never deployed (CLAUDE.md §12)
 _examples/
