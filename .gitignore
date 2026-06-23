@@ -1,0 +1,15 @@
+# dependencies & build
+node_modules
+dist
+.vite
+
+# reference / seed material — never deployed (CLAUDE.md §12)
+_examples/
+
+# misc
+*.local
+.DS_Store
+
+# IDE
+.idea/
+.vscode/
