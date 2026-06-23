@@ -12,11 +12,14 @@ import { m7 } from './modules/m7-normalization';
 // CHANGED (S5): M8–M9 authored from stubs.
 import { m8 } from './modules/m8-keys-constraints';
 import { m9 } from './modules/m9-data-types';
+// CHANGED (S6): M10–M11 authored from stubs.
+import { m10 } from './modules/m10-sql-in-depth';
+import { m11 } from './modules/m11-views-procedural';
 import { m13 } from './modules/m13-btree';
 
 /*
  * concepts.ts — the SINGLE SOURCE OF TRUTH (CLAUDE.md §2, §4).
- * 8 sections · 36 modules. M1–M9 + M13 are fully authored; the remaining modules are
+ * 8 sections · 36 modules. M1–M11 + M13 are fully authored; the remaining modules are
  * navigable bilingual stubs (title + tagline + mental model authored now; topics,
  * key points, pitfalls and sources land in later sessions per the roadmap).
  */
@@ -138,40 +141,9 @@ export const modules: Module[] = [
   // CHANGED (S5): M8–M9 now fully authored (imported above).
   m8,
   m9,
-  stub({
-    id: 'm10-sql-in-depth',
-    num: 10,
-    section: 's2-relational',
-    order: 5,
-    level: 'senior',
-    title: { en: 'SQL in depth', uk: 'SQL поглиблено' },
-    tagline: {
-      en: 'Joins and how they run, subqueries/CTEs, window functions, GROUPING/CUBE/ROLLUP, NULL logic.',
-      uk: 'Joins і як вони виконуються, subqueries/CTEs, window functions, GROUPING/CUBE/ROLLUP, логіка NULL.',
-    },
-    readMins: 14,
-    mentalModel: {
-      en: "Most 'hard' SQL is a window function or a CTE you haven't reached for yet.",
-      uk: 'Більшість «складного» SQL — це window function або CTE, до яких ви ще не дотягнулися.',
-    },
-  }),
-  stub({
-    id: 'm11-views-procedural',
-    num: 11,
-    section: 's2-relational',
-    order: 6,
-    level: 'senior',
-    title: { en: 'Views, procedural SQL & triggers', uk: 'Views, процедурний SQL і triggers' },
-    tagline: {
-      en: 'Views vs materialized views, PL/pgSQL, triggers, and when logic belongs in the DB.',
-      uk: 'Views проти materialized views, PL/pgSQL, triggers і коли логіці місце в БД.',
-    },
-    readMins: 11,
-    mentalModel: {
-      en: 'Logic in the database is power and opacity in the same move — use it deliberately.',
-      uk: 'Логіка в базі — це водночас сила і непрозорість; застосовуйте свідомо.',
-    },
-  }),
+  // CHANGED (S6): M10–M11 now fully authored (imported above).
+  m10,
+  m11,
 
   // ── Section III · Storage & indexing internals ───────────────────────────
   stub({

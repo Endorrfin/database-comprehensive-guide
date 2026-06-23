@@ -287,4 +287,51 @@ export const glossary: GlossaryEntry[] = [
     },
     seeAlso: ['normalization'],
   },
+  // CHANGED (S6): M10/M11 terms.
+  {
+    term: 'window function',
+    def: {
+      en: 'A function computed across a set of rows related to the current one (OVER PARTITION BY … ORDER BY … frame) without collapsing them — unlike an aggregate. Powers running totals, rankings, and row-to-row deltas.',
+      uk: 'Функція, обчислена над набором рядків, повʼязаних із поточним (OVER PARTITION BY … ORDER BY … frame), без їх згортання — на відміну від агрегата. Дає running totals, ranking і дельти між рядками.',
+    },
+    seeAlso: ['three-valued logic'],
+  },
+  {
+    term: 'common table expression',
+    def: {
+      en: 'A CTE — a named subquery introduced by WITH that the main query references by name; WITH RECURSIVE walks hierarchies and graphs. Since PostgreSQL 12 a single-reference, non-recursive CTE is inlined by default.',
+      uk: 'CTE — іменована subquery, введена через WITH, на яку головний запит посилається за іменем; WITH RECURSIVE обходить ієрархії та graphs. Від PostgreSQL 12 нерекурсивний CTE з одним посиланням за замовчуванням inlined.',
+    },
+  },
+  {
+    term: 'materialized view',
+    def: {
+      en: 'A view whose query result is stored on disk (and can be indexed): reads are table-fast, but the data is stale until REFRESH MATERIALIZED VIEW. Effectively a cache of a query result.',
+      uk: 'View, чий результат запиту зберігається на диску (і може індексуватися): читання швидкі як з таблиці, але дані stale до REFRESH MATERIALIZED VIEW. По суті, кеш результату запиту.',
+    },
+  },
+  {
+    term: 'trigger',
+    def: {
+      en: 'A function the database runs automatically on INSERT/UPDATE/DELETE: BEFORE (validate/modify/cancel), AFTER (audit/react), or INSTEAD OF (make a view writable), at row or statement granularity.',
+      uk: 'Функція, яку база виконує автоматично на INSERT/UPDATE/DELETE: BEFORE (валідувати/змінити/скасувати), AFTER (аудит/реакція) чи INSTEAD OF (зробити view записуваним), з гранулярністю рядка чи statement.',
+    },
+    seeAlso: ['PL/pgSQL'],
+  },
+  {
+    term: 'PL/pgSQL',
+    def: {
+      en: 'PostgreSQL’s default, trusted procedural language — variables, control flow, and BEGIN…EXCEPTION error handling — used to write functions, procedures, and trigger functions.',
+      uk: 'Типова, trusted процедурна мова PostgreSQL — змінні, потік керування й обробка помилок BEGIN…EXCEPTION — для написання functions, procedures і trigger-функцій.',
+    },
+    seeAlso: ['trigger'],
+  },
+  {
+    term: 'three-valued logic',
+    def: {
+      en: 'SQL’s TRUE/FALSE/UNKNOWN logic: any comparison with NULL yields UNKNOWN, and WHERE keeps only TRUE rows — the source of the NOT IN-with-NULL and inequality-drops-NULL traps. Use IS [NOT] DISTINCT FROM for null-safe equality.',
+      uk: 'Логіка SQL TRUE/FALSE/UNKNOWN: будь-яке порівняння з NULL дає UNKNOWN, а WHERE лишає лише TRUE-рядки — джерело пасток NOT IN-із-NULL та «нерівність відкидає NULL». Вживайте IS [NOT] DISTINCT FROM для null-safe рівності.',
+    },
+    seeAlso: ['window function'],
+  },
 ];

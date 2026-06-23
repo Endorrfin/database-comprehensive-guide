@@ -19,6 +19,9 @@ import { UpdateAnomalies } from '../components/figures/UpdateAnomalies';
 // CHANGED (S5): M8 referential-actions + M9 float-trap figures.
 import { ReferentialActions } from '../components/figures/ReferentialActions';
 import { FloatTrap } from '../components/figures/FloatTrap';
+// CHANGED (S6): M10 window-frame + M11 view-vs-matview figures.
+import { WindowFrame } from '../components/figures/WindowFrame';
+import { ViewVsMatview } from '../components/figures/ViewVsMatview';
 
 /*
  * Registry — content references figures and sims by KEY (CLAUDE.md §4), resolved here.
@@ -41,6 +44,8 @@ export const figures: Record<string, ComponentType> = {
   'update-anomalies': UpdateAnomalies, // CHANGED (S4)
   'referential-actions': ReferentialActions, // CHANGED (S5)
   'float-trap': FloatTrap, // CHANGED (S5)
+  'window-frame': WindowFrame, // CHANGED (S6)
+  'view-vs-matview': ViewVsMatview, // CHANGED (S6)
 };
 
 export const getSim = (key: string): ComponentType | undefined => sims[key];
