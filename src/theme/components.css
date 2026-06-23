@@ -1809,3 +1809,114 @@
   background: var(--c-danger-soft);
   border: 1px solid var(--c-danger);
 }
+
+/* CHANGED (S7): M14 index access-path picker sim. */
+.idx-seg {
+  flex-wrap: wrap;
+}
+.idx-seg button {
+  font-family: var(--font-mono);
+  min-width: 2.4rem;
+}
+.idx-shape-name {
+  font-size: 0.84rem;
+}
+.idx-query {
+  background: var(--bg);
+  border: 1px solid var(--line2);
+  border-left: 3px solid var(--c-query);
+  border-radius: var(--r-sm);
+  padding: 0.5rem 0.7rem;
+  font-size: 0.86rem;
+  color: var(--tx);
+  overflow-x: auto;
+  white-space: nowrap;
+}
+.idx-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(98px, 1fr));
+  gap: 0.5rem;
+  margin: 0.7rem 0;
+}
+.idx-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  align-items: flex-start;
+  padding: 0.5rem 0.6rem;
+  border: 1px solid var(--line2);
+  border-radius: var(--r-md);
+  background: var(--bg);
+  transition: opacity 0.15s ease;
+}
+.idx-cell-name {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--tx);
+}
+.idx-cell-verdict {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.idx-cell--best {
+  border-color: var(--c-commit);
+  background: var(--c-commit-soft);
+}
+.idx-cell--best .idx-cell-verdict {
+  color: var(--c-commit);
+}
+.idx-cell--ok {
+  border-color: var(--c-analytics);
+  background: var(--c-analytics-soft);
+}
+.idx-cell--ok .idx-cell-verdict {
+  color: var(--c-analytics);
+}
+.idx-cell--no {
+  opacity: 0.5;
+}
+.idx-cell--no .idx-cell-verdict {
+  color: var(--tx3);
+}
+.idx-rec {
+  margin-top: 0.4rem;
+  padding: 0.7rem 0.8rem;
+  background: var(--s2);
+  border: 1px solid var(--line2);
+  border-radius: var(--r-md);
+}
+.idx-rec-head {
+  font-size: 0.9rem;
+  color: var(--tx);
+  margin-bottom: 0.45rem;
+}
+.idx-rec-head strong {
+  color: var(--accent-bright);
+}
+.idx-rec-ddl {
+  display: block;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  padding: 0.45rem 0.6rem;
+  font-size: 0.82rem;
+  color: var(--c-storage);
+  overflow-x: auto;
+  white-space: nowrap;
+}
+.idx-why {
+  margin: 0.5rem 0 0;
+  font-size: 0.82rem;
+  color: var(--tx2);
+  line-height: 1.45;
+}
+.idx-dot--best {
+  background: var(--c-commit);
+}
+.idx-dot--ok {
+  background: var(--c-analytics);
+}
+.idx-dot--no {
+  background: var(--tx3);
+}

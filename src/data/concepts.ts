@@ -15,11 +15,14 @@ import { m9 } from './modules/m9-data-types';
 // CHANGED (S6): M10–M11 authored from stubs.
 import { m10 } from './modules/m10-sql-in-depth';
 import { m11 } from './modules/m11-views-procedural';
+// CHANGED (S7): M12 + M14 authored from stubs (M13 was the S1 golden module).
+import { m12 } from './modules/m12-storage';
 import { m13 } from './modules/m13-btree';
+import { m14 } from './modules/m14-index-toolbox';
 
 /*
  * concepts.ts — the SINGLE SOURCE OF TRUTH (CLAUDE.md §2, §4).
- * 8 sections · 36 modules. M1–M11 + M13 are fully authored; the remaining modules are
+ * 8 sections · 36 modules. M1–M14 are fully authored; the remaining modules are
  * navigable bilingual stubs (title + tagline + mental model authored now; topics,
  * key points, pitfalls and sources land in later sessions per the roadmap).
  */
@@ -146,44 +149,11 @@ export const modules: Module[] = [
   m11,
 
   // ── Section III · Storage & indexing internals ───────────────────────────
-  stub({
-    id: 'm12-storage',
-    num: 12,
-    section: 's3-storage',
-    order: 1,
-    level: 'senior',
-    signature: true,
-    title: { en: 'How data is stored', uk: 'Як зберігаються дані' },
-    tagline: {
-      en: 'The memory hierarchy, pages & the heap, row vs columnar, TOAST.',
-      uk: 'Ієрархія памʼяті, pages і heap, row проти columnar, TOAST.',
-    },
-    readMins: 12,
-    mentalModel: {
-      en: 'Disk is far; every design choice is about minimizing trips to it.',
-      uk: 'Диск далеко; кожне рішення дизайну — про мінімізацію походів до нього.',
-    },
-  }),
+  // CHANGED (S7): M12 + M14 now fully authored (imported above). M12 is figures-only
+  // (signature:false — strong static visuals, no widget); M14 ships the ★ index-picker sim.
+  m12,
   m13, // ★ GOLDEN — fully authored
-  stub({
-    id: 'm14-index-toolbox',
-    num: 14,
-    section: 's3-storage',
-    order: 3,
-    level: 'senior',
-    signature: true,
-    title: { en: 'The index toolbox', uk: 'Набір індексів' },
-    tagline: {
-      en: 'Hash, GIN/GiST/BRIN, full-text, covering/partial/expression — and what NOT to index.',
-      uk: 'Hash, GIN/GiST/BRIN, full-text, covering/partial/expression — і що НЕ індексувати.',
-    },
-    readMins: 12,
-    mentalModel: {
-      en: 'Pick the index to the query shape; each index is a write you pay for.',
-      uk: 'Підбирайте index під форму запиту; кожен index — це запис, за який ви платите.',
-    },
-    seeAlso: ['m13-btree'],
-  }),
+  m14, // ★ index access-path picker
   stub({
     id: 'm15-lsm',
     num: 15,

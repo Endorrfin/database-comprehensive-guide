@@ -7,6 +7,8 @@ import { QueryLifecycleSim } from '../components/sims/QueryLifecycleSim';
 // CHANGED (S4): M6 ER explorer + M7 normalization stepper.
 import { ErExplorer } from '../components/sims/ErExplorer';
 import { NormalizationSim } from '../components/sims/NormalizationSim';
+// CHANGED (S7): M14 index access-path picker.
+import { IndexPicker } from '../components/sims/IndexPicker';
 import { BTreeNodeAnatomy } from '../components/figures/BTreeNodeAnatomy';
 // CHANGED (S2): M1 + M3 figures.
 import { FilesVsDbms } from '../components/figures/FilesVsDbms';
@@ -22,6 +24,10 @@ import { FloatTrap } from '../components/figures/FloatTrap';
 // CHANGED (S6): M10 window-frame + M11 view-vs-matview figures.
 import { WindowFrame } from '../components/figures/WindowFrame';
 import { ViewVsMatview } from '../components/figures/ViewVsMatview';
+// CHANGED (S7): M12 memory-hierarchy + heap-page; M14 index-only-scan.
+import { MemoryHierarchy } from '../components/figures/MemoryHierarchy';
+import { HeapPage } from '../components/figures/HeapPage';
+import { IndexOnlyScan } from '../components/figures/IndexOnlyScan';
 
 /*
  * Registry — content references figures and sims by KEY (CLAUDE.md §4), resolved here.
@@ -33,6 +39,7 @@ export const sims: Record<string, ComponentType> = {
   'query-lifecycle': QueryLifecycleSim, // CHANGED (S3)
   'er-explorer': ErExplorer, // CHANGED (S4)
   'normalization-stepper': NormalizationSim, // CHANGED (S4)
+  'index-picker': IndexPicker, // CHANGED (S7)
 };
 
 export const figures: Record<string, ComponentType> = {
@@ -46,6 +53,9 @@ export const figures: Record<string, ComponentType> = {
   'float-trap': FloatTrap, // CHANGED (S5)
   'window-frame': WindowFrame, // CHANGED (S6)
   'view-vs-matview': ViewVsMatview, // CHANGED (S6)
+  'memory-hierarchy': MemoryHierarchy, // CHANGED (S7)
+  'heap-page': HeapPage, // CHANGED (S7)
+  'index-only-scan': IndexOnlyScan, // CHANGED (S7)
 };
 
 export const getSim = (key: string): ComponentType | undefined => sims[key];

@@ -417,8 +417,8 @@ Footer: **"Vasyl Krupka · Senior Fullstack Engineer"** + 🇺🇦. Dark is prim
   in S6** to keep the two dense modules tight and avoid bundle growth before the code-split below. Follow BTreeSim
   conventions (deterministic, play/pause/step, reduced-motion fallback, ARIA); register a sim key and flip M10's
   `window-frame` block from `figure` → `sim`. Slot opportunistically (S19–S20).
-- **Bundle code-split / per-module lazy-load (≈S10–S12)** — JS is ~230 KB gzip at 12 authored modules and grows
-  with bilingual content; before it gets heavy, route-split so each module's data/figures/sims load on demand
+- **Bundle code-split / per-module lazy-load (≈S10–S12)** — JS is **~264 KB gzip at 14 authored modules** (+34 in S7)
+  and grows with bilingual content; before it gets heavy, route-split so each module's data/figures/sims load on demand
   (dynamic `import()` per module in the hash router + `React.lazy` for sims). Must keep `check:data`, the render
   smoke, and SSR/route smoke working across the split, and preserve global search (which currently indexes all
   modules eagerly — may need a lightweight prebuilt index).
@@ -697,3 +697,58 @@ Footer: **"Vasyl Krupka · Senior Fullstack Engineer"** + 🇺🇦. Dark is prim
   **Next (S7):** Storage internals — M12 How data is stored; M14 The index toolbox *(M13 done in S1)*. **Pending
   user:** repo is live (§11) — S6 appears live once committed & **merged to `main`**; locally `npm install`
   (darwin-arm64) + `npm run verify`; optional cleanup `rm -rf dist-s2 dist-s3 dist-s4 dist-s5 dist-s6`.
+
+- **2026-06-24 · S7 Storage internals (storage / index-toolbox)** *(branch `s7-storage-internals`)* — Authored the
+  two remaining Section-III pillars **fully EN+UA** to the M13 depth bar, lifting authored modules from 12 → **14**
+  (Section III now 3 of 5: M12, M13, M14; M15–M16 land in S8). **Scope decision (user-confirmed this session via
+  AskUserQuestion):** **build** M14's curriculum-specced light **index access-path picker** sim (S7 had the budget —
+  neither module is otherwise a sim); **M12 stays figures-only** per its curriculum ("★ light" = diagram/table/compare,
+  no widget). Also flipped **M12 `signature: true → false`** in `concepts.ts` — with no interactive, the "★ interactive"
+  chip would overpromise; M14 keeps `signature: true` (it has the picker). **M12 · How data is stored** `[senior]`
+  (4 topics: the memory hierarchy · pages & the heap · row vs column-store · big values & layout; new **memory-hierarchy**
+  SVG figure [latency ladder, log-scale bars, human-scaled "if L1 = 1 s" column, memory⟷storage divider] + new
+  **heap-page** SVG figure [8 kB page: header → line pointers → free space → tuples, TID/ctid pointer], a
+  find-one-row-in-a-million access-cost table, a row-vs-columnar compare, a PLAIN/MAIN/EXTERNAL/EXTENDED storage table,
+  a storage-tuning DDL block, 4 callouts [I/O machine, seq-vs-random, don't-run-OLAP-on-OLTP, the SELECT*/TOAST tax],
+  5 keyPoints, 3 pitfalls, 3 interview Q&A, 5 web-verified sources). **M14 · The index toolbox** `[senior]` *(signature)*
+  (5 topics: the toolbox & hash · the specialized zoo · full-text search · composite/covering/partial/expression ·
+  the cost of indexes; the **★ index-picker** sim, the index-type→best-for/can't-do table, the **LIKE vs full-text**
+  compare, new **index-only-scan** figure [regular index scan → heap fetch vs covering INCLUDE → answer from leaf,
+  visibility-map note], FTS + pg_trgm DDL, covering/partial/expression DDL, 4 callouts [B-Tree already does equality,
+  bitmap scans cooperate, pg_trgm rescues LIKE, leftmost-prefix loosened by skip scan, over-indexing], 5 keyPoints,
+  3 pitfalls, 3 interview Q&A [senior/senior/staff], 6 sources).
+  **★ Index access-path picker** (`sims/IndexPicker.tsx`, key `index-picker`): pick a query SHAPE (`=` · range/sort ·
+  `@>` containment · full-text · prefix `a%` · substring `%a%`) → the 6 index types (B-Tree/Hash/GIN/GiST/BRIN/Trigram)
+  light up **best / works / no**, with a one-line "why" + the recommended `CREATE INDEX`. Toggle-driven, deterministic,
+  **inherently reduced-motion-safe** (no animation loop), ARIA tablist + live region — mirrors ErExplorer/FamiliesMap.
+  New CSS `.idx-*` block appended to `components.css`; sim + 3 figures registered; glossary **+8 terms** (TOAST,
+  fillfactor, GIN, GiST, BRIN, covering index, partial index, bitmap index scan) → **49**.
+  **Web-verified this session** (sources in module `sources[]`): PostgreSQL fixed **8 kB pages**, page layout
+  (header/line-pointers/tuples/free-space), tuples can't span pages; **TOAST** triggers >~2 kB (TOAST_TUPLE_THRESHOLD
+  2032 B), compresses (**pglz** default / **lz4**) + moves out-of-line, **18-byte** pointer, STORAGE
+  PLAIN/MAIN/EXTERNAL/EXTENDED; **fillfactor** heap default **100** / B-Tree **90**, HOT updates, CLUSTER reorders once
+  (not maintained); row-store (OLTP) vs column-store (OLAP) — ClickHouse/columnar **5–20× compression + SIMD vectorized**
+  execution; latency hierarchy (jboner: L1 ~0.5 ns · RAM ~100 ns · SSD ~150 µs · disk seek ~10 ms). Index types:
+  **hash** = equality-only, **WAL-logged/crash-safe since PG 10**; **GIN** inverted (array/jsonb @>/FTS), **GiST**
+  bounding-predicate (geo/range/KNN/FTS), **SP-GiST** space-partitioned, **BRIN** block-range min/max (huge ordered
+  tables); **bitmap index scan** = runtime BitmapAnd/BitmapOr, not a stored type; FTS `tsvector @@ tsquery` on **GIN**
+  (vs lossy GiST), **pg_trgm** for `%x%`/fuzzy; multicolumn **leftmost-prefix** + **B-Tree skip scan NEW in PG 18**;
+  **covering INCLUDE since PG 11** → index-only scan needs the **visibility map** current; partial/expression indexes;
+  **B-Tree dedup since PG 13**; indexes = write amplification + storage + maintenance (drop `idx_scan=0`). PG latest
+  stable **18.4**, 19 Beta 1.
+  **Verification (repo, linux-arm64):** `tsc -b --noEmit` ✓ · ESLint ✓ · `check:data` ✓ (**8 sections, 36 modules
+  [14 authored, 22 stubs], 1533 Localized EN+UA pairs**, **6 sims + 13 figures**, 49 glossary terms, all registry keys
+  resolve, cross-links valid) · `test:btree` ✓ (346 checks) · **render+content smoke** ✓ (`react-dom/server` of the
+  `index-picker` sim inside `LangProvider` + the 3 figures — asserts default equality → `CREATE INDEX ON users (email)`
+  + `best`, and figure content: latency ladder `0.5 ns`/`~8 months`, heap `ctid = (0, 1)`, `Index-Only Scan`/`visibility
+  map`) · `vite build` ✓ (**78 modules**, JS **263.86 KB gzip** / CSS 7.59 KB gzip, relative `./assets/` base).
+  **Bundle watch:** JS gzip **230 → 264 KB (+34)** for two dense bilingual modules + a sim + 3 figures — reinforces the
+  §13 code-split backlog item (updated to "14 modules"); still on track for ~S10–S12.
+  **Sandbox gotchas (expected, §12):** linux helpers from S2 (`@esbuild/linux-arm64`, `@rolldown/binding-linux-arm64-gnu`)
+  still present → all tooling ran; built into fresh `dist-s7/` (unlink blocked; `dist-*/` gitignored). Render-smoke file
+  gitignored (`scripts/_smoke-*.ts`) — **user can `rm scripts/_smoke-s7.ts`** (and any stale `_smoke-s3/4/5/6`).
+  **No stale `.git/index.lock` this session** (checked — absent).
+  **Next (S8):** Storage internals cont. — M15 LSM-trees (+ **LSM sim**); M16 Query planning (+ **Query Planner / EXPLAIN
+  sim**) — two signature sims, a heavy session. **Pending user:** repo is live (§11) — S7 appears live once committed &
+  **merged to `main`**; locally `npm install` (darwin-arm64) + `npm run verify`; optional cleanup
+  `rm -rf dist-s2 dist-s3 dist-s4 dist-s5 dist-s6 dist-s7`.
