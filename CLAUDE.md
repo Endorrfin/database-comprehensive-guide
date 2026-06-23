@@ -32,8 +32,8 @@ isolation anomalies, replication & failover, CAP, LSM compaction, vector/ANN sea
      Postgres as the primary concrete example; it mirrors `info.txt`).
   3. **NoSQL families get balanced, first-class coverage** (Section VI: document, key-value,
      wide-column, graph) plus the modern/specialized engines (Section VII).
-  These are *layers, not competing tracks* — internals are taught once, then instantiated across
-  engines, so nothing is redundant.
+     These are *layers, not competing tracks* — internals are taught once, then instantiated across
+     engines, so nothing is redundant.
 - **Levels:** every module tagged `beginner | middle | senior | staff`.
 - **Language:** **Bilingual EN / UA** with a runtime toggle (user choice 2026-06-23). **All technical
   terminology stays in English** in both languages (SQL, B-Tree, MVCC, WAL, sharding, index,
@@ -322,8 +322,10 @@ Footer: **"Vasyl Krupka · Senior Fullstack Engineer"** + 🇺🇦. Dark is prim
   engines, with hero simulators."* Suggested **topics/tags:** `databases · sql · nosql · postgresql ·
   mongodb · indexing · b-tree · transactions · mvcc · replication · vector-database · vite · react ·
   typescript · github-pages`.
-- **Pending (user):** create the repo `database-comprehensive-guide`, then (after S1 push) set
-  Settings → Pages → **Source = GitHub Actions**.
+- **Done (user, 2026-06-23):** repo `database-comprehensive-guide` @ `endorrfin` created, Pages
+  **Source = GitHub Actions**, site **live** at `https://endorrfin.github.io/database-comprehensive-guide/`
+  (verified by user; e.g. `#/glossary`). The Action redeploys on push to `main` — **branch work (S2–S4)
+  only appears live once committed and merged to `main`.**
 
 ## 12. Gotchas / constraints (read before building)
 
@@ -401,6 +403,18 @@ Footer: **"Vasyl Krupka · Senior Fullstack Engineer"** + 🇺🇦. Dark is prim
 - **S18 · Mastery + polish** — M35 Choosing the right database (+ **Database Picker**); M36 Mental
   models gallery + glossary + cheat-sheet; global search, flashcards, mobile/a11y/perf, **bilingual QA**.
 - **S19–S20 · Buffer** — extra "maximal" interactives, full UA pass, final QA; optional PDF/LinkedIn pack.
+
+### Backlog / deferred enhancements (agreed with user 2026-06-23)
+- **★ FLOAT-vs-numeric drift stepper (M9)** — promote the static `float-trap` figure into a real interactive:
+  step a running sum (add `0.1` / one cent N times) in `double precision` vs `numeric`, watch the float result
+  drift off the exact decimal and the rounding error accumulate row by row. Follow BTreeSim conventions
+  (deterministic, play/pause/step, `prefers-reduced-motion` fallback, ARIA live region); register under a new
+  sim key and flip M9's `float-trap` block from `figure` → `sim`. Slot opportunistically (S8 storage, or S19–S20).
+- **Bundle code-split / per-module lazy-load (≈S10–S12)** — JS is ~197 KB gzip at 10 authored modules and grows
+  with bilingual content; before it gets heavy, route-split so each module's data/figures/sims load on demand
+  (dynamic `import()` per module in the hash router + `React.lazy` for sims). Must keep `check:data`, the render
+  smoke, and SSR/route smoke working across the split, and preserve global search (which currently indexes all
+  modules eagerly — may need a lightweight prebuilt index).
 
 ## 14. Status / progress log
 
@@ -499,37 +513,37 @@ Footer: **"Vasyl Krupka · Senior Fullstack Engineer"** + 🇺🇦. Dark is prim
   with PK/FK + 1:N arrow], a 6-row formal↔SQL↔everyday vocabulary table, a relationship-shapes table, the
   **relational-algebra → SQL** table [σ/π/⋈/∪/−/×], the **SQL logical processing order** table, worked DDL
   + SELECT code blocks, tip/security/senior callouts, 5 keyPoints, 3 pitfalls, 3 interview Q&A, 5
-  web-verified sources). **M5 · Anatomy of a query** `[middle]` *(signature)* (4 topics: the lifecycle ·
-  logical vs physical plan · where time goes · why this matters; embeds the **★ query-lifecycle sim**,
-  a stage→job table, a logical-vs-physical compare, a where-the-time-goes cost ladder, a stage→later-module
-  map, senior/tip callouts, 5 keyPoints, 3 pitfalls, 3 interview Q&A, 5 sources).
-  **★ Query-lifecycle stepper** (`sims/QueryLifecycleSim.tsx`, registry key `query-lifecycle`): a fixed SQL
-  statement walks Parser → Rewriter → Planner → Executor → Storage → Result; per-stage artifact (parse tree,
-  plan tree, page reads) + a single **"index on customer_id?" toggle** that flips the planner between Seq
-  Scan and Index Scan and the pages-read meter between ~1,300 and ~3 — the payoff of "same SQL, many physical
-  plans". Deterministic, click-any-stage, play/pause/step, reduced-motion fallback (Play hidden), ARIA live
-  region — mirrors BTreeSim. New CSS `.qlife*` block appended to `components.css`; both assets registered.
-  **Web-verified this session** (sources in module `sources[]`): the PostgreSQL 18 docs **"The Path of a
-  Query"** (parser → rewrite system → planner/optimizer → executor; the planner's own seq-scan-vs-index-scan
-  cost example; the executor's recursive plan-tree pull from the storage system) — confirms PG latest
-  **18.4**, **19 Beta 1** (2026-06-04); **Codd 1970** "A Relational Model of Data for Large Shared Data
-  Banks" + the relational algebra (σ/π/⋈/set ops); the **SQL logical clause order** enumerated in the PG
-  SELECT reference; primary/foreign keys from the PG constraints docs; EXPLAIN as logical-vs-physical.
-  **Verification (repo + scratch, linux):** `tsc -b --noEmit` ✓ · ESLint ✓ · `check:data` ✓ (**8 sections,
-  36 modules [6 authored, 30 stubs], 731 Localized EN+UA pairs**, **3 sims + 4 figures**, all registry keys
-  resolve, cross-links valid) · `test:btree` ✓ (346 checks) · `vite build` ✓ (**58 modules**, JS 142 KB
-  gzip / CSS 6.66 KB gzip) · **new: render smoke** (`react-dom/server` renderToStaticMarkup of the sim +
-  figure inside `LangProvider`) ✓ — catches hook/JSX runtime errors the typecheck/build miss.
-  **Sandbox gotchas (expected, §12):** linux binaries from S2 (`@esbuild/linux-arm64`,
-  `@rolldown/binding-linux-arm64-gnu`) still present → all tooling ran; built into fresh `dist-s3/`. tsx
-  defaults JSX to the **classic** runtime, so the render smoke must run with `--tsconfig tsconfig.app.json`
-  (which sets `jsx: react-jsx`); harmless for the real Vite build. The render-smoke file is neutralized +
-  gitignored (`scripts/_smoke-*.ts`) since the sandbox can't unlink — **user can `rm scripts/_smoke-s3.ts`
-  locally**. Stale **`.git/index.lock`** likely persists — **`rm -f ".git/index.lock"` before committing**,
-  then `npm install` (darwin-arm64) + `npm run verify`.
-  **Next (S4):** Design — M6 ER modeling (+ ER interactive); M7 Normalization (+ Normalization sim).
-  **Pending user:** create repo `database-comprehensive-guide` @ `endorrfin`; set Pages → Source = GitHub
-  Actions after first push.
+    web-verified sources). **M5 · Anatomy of a query** `[middle]` *(signature)* (4 topics: the lifecycle ·
+    logical vs physical plan · where time goes · why this matters; embeds the **★ query-lifecycle sim**,
+    a stage→job table, a logical-vs-physical compare, a where-the-time-goes cost ladder, a stage→later-module
+    map, senior/tip callouts, 5 keyPoints, 3 pitfalls, 3 interview Q&A, 5 sources).
+    **★ Query-lifecycle stepper** (`sims/QueryLifecycleSim.tsx`, registry key `query-lifecycle`): a fixed SQL
+    statement walks Parser → Rewriter → Planner → Executor → Storage → Result; per-stage artifact (parse tree,
+    plan tree, page reads) + a single **"index on customer_id?" toggle** that flips the planner between Seq
+    Scan and Index Scan and the pages-read meter between ~1,300 and ~3 — the payoff of "same SQL, many physical
+    plans". Deterministic, click-any-stage, play/pause/step, reduced-motion fallback (Play hidden), ARIA live
+    region — mirrors BTreeSim. New CSS `.qlife*` block appended to `components.css`; both assets registered.
+    **Web-verified this session** (sources in module `sources[]`): the PostgreSQL 18 docs **"The Path of a
+    Query"** (parser → rewrite system → planner/optimizer → executor; the planner's own seq-scan-vs-index-scan
+    cost example; the executor's recursive plan-tree pull from the storage system) — confirms PG latest
+    **18.4**, **19 Beta 1** (2026-06-04); **Codd 1970** "A Relational Model of Data for Large Shared Data
+    Banks" + the relational algebra (σ/π/⋈/set ops); the **SQL logical clause order** enumerated in the PG
+    SELECT reference; primary/foreign keys from the PG constraints docs; EXPLAIN as logical-vs-physical.
+    **Verification (repo + scratch, linux):** `tsc -b --noEmit` ✓ · ESLint ✓ · `check:data` ✓ (**8 sections,
+    36 modules [6 authored, 30 stubs], 731 Localized EN+UA pairs**, **3 sims + 4 figures**, all registry keys
+    resolve, cross-links valid) · `test:btree` ✓ (346 checks) · `vite build` ✓ (**58 modules**, JS 142 KB
+    gzip / CSS 6.66 KB gzip) · **new: render smoke** (`react-dom/server` renderToStaticMarkup of the sim +
+    figure inside `LangProvider`) ✓ — catches hook/JSX runtime errors the typecheck/build miss.
+    **Sandbox gotchas (expected, §12):** linux binaries from S2 (`@esbuild/linux-arm64`,
+    `@rolldown/binding-linux-arm64-gnu`) still present → all tooling ran; built into fresh `dist-s3/`. tsx
+    defaults JSX to the **classic** runtime, so the render smoke must run with `--tsconfig tsconfig.app.json`
+    (which sets `jsx: react-jsx`); harmless for the real Vite build. The render-smoke file is neutralized +
+    gitignored (`scripts/_smoke-*.ts`) since the sandbox can't unlink — **user can `rm scripts/_smoke-s3.ts`
+    locally**. Stale **`.git/index.lock`** likely persists — **`rm -f ".git/index.lock"` before committing**,
+    then `npm install` (darwin-arm64) + `npm run verify`.
+    **Next (S4):** Design — M6 ER modeling (+ ER interactive); M7 Normalization (+ Normalization sim).
+    **Pending user:** create repo `database-comprehensive-guide` @ `endorrfin`; set Pages → Source = GitHub
+    Actions after first push.
 
 - **2026-06-23 · S4 Design** *(branch `s4-design-er-normalization`)* — Authored the two Section-II design
   modules **fully EN+UA** to the M13 depth bar, lifting authored modules from 6 → **8** and shipping **both
@@ -575,3 +589,49 @@ Footer: **"Vasyl Krupka · Senior Fullstack Engineer"** + 🇺🇦. Dark is prim
   `npm install` (darwin-arm64) + `npm run verify`.
   **Next (S5):** SQL mastery — M8 Keys & constraints; M9 Data types done right. **Pending user:** create repo
   `database-comprehensive-guide` @ `endorrfin`; set Pages → Source = GitHub Actions after first push.
+
+- **2026-06-23 · S5 SQL mastery (keys/types)** *(branch `s5-keys-constraints-data-types`)* — Authored the two
+  Section-II modules **fully EN+UA** to the M13 depth bar, lifting authored modules from 8 → **10** (Section II
+  now 4 of 6). **M8 · Keys & constraints** `[middle]` (4 topics: the key family super→candidate→primary ·
+  foreign keys & referential integrity · the constraint toolbox · push invariants into the database; new
+  **referential-actions** SVG figure [deleting customers.id=7 plays out RESTRICT/CASCADE/SET NULL on two child
+  orders], a key-vocabulary table, the **five referential actions** table, a core-constraints table, an
+  app-validation-vs-DB-constraint compare, a worked IDENTITY/FK/CHECK DDL block, tip/senior/warn callouts
+  [UNIQUE-plus-NULL, IDENTITY over serial, the **unindexed-FK full-scan** trap, invariants-not-workflow], 5
+  keyPoints, 3 pitfalls, 3 interview Q&A, 5 web-verified sources). **M9 · Data types done right** `[middle]`
+  (4 topics: a type is a constraint · numbers & the FLOAT-for-money disaster · text/time/zones · beyond scalars
+  JSONB/array/enum/UUID; new **float-trap** SVG figure [`0.1+0.2` = `0.30000000000000004` in float8 vs exact
+  `0.3` in numeric], a number-type chooser table, a rich-type "reach for X vs a column/table" compare, a worked
+  numeric/timestamptz/text DDL block, stringly-typed/float-is-not-evil/timezone-trap/JSONB-is-not-an-escape-hatch
+  callouts, 5 keyPoints, 3 pitfalls, 3 interview Q&A, 5 sources).
+  **Scope decision (deliberate):** M8/M9 are **non-signature** in the locked plan, so they got the non-signature
+  treatment (figure + tables + compare + code, like M1/M3/M4) — **no new hero sim**. The one genuinely
+  high-insight interactive here, a live **FLOAT-vs-numeric drift demo**, is captured statically by `float-trap`
+  + the canonical fact; flagged to the user as an optional future add rather than scope-creeping S5.
+  **Wiring:** `concepts.ts` imports m8/m9 (stubs replaced) + header comment refreshed; `registry.tsx` +2 figures
+  (`referential-actions`, `float-trap`); glossary **+6 terms** (primary key, foreign key, referential integrity,
+  surrogate key, generated column, jsonb) → 35. **No CSS added** (figures are pure SVG) — CSS gzip unchanged.
+  **Web-verified this session** (sources in module `sources[]`): **PostgreSQL 18** makes generated columns
+  **VIRTUAL by default** (STORED-only ≤17) and adds a built-in **`uuidv7()`** (RFC 9562, time-ordered; `uuidv4()`
+  = `gen_random_uuid()`); **PostgreSQL 15** added **`UNIQUE … NULLS NOT DISTINCT`** and the **column-list
+  `ON DELETE SET NULL (col)`** form; referential actions NO ACTION(default)/RESTRICT/CASCADE/SET NULL/SET DEFAULT;
+  **`numeric` exact vs `real`/`double precision` inexact** (`0.1::float8+0.2::float8 = 0.30000000000000004`),
+  `numeric` recommended for money & **`money` discouraged**; `char`/`varchar`/`text` perf-equal with `text`
+  idiomatic; **`timestamptz` over `timestamp`** ("without time zone" = zoneless, not UTC); `jsonb` binary +
+  GIN-indexable; **IDENTITY over serial** (PG wiki "Don't Do This").
+  **Verification (repo, linux-arm64):** `tsc -b --noEmit` ✓ · ESLint ✓ · `check:data` ✓ (**8 sections, 36 modules
+  [10 authored, 26 stubs], 1134 Localized EN+UA pairs**, **5 sims + 8 figures**, 35 glossary terms, all registry
+  keys resolve, cross-links valid) · `test:btree` ✓ (346 checks) · **render+content smoke** ✓ (`react-dom/server`
+  renderToStaticMarkup of both new figures via the registry — asserts `referential-actions` shows the tables +
+  ON DELETE/CASCADE/SET NULL chips and `float-trap` shows `0.30000000000000004` + both type lanes) · `vite build`
+  ✓ (**68 modules**, JS 197 KB gzip / CSS 7.32 KB gzip, relative `./assets/` base).
+  **Caught before commit:** used `var(--c-committed)`/`-soft` in `FloatTrap` — the token is `--c-commit`/
+  `--c-commit-soft` (fixed); removed a self-reference (`m9-data-types` in its own `seeAlso`, → `m12-storage`).
+  **Sandbox gotchas (expected, §12):** linux helpers from S2 (`@esbuild/linux-arm64`, `@rolldown/binding-linux-arm64-gnu`)
+  still present → all tooling ran; built into fresh `dist-s5/` (unlink blocked; `dist-*/` already gitignored).
+  Render-smoke file gitignored (`scripts/_smoke-*.ts`) — **user can `rm scripts/_smoke-s5.ts`** (and stale
+  `_smoke-s3.ts`/`_smoke-s4.ts`). **No stale `.git/index.lock` this session** (checked — absent), so no lock
+  cleanup needed unless one reappears.
+  **Next (S6):** SQL mastery cont. — M10 SQL in depth (joins/CTE/window/NULL logic); M11 Views, procedural SQL &
+  triggers. **Pending user:** repo is already live (§11) — S5 appears live once committed & **merged to `main`**;
+  locally `npm install` (darwin-arm64) + `npm run verify`; optional cleanup `rm -rf dist-s2 dist-s3 dist-s4 dist-s5`.

@@ -238,4 +238,53 @@ export const glossary: GlossaryEntry[] = [
     },
     seeAlso: ['normalization'],
   },
+  // CHANGED (S5): M8/M9 terms.
+  {
+    term: 'primary key',
+    def: {
+      en: 'The candidate key chosen as a row’s official identity: NOT NULL, one per table, and the usual target of foreign keys.',
+      uk: 'Candidate key, обраний офіційною ідентичністю рядка: NOT NULL, один на таблицю, і звичайна ціль для foreign keys.',
+    },
+    seeAlso: ['foreign key', 'surrogate key'],
+  },
+  {
+    term: 'foreign key',
+    def: {
+      en: 'A column set whose values must match an existing row in another (or the same) table; the database enforces it as referential integrity.',
+      uk: 'Набір колонок, чиї значення мають відповідати наявному рядку іншої (чи тієї ж) таблиці; база забезпечує це як referential integrity.',
+    },
+    seeAlso: ['referential integrity', 'primary key'],
+  },
+  {
+    term: 'referential integrity',
+    def: {
+      en: 'The guarantee that every foreign-key value points at a real parent row (or is NULL); orphans are impossible by construction.',
+      uk: 'Гарантія, що кожне значення foreign key вказує на реальний батьківський рядок (або є NULL); orphans неможливі за побудовою.',
+    },
+    seeAlso: ['foreign key'],
+  },
+  {
+    term: 'surrogate key',
+    def: {
+      en: 'A synthetic, meaningless identifier (an IDENTITY integer or a UUID) used as a stable primary key instead of real-world data.',
+      uk: 'Синтетичний беззмістовний ідентифікатор (IDENTITY integer чи UUID), що править за стабільний primary key замість реальних даних.',
+    },
+    seeAlso: ['primary key', 'foreign key'],
+  },
+  {
+    term: 'generated column',
+    def: {
+      en: 'A column whose value is computed from other columns — STORED (written to disk) or VIRTUAL (computed on read; the default since PostgreSQL 18).',
+      uk: 'Колонка, чиє значення обчислюється з інших колонок — STORED (пишеться на диск) чи VIRTUAL (рахується на читанні; дефолт від PostgreSQL 18).',
+    },
+    seeAlso: ['primary key'],
+  },
+  {
+    term: 'jsonb',
+    def: {
+      en: 'PostgreSQL’s decomposed binary JSON type: slower to write than json but far faster to query and GIN-indexable. For variable, not stable, data.',
+      uk: 'Розкладений двійковий JSON-тип PostgreSQL: повільніший на запис за json, але значно швидший на запит і GIN-індексований. Для змінних, а не стабільних, даних.',
+    },
+    seeAlso: ['normalization'],
+  },
 ];

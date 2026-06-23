@@ -9,11 +9,14 @@ import { m5 } from './modules/m5-anatomy-of-a-query';
 // CHANGED (S4): M6–M7 authored from stubs.
 import { m6 } from './modules/m6-er-modeling';
 import { m7 } from './modules/m7-normalization';
+// CHANGED (S5): M8–M9 authored from stubs.
+import { m8 } from './modules/m8-keys-constraints';
+import { m9 } from './modules/m9-data-types';
 import { m13 } from './modules/m13-btree';
 
 /*
  * concepts.ts — the SINGLE SOURCE OF TRUTH (CLAUDE.md §2, §4).
- * 8 sections · 36 modules. M13 is fully authored (S1 golden); the other 35 are
+ * 8 sections · 36 modules. M1–M9 + M13 are fully authored; the remaining modules are
  * navigable bilingual stubs (title + tagline + mental model authored now; topics,
  * key points, pitfalls and sources land in later sessions per the roadmap).
  */
@@ -132,40 +135,9 @@ export const modules: Module[] = [
   // CHANGED (S4): M6–M7 now fully authored (imported above).
   m6,
   m7,
-  stub({
-    id: 'm8-keys-constraints',
-    num: 8,
-    section: 's2-relational',
-    order: 3,
-    level: 'middle',
-    title: { en: 'Keys & constraints', uk: 'Ключі та constraints' },
-    tagline: {
-      en: 'PK/FK/unique/candidate, referential actions, CHECK/NOT NULL/DEFAULT.',
-      uk: 'PK/FK/unique/candidate, referential actions, CHECK/NOT NULL/DEFAULT.',
-    },
-    readMins: 9,
-    mentalModel: {
-      en: "Constraints are the database's last line of integrity — push invariants down into it.",
-      uk: 'Constraints — остання лінія цілісності бази даних; проштовхуйте інваріанти в неї.',
-    },
-  }),
-  stub({
-    id: 'm9-data-types',
-    num: 9,
-    section: 's2-relational',
-    order: 4,
-    level: 'middle',
-    title: { en: 'Data types done right', uk: 'Типи даних правильно' },
-    tagline: {
-      en: 'Strings, the FLOAT-for-money disaster, dates/zones, JSONB, arrays, enums, UUID.',
-      uk: 'Рядки, катастрофа FLOAT для грошей, дати/zones, JSONB, масиви, enums, UUID.',
-    },
-    readMins: 10,
-    mentalModel: {
-      en: 'A type is a constraint: the narrowest type that fits is the safest.',
-      uk: 'Тип — це constraint: найвужчий тип, що підходить, — найбезпечніший.',
-    },
-  }),
+  // CHANGED (S5): M8–M9 now fully authored (imported above).
+  m8,
+  m9,
   stub({
     id: 'm10-sql-in-depth',
     num: 10,
