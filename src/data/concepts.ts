@@ -25,6 +25,9 @@ import { m16 } from './modules/m16-query-planning';
 // CHANGED (S9): M17 + M18 authored from stubs (ACID/WAL stepper + Isolation anomalies sim). Section IV begins.
 import { m17 } from './modules/m17-acid-wal';
 import { m18 } from './modules/m18-isolation';
+// CHANGED (S10): M19 + M20 authored from stubs (MVCC sim + distributed-tx figures). Section IV complete.
+import { m19 } from './modules/m19-mvcc';
+import { m20 } from './modules/m20-distributed-tx';
 
 /*
  * concepts.ts — the SINGLE SOURCE OF TRUTH (CLAUDE.md §2, §4).
@@ -170,41 +173,11 @@ export const modules: Module[] = [
   // recovery stepper; M18 ships the ★ Isolation anomalies sim. Section IV (transactions) begins.
   m17, // ★ ACID/WAL crash-recovery stepper
   m18, // ★ Isolation anomalies
-  stub({
-    id: 'm19-mvcc',
-    num: 19,
-    section: 's4-transactions',
-    order: 3,
-    level: 'staff',
-    signature: true,
-    title: { en: 'Concurrency control', uk: 'Контроль конкурентності' },
-    tagline: {
-      en: 'MVCC vs locking, 2PL, snapshot isolation, deadlocks, vacuum/bloat.',
-      uk: 'MVCC проти locking, 2PL, snapshot isolation, deadlocks, vacuum/bloat.',
-    },
-    readMins: 13,
-    mentalModel: {
-      en: "Everyone reads their own snapshot; readers don't block writers.",
-      uk: 'Кожен читає власний snapshot; читачі не блокують записувачів.',
-    },
-  }),
-  stub({
-    id: 'm20-distributed-tx',
-    num: 20,
-    section: 's4-transactions',
-    order: 4,
-    level: 'staff',
-    title: { en: 'Distributed transactions', uk: 'Розподілені транзакції' },
-    tagline: {
-      en: '2PC and its blocking problem, sagas & compensation, the outbox, idempotency.',
-      uk: '2PC і його проблема блокування, sagas і компенсація, outbox, idempotency.',
-    },
-    readMins: 12,
-    mentalModel: {
-      en: "Across machines you agree then act — or you undo. 'Exactly-once' is a myth.",
-      uk: 'Між машинами ви домовляєтесь, тоді дієте — або відкочуєте. «Exactly-once» — міф.',
-    },
-  }),
+  // CHANGED (S10): M19 + M20 now fully authored (imported above). M19 ships the ★ MVCC version-chain
+  // + lock-contrast sim and references the pre-built deadlock-cycle figure; M20 is figures-only
+  // (2PC / saga / outbox). Section IV (transactions & concurrency) complete.
+  m19, // ★ MVCC sim
+  m20,
 
   // ── Section V · Distribution, scale & reliability ────────────────────────
   stub({
