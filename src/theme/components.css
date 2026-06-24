@@ -2268,3 +2268,309 @@
   color: var(--tx2);
   margin: 0;
 }
+
+/* CHANGED (S9): M17 ACID / WAL crash-recovery stepper. */
+.acid-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  margin-top: 0.6rem;
+}
+.acid-lane {
+  background: var(--surface);
+  border: 1px solid var(--line2);
+  border-radius: var(--r-md);
+  padding: 0.6rem 0.7rem;
+  transition: border-color 0.25s var(--ease), box-shadow 0.25s var(--ease);
+}
+.acid-lane--hot {
+  border-color: var(--accent);
+  box-shadow: var(--shadow-glow);
+}
+.acid-lane--crash {
+  border-color: var(--c-danger);
+  box-shadow: 0 0 0 1px var(--c-danger-soft);
+}
+.acid-lane-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.6rem;
+  margin-bottom: 0.4rem;
+}
+.acid-lane-name {
+  font-weight: 700;
+  font-size: 0.84rem;
+}
+.acid-lane-tag {
+  font-size: 0.72rem;
+}
+.acid-txstatus {
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  color: var(--tx2);
+  border: 1px solid var(--line2);
+  border-radius: 999px;
+  padding: 0.06rem 0.5rem;
+}
+.acid-txstatus--ok {
+  color: var(--c-commit);
+  border-color: var(--c-commit);
+  background: var(--c-commit-soft);
+}
+.acid-sql {
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--c-query);
+  border-radius: var(--r-sm);
+  padding: 0.45rem 0.6rem;
+  font-size: 0.8rem;
+  color: var(--tx);
+  overflow-x: auto;
+  margin: 0;
+}
+.acid-tx.acid-lane--crash .acid-sql {
+  border-left-color: var(--c-danger);
+  color: var(--c-danger);
+}
+.acid-wal {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+.acid-wal-rec {
+  font-size: 0.74rem;
+  color: var(--tx2);
+  background: var(--bg);
+  border: 1px solid var(--line2);
+  border-radius: var(--r-sm);
+  padding: 0.2rem 0.5rem;
+}
+.acid-wal-rec--commit {
+  color: var(--c-commit);
+  border-color: var(--c-commit);
+  background: var(--c-commit-soft);
+  font-weight: 700;
+}
+.acid-wal-rec--pending {
+  border-style: dashed;
+  opacity: 0.6;
+}
+.acid-empty {
+  font-size: 0.78rem;
+}
+.acid-pages {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.6rem;
+}
+.acid-store {
+  background: var(--bg);
+  border: 1px solid var(--line2);
+  border-radius: var(--r-sm);
+  padding: 0.45rem 0.55rem;
+  transition: opacity 0.25s var(--ease);
+}
+.acid-store--gone {
+  border-style: dashed;
+  border-color: var(--c-danger);
+  opacity: 0.85;
+}
+.acid-store-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.4rem;
+  margin-bottom: 0.3rem;
+}
+.acid-store-name {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--c-storage);
+}
+.acid-store-tag {
+  font-size: 0.68rem;
+}
+.acid-accts {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+.acid-acct {
+  font-size: 0.82rem;
+  color: var(--tx2);
+}
+.acid-acct b {
+  color: var(--tx);
+}
+.acid-store-wiped {
+  font-size: 0.78rem;
+  color: var(--c-danger);
+}
+.acid-outcome {
+  border-radius: var(--r-md);
+  padding: 0.55rem 0.75rem;
+  font-size: 0.84rem;
+  line-height: 1.5;
+}
+.acid-outcome--good {
+  background: var(--c-commit-soft);
+  border: 1px solid var(--c-commit);
+  color: var(--tx);
+}
+.acid-outcome--bad {
+  background: var(--c-danger-soft);
+  border: 1px solid var(--c-danger);
+  color: var(--tx);
+}
+
+/* CHANGED (S9): M18 Isolation anomalies sim. */
+.seg-wrap {
+  flex-wrap: wrap;
+}
+.iso-bar {
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: flex-start;
+}
+.iso-pick {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+.iso-pick-label {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.iso-premise {
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: var(--tx2);
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--r-sm);
+  padding: 0.5rem 0.7rem;
+  margin: 0.7rem 0;
+}
+.iso-premise-tag {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-right: 0.5rem;
+}
+.iso-timeline {
+  margin-top: 0.7rem;
+  border: 1px solid var(--line2);
+  border-radius: var(--r-md);
+  padding: 0.55rem 0.65rem;
+  background: var(--surface);
+}
+.iso-cols-head {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 0.5rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 0.5rem;
+}
+.iso-col-name {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+.iso-cols-head .iso-col-name:last-child {
+  text-align: right;
+}
+.iso-time {
+  font-size: 0.72rem;
+}
+.iso-steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.iso-step {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
+.iso-cell {
+  border: 1px solid var(--line2);
+  border-radius: var(--r-sm);
+  padding: 0.35rem 0.55rem;
+  background: var(--bg);
+  font-size: 0.76rem;
+}
+.iso-step--t1 .iso-cell {
+  grid-column: 1;
+  border-left: 3px solid var(--c-query);
+}
+.iso-step--t2 .iso-cell {
+  grid-column: 2;
+  border-left: 3px solid var(--c-dist);
+}
+.iso-step--now .iso-cell {
+  box-shadow: var(--shadow-glow);
+  border-color: var(--accent);
+}
+.iso-op {
+  display: block;
+  color: var(--tx);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.iso-detail {
+  display: block;
+  margin-top: 0.18rem;
+  font-size: 0.72rem;
+}
+.iso-verdict {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.55rem;
+  margin-top: 0.7rem;
+  border-radius: var(--r-md);
+  padding: 0.55rem 0.75rem;
+  font-size: 0.84rem;
+  line-height: 1.5;
+}
+.iso-verdict--good {
+  background: var(--c-commit-soft);
+  border: 1px solid var(--c-commit);
+}
+.iso-verdict--bad {
+  background: var(--c-danger-soft);
+  border: 1px solid var(--c-danger);
+}
+.iso-verdict-tag {
+  font-weight: 700;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  padding: 0.1rem 0.5rem;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+.iso-verdict--good .iso-verdict-tag {
+  color: var(--c-commit);
+  border: 1px solid var(--c-commit);
+}
+.iso-verdict--bad .iso-verdict-tag {
+  color: var(--c-danger);
+  border: 1px solid var(--c-danger);
+}
+.iso-verdict-how {
+  flex: 1 1 240px;
+  color: var(--tx);
+}
+@media (max-width: 560px) {
+  .acid-pages {
+    grid-template-columns: 1fr;
+  }
+}

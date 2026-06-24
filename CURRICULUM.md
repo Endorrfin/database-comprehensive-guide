@@ -200,7 +200,7 @@ reused). Sections carry an `accent` (the section colour); modules carry `level`,
 - 19.2 MVCC — row versions, snapshots, visibility; readers don't block writers
 - 19.3 Locking & 2PL — lock modes, lock escalation, deadlocks & detection
 - 19.4 The cost of MVCC — bloat, vacuum/GC, long-running transactions
-- Visuals: `[sim ★]` **MVCC** (versions per row, two snapshots, visibility, vacuum reclaim) · `[diagram]` deadlock cycle · `[compare]` MVCC vs locking · `[callout warn]` long transactions & bloat · `[mental-model]` "everyone reads their own snapshot"
+- Visuals: `[sim ★]` **MVCC** (versions per row, two snapshots, visibility, vacuum reclaim) · `[diagram]` **deadlock cycle** *(pre-built in S9 — `figures/DeadlockCycle.tsx`, registry key `deadlock-cycle`; S10 adds the `figure` block + bilingual caption)* · `[compare]` MVCC vs locking · `[callout warn]` long transactions & bloat · `[mental-model]` "everyone reads their own snapshot"
 
 **M20 · Distributed transactions**  `[staff]`
 - 20.1 Why distribution breaks single-node ACID

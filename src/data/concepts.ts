@@ -22,6 +22,9 @@ import { m14 } from './modules/m14-index-toolbox';
 // CHANGED (S8): M15 + M16 authored from stubs (two signature sims). Section III complete.
 import { m15 } from './modules/m15-lsm';
 import { m16 } from './modules/m16-query-planning';
+// CHANGED (S9): M17 + M18 authored from stubs (ACID/WAL stepper + Isolation anomalies sim). Section IV begins.
+import { m17 } from './modules/m17-acid-wal';
+import { m18 } from './modules/m18-isolation';
 
 /*
  * concepts.ts — the SINGLE SOURCE OF TRUTH (CLAUDE.md §2, §4).
@@ -163,42 +166,10 @@ export const modules: Module[] = [
   m16, // ★ Query Planner / EXPLAIN
 
   // ── Section IV · Transactions & concurrency ──────────────────────────────
-  stub({
-    id: 'm17-acid-wal',
-    num: 17,
-    section: 's4-transactions',
-    order: 1,
-    level: 'senior',
-    signature: true,
-    title: { en: 'ACID & durability', uk: 'ACID та durability' },
-    tagline: {
-      en: 'The four guarantees, the Write-Ahead Log, commit & crash recovery.',
-      uk: 'Чотири гарантії, Write-Ahead Log, commit і відновлення після збою.',
-    },
-    readMins: 12,
-    mentalModel: {
-      en: "Write your intentions down first (WAL); then it's safe to change the data.",
-      uk: 'Спершу запишіть наміри (WAL); потім безпечно змінювати дані.',
-    },
-  }),
-  stub({
-    id: 'm18-isolation',
-    num: 18,
-    section: 's4-transactions',
-    order: 2,
-    level: 'staff',
-    signature: true,
-    title: { en: 'Isolation levels & anomalies', uk: 'Isolation levels та аномалії' },
-    tagline: {
-      en: 'Dirty/non-repeatable/phantom/write-skew; the SQL levels vs what engines really do.',
-      uk: 'Dirty/non-repeatable/phantom/write-skew; рівні SQL проти того, що движки роблять насправді.',
-    },
-    readMins: 13,
-    mentalModel: {
-      en: "Isolation is the illusion that you're alone — each level buys more of it for more cost.",
-      uk: 'Isolation — це ілюзія, що ви самі; кожен рівень купує її більше за більшу ціну.',
-    },
-  }),
+  // CHANGED (S9): M17 + M18 now fully authored (imported above). M17 ships the ★ ACID/WAL crash-
+  // recovery stepper; M18 ships the ★ Isolation anomalies sim. Section IV (transactions) begins.
+  m17, // ★ ACID/WAL crash-recovery stepper
+  m18, // ★ Isolation anomalies
   stub({
     id: 'm19-mvcc',
     num: 19,

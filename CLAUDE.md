@@ -417,7 +417,7 @@ Footer: **"Vasyl Krupka · Senior Fullstack Engineer"** + 🇺🇦. Dark is prim
   in S6** to keep the two dense modules tight and avoid bundle growth before the code-split below. Follow BTreeSim
   conventions (deterministic, play/pause/step, reduced-motion fallback, ARIA); register a sim key and flip M10's
   `window-frame` block from `figure` → `sim`. Slot opportunistically (S19–S20).
-- **Bundle code-split / per-module lazy-load (≈S10–S12)** — JS is **~307 KB gzip at 16 authored modules** (+43 in S8;
+- **Bundle code-split / per-module lazy-load (≈S10–S12)** — JS is **~348 KB gzip at 18 authored modules** (+41 in S9;
   Vite now warns the raw chunk is >900 KB) and grows with bilingual content; before it gets heavy, route-split so each
   module's data/figures/sims load on demand
   (dynamic `import()` per module in the hash router + `React.lazy` for sims). Must keep `check:data`, the render
@@ -807,3 +807,66 @@ Footer: **"Vasyl Krupka · Senior Fullstack Engineer"** + 🇺🇦. Dark is prim
   **Next (S9):** Transactions — M17 ACID & WAL (+ **ACID/WAL sim**); M18 Isolation levels & anomalies (+ **Isolation
   sim**). **Pending user:** repo is live (§11) — S8 appears live once committed & **merged to `main`**; locally
   `npm install` (darwin-arm64) + `npm run verify`; optional cleanup `rm -rf dist-s2 dist-s3 dist-s4 dist-s5 dist-s6 dist-s7 dist-s8`.
+
+- **2026-06-24 · S9 Transactions (ACID/WAL · isolation)** *(branch `s9-acid-wal-isolation`)* — Authored the first two
+  Section-IV modules **fully EN+UA** to the M13 depth bar, lifting authored modules from 16 → **18** (Section IV now 2 of
+  4: M17, M18; M19–M20 land in S10). Shipped **both confirmed sims** (user choice this session: build both; code-split
+  deferred to S10–S12). **M17 · ACID & durability** `[senior]` *(light signature)* (4 topics: the four guarantees · the
+  Write-Ahead Log · commit & crash recovery · "consistency" here vs CAP; new **wal-checkpoint** SVG figure [append-only
+  WAL with checkpoint + COMMIT(fsync) durability point + REDO span; data files flushed lazily], the ★ **ACID/WAL stepper**,
+  an ACID-letter→mechanism table, a **synchronous_commit on/off** compare, a BEGIN/COMMIT + `SET LOCAL synchronous_commit`
+  code block, tip/senior/warn/senior callouts [A&D share the WAL · the WAL is the engine not just a net · **fsync=off risks
+  corruption, not just loss** · PG has no undo log — atomicity via MVCC], 5 keyPoints, 3 pitfalls, 3 interview Q&A
+  [senior/senior/staff], 6 web-verified sources). **M18 · Isolation levels & anomalies** `[staff]` *(signature)* (4 topics:
+  the anomalies · the SQL-standard levels · standard vs reality · Serializable & the cost of correctness; the ★ **Isolation
+  anomalies sim**, new **level-anomaly-matrix** SVG figure [PG Table 13.1 + lost-update & write-skew rows, the boxed
+  write-skew×RR cell], an anomaly→lowest-level table, a **snapshot-vs-serializable** compare, a `BEGIN ISOLATION LEVEL
+  SERIALIZABLE` + retry-loop code block, senior/warn callouts [**PG Repeatable Read = Snapshot Isolation** · must handle
+  40001 everywhere], 5 keyPoints, 3 pitfalls, 3 interview Q&A [senior/staff/staff], 6 sources).
+  **★ ACID/WAL stepper** (`sims/AcidWalSim.tsx`, key `acid-wal`): a $100 transfer walks BEGIN → write-ahead debit →
+  write-ahead credit, then a **scenario toggle** picks where the crash lands — *after COMMIT* (WAL fsync'd → recovery REDOes
+  it → **Durability**) vs *before COMMIT* (no commit record → discarded → **Atomicity**). Three lanes (txn op · WAL · data
+  pages split RAM/disk); RAM wipes on crash, recovery replays the WAL into the data files. Play/pause/step + reduced-motion
+  fallback + ARIA live region (mirrors LsmSim). **★ Isolation anomalies sim** (`sims/IsolationSim.tsx`, key `isolation`):
+  pick an anomaly (dirty · non-repeatable · phantom · lost update · write-skew) × a level (RC · RR · SER) → step a fixed
+  two-transaction T1│T2 timeline; the **verdict flips live** (occurs/prevented + a "why") as you change the level.
+  PostgreSQL-accurate: PG never dirty-reads; RR(SI) prevents phantoms + aborts the lost-update loser (40001); **SI still
+  allows write-skew**; only SER(SSI) catches it. Toggle/step-driven, reduced-motion-safe, ARIA tablists + live region. New
+  CSS `.acid-*` + `.iso-*` + `.seg-wrap` appended to `components.css`; both sims + both figures registered; glossary **+10
+  terms** (durability, checkpoint, crash recovery, dirty read, non-repeatable read, phantom read, lost update,
+  serializability, SSI, two-phase locking) → **73**.
+  **Web-verified this session** (sources in module `sources[]`, primary = PG 18 docs): **Table 13.1** (Read Uncommitted
+  mapped to Read Committed → PG never returns a dirty read; **Repeatable Read = Snapshot Isolation** prevents non-repeatable
+  AND phantom reads — stronger than the standard; "serialization anomaly" Possible at RR, Not possible at Serializable);
+  RR aborts a conflicting update with **"could not serialize access due to concurrent update" (40001)** → no lost update;
+  **Serializable = SSI** (since **9.1**; predicate locks `SIReadLock`, non-blocking; Cahill/Fekete/Röhm; Ports & Grittner
+  VLDB'12 `[ports12]`); the docs' class/value **SUM example** = write-skew; WAL **28.3** ("changes to data files must be
+  written only after WAL records … flushed" → roll-forward/REDO; one `fsync` commits many txns); **28.4 async commit**
+  (`synchronous_commit=off` loses ≤ ~3× `wal_writer_delay` of recent commits but **no inconsistency**, unlike `fsync=off`
+  corruption); checkpoints (**30.5**) bound recovery; ACID coined **Härder & Reuter 1983**; PG has **no undo log** (atomicity
+  via MVCC visibility + clog, vacuum). Berenson et al. 1995 critique (SI/write-skew formalized post-standard). PG stable **18.4**, 19 Beta 1.
+  **Verification (repo, linux-arm64):** `tsc -b --noEmit` ✓ · ESLint ✓ (**clean** — fixed 1 `react-hooks/exhaustive-deps`
+  warning by memoizing the `verdict` Localized in IsolationSim) · `check:data` ✓ (**8 sections, 36 modules [18 authored, 18
+  stubs], 1857 Localized EN+UA pairs**, **10 sims + 17 figures**, 73 glossary terms, all registry keys resolve, cross-links
+  valid) · `test:btree` ✓ (346 checks) · **render+content smoke** ✓ (`react-dom/server` of both new sims inside `LangProvider`
+  + both figures — asserts `acid-wal` shows Crash-after/before-COMMIT + WAL/buffer-cache/data-files + BEGIN + id=1,
+  `isolation` default write-skew@RR → `Anomaly occurs` + `Snapshot Isolation` + `on_call`, `wal-checkpoint` shows
+  CHECKPOINT/COMMIT(fsync)/REDO, `level-anomaly-matrix` shows the three levels + Write-skew + can occur/prevented) ·
+  `vite build` ✓ (**90 modules**, JS **348.16 KB gzip** / CSS 9.01 KB gzip, relative `./assets/` base).
+  **Bundle watch:** JS gzip **307 → 348 KB (+41)** for two dense bilingual modules + 2 sims + 2 figures; Vite still warns the
+  raw chunk is **>900 KB**. Per the user's S9 decision the §13 code-split (updated to "18 modules") stays slated for **S10–S12**.
+  **Sandbox gotchas (expected, §12):** linux helpers from S2 (`@esbuild/linux-arm64`, `@rolldown/binding-linux-arm64-gnu`)
+  still present → all tooling ran; built into fresh `dist-s9/` (unlink blocked; `dist-*/` gitignored). Render-smoke file
+  gitignored (`scripts/_smoke-*.ts`) — **user can `rm scripts/_smoke-s9.ts`** (and any stale `_smoke-s6/s7`). **A stale
+  `.git/index.lock` was created this session** (a sandbox `git status` couldn't unlink it) — **user must `rm -f
+  ".git/index.lock"` locally before committing.**
+  **S9 follow-up (user request):** pre-built the **M19 deadlock-cycle figure** (`figures/DeadlockCycle.tsx`, registry key
+  `deadlock-cycle`) — T1↔T2 wait-for cycle (T1 holds A waits B, T2 holds B waits A), the detector aborts a victim with
+  **ERROR: deadlock detected (SQLSTATE 40P01)** after `deadlock_timeout` (default 1s); facts web-verified (PG
+  explicit-locking + runtime-config-locks). Registered + render-smoked now (**check:data → 18 figures**); intentionally
+  **unreferenced until M19 is authored in S10**, which will add the `figure` block + bilingual caption (harmless: check:data
+  only validates referenced keys). typecheck · lint (clean) · check:data · render smoke · `vite build` all re-verified green.
+  **Next (S10):** Concurrency — M19 Concurrency control / MVCC (+ **MVCC sim**, + the pre-built **deadlock-cycle** figure);
+  M20 Distributed transactions. **Pending
+  user:** repo is live (§11) — S9 appears live once committed & **merged to `main`**; locally `npm install` (darwin-arm64)
+  + `npm run verify`; optional cleanup `rm -rf dist-s2 dist-s3 dist-s4 dist-s5 dist-s6 dist-s7 dist-s8 dist-s9 dist-s9b`.
