@@ -417,8 +417,9 @@ Footer: **"Vasyl Krupka · Senior Fullstack Engineer"** + 🇺🇦. Dark is prim
   in S6** to keep the two dense modules tight and avoid bundle growth before the code-split below. Follow BTreeSim
   conventions (deterministic, play/pause/step, reduced-motion fallback, ARIA); register a sim key and flip M10's
   `window-frame` block from `figure` → `sim`. Slot opportunistically (S19–S20).
-- **Bundle code-split / per-module lazy-load (≈S10–S12)** — JS is **~264 KB gzip at 14 authored modules** (+34 in S7)
-  and grows with bilingual content; before it gets heavy, route-split so each module's data/figures/sims load on demand
+- **Bundle code-split / per-module lazy-load (≈S10–S12)** — JS is **~307 KB gzip at 16 authored modules** (+43 in S8;
+  Vite now warns the raw chunk is >900 KB) and grows with bilingual content; before it gets heavy, route-split so each
+  module's data/figures/sims load on demand
   (dynamic `import()` per module in the hash router + `React.lazy` for sims). Must keep `check:data`, the render
   smoke, and SSR/route smoke working across the split, and preserve global search (which currently indexes all
   modules eagerly — may need a lightweight prebuilt index).
@@ -752,3 +753,57 @@ Footer: **"Vasyl Krupka · Senior Fullstack Engineer"** + 🇺🇦. Dark is prim
   sim**) — two signature sims, a heavy session. **Pending user:** repo is live (§11) — S7 appears live once committed &
   **merged to `main`**; locally `npm install` (darwin-arm64) + `npm run verify`; optional cleanup
   `rm -rf dist-s2 dist-s3 dist-s4 dist-s5 dist-s6 dist-s7`.
+
+- **2026-06-24 · S8 Storage internals (LSM / query-planning)** *(branch `s8-lsm-query-planning`)* — Authored the two
+  remaining Section-III modules **fully EN+UA** to the M13 depth bar, **completing Section III** (M12–M16) and lifting
+  authored modules from 14 → **16**. Shipped **both confirmed signature sims** (no trim — user asked for «два
+  signature-сими»). **M15 · LSM-trees & write-optimized storage** `[staff]` *(signature)* (5 topics: the write problem ·
+  memtable/SSTable/compaction · reads — Bloom filters & tombstones · the amplification triangle · who uses it; new
+  **lsm-vs-btree** SVG figure [random in-place page write vs sequential append+flush], the ★ **LSM compaction stepper**,
+  a Cassandra-CQL compaction-strategy code block, a B-Tree↔LSM compare, engine-usage table, tip/senior/warn callouts
+  [Bloom “definitely-not/maybe”, sequential-beats-random, don’t-reach-for-LSM-by-reflex, WAL-is-log-structured-too], 5
+  keyPoints, 3 pitfalls, 3 interview Q&A [senior/senior/staff incl. the Cassandra tombstone incident], 6 web-verified
+  sources). **M16 · Query planning & optimization** `[staff]` *(signature)* (5 topics: the optimizer’s job · statistics &
+  cardinality · access paths & join algorithms · reading EXPLAIN ANALYZE · helping the planner; new **plan-tree** SVG
+  figure [annotated EXPLAIN node — estimates vs actuals, the misestimate to hunt], the ★ **Query Planner / EXPLAIN sim**,
+  a per-column-statistics table, a 3-join-algorithm table, an EXPLAIN↔EXPLAIN ANALYZE compare, an EXPLAIN(ANALYZE)+
+  ANALYZE/CREATE STATISTICS code block, senior/tip/warn callouts [cost≠ms, CREATE STATISTICS for correlation, no
+  per-query hints by design], 5 keyPoints, 3 pitfalls, 3 interview Q&A [senior/senior/staff], 6 sources).
+  **★ LSM compaction stepper** (`sims/LsmSim.tsx`, key `lsm-tree`): a 9-frame deterministic workload walks
+  buffer→memtable-full→**flush**→update/del→second flush→**compaction** (newest wins, tombstone purged, space reclaimed)
+  →**read present** (Bloom “maybe” → hit) →**read absent** (Bloom “no” → 0 disk reads); a Leveled↔Size-tiered toggle
+  drives the read/write/space **amplification meters** (the RUM trade). Play/pause/step + reduced-motion fallback + ARIA
+  live region, mirrors BTreeSim. **★ Query Planner / EXPLAIN** (`sims/QueryPlannerSim.tsx`, key `query-planner`): a fixed
+  two-table join with two toggles — index on `orders.status`? × predicate selectivity — flips the 2×2 between
+  `Index Scan`+`Nested Loop` and `Seq Scan`+`Hash Join`, with the plan tree, est. cost/rows and a “why” updating; toggle-
+  driven, inherently reduced-motion-safe, ARIA tablists + live region (like ErExplorer/IndexPicker). New CSS `.lsm-*` +
+  `.qplan-*` blocks appended to `components.css`; both sims + both figures registered; glossary **+15 terms** (LSM-tree,
+  memtable, SSTable, compaction, Bloom filter, tombstone, amplification, cardinality, selectivity, cost-based optimizer,
+  EXPLAIN, nested loop/hash/merge join) → **63**.
+  **Web-verified this session** (sources in module `sources[]`): **O’Neil et al. 1996** (the LSM-tree paper); **RUM
+  conjecture** (Athanassoulis et al., EDBT 2016 — optimize 2 of read/update/memory); **RocksDB** leveled (default; ~10×
+  levels, non-overlapping within a level; write amp ~10–30×) vs **universal/size-tiered**, **Cassandra** STCS default +
+  TimeWindow for TTL; Bloom filters skip SSTables with **no false negatives**; tombstones purged at compaction. Planner:
+  **cost-based**, `seq_page_cost=1.0`/`random_page_cost=4.0` (HDD-era; ~1.1 for SSD); stats via **ANALYZE** → MCV list
+  (equality), histogram (ranges), n_distinct, correlation; **independence assumption** breaks correlated columns →
+  **`CREATE STATISTICS`** (deps/ndistinct since **PG10**, multivariate **MCV since PG13**); joins nested-loop/hash/merge;
+  join order DP **< geqo_threshold=12**, **GEQO** at/above; **EXPLAIN ANALYZE includes BUFFERS by default since PG18**
+  (Lelarge/Rowley); the misestimate hunt = lowest node where est vs actual rows diverge ~10×+; PostgreSQL ships **no
+  per-query hints** by design. PG latest stable **18.4**, 19 Beta 1.
+  **Verification (repo, linux-arm64):** `tsc -b --noEmit` ✓ · ESLint ✓ (clean) · `check:data` ✓ (**8 sections, 36 modules
+  [16 authored, 20 stubs], 1711 Localized EN+UA pairs**, **8 sims + 15 figures**, 63 glossary terms, all registry keys
+  resolve, cross-links valid) · `test:btree` ✓ (346 checks) · **render+content smoke** ✓ (`react-dom/server` of both new
+  sims inside `LangProvider` + both figures — asserts `lsm-tree` shows memtable/SSTables/Leveled/Size-tiered/Bloom-
+  filtered/Write+Space amplification/tombstone, `query-planner` default → `Nested Loop`+`orders_status_idx`, `lsm-vs-btree`
+  shows random-vs-sequential write paths, `plan-tree` shows `actual rows=80` vs `rows=600000` misestimate) · `vite build`
+  ✓ (**84 modules**, JS **307.19 KB gzip** / CSS 8.33 KB gzip, relative `./assets/` base).
+  **Bundle watch:** JS gzip **264 → 307 KB (+43)** for two dense bilingual staff modules + 2 sims + 2 figures; Vite now
+  warns the raw chunk is **>900 KB**. Reinforces the §13 code-split backlog item (updated to "16 modules") — worth doing
+  around S10–S12 as planned.
+  **Sandbox gotchas (expected, §12):** linux helpers from S2 (`@esbuild/linux-arm64`, `@rolldown/binding-linux-arm64-gnu`)
+  still present → all tooling ran; built into fresh `dist-s8/` (unlink blocked; `dist-*/` gitignored). Render-smoke file
+  gitignored (`scripts/_smoke-*.ts`) — **user can `rm scripts/_smoke-s8.ts`** (and any stale `_smoke-s3..7`). **No stale
+  `.git/index.lock` this session** (checked — absent).
+  **Next (S9):** Transactions — M17 ACID & WAL (+ **ACID/WAL sim**); M18 Isolation levels & anomalies (+ **Isolation
+  sim**). **Pending user:** repo is live (§11) — S8 appears live once committed & **merged to `main`**; locally
+  `npm install` (darwin-arm64) + `npm run verify`; optional cleanup `rm -rf dist-s2 dist-s3 dist-s4 dist-s5 dist-s6 dist-s7 dist-s8`.

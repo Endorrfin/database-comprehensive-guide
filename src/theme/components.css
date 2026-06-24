@@ -1920,3 +1920,351 @@
 .idx-dot--no {
   background: var(--tx3);
 }
+
+/* CHANGED (S8): M15 LSM-tree compaction stepper. */
+.lsm-body {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.9rem;
+  align-items: flex-start;
+}
+.lsm-store {
+  flex: 1 1 340px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  min-width: 0;
+}
+.lsm-lane {
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  padding: 0.55rem 0.65rem;
+  transition: border-color 0.2s var(--ease), box-shadow 0.2s var(--ease);
+}
+.lsm-lane--hot {
+  border-color: var(--accent-deep);
+  box-shadow: var(--shadow-glow);
+}
+.lsm-lane-head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 0.45rem;
+}
+.lsm-lane-name {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+.lsm-lane-tag {
+  font-size: 0.72rem;
+}
+.lsm-mem {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  min-height: 1.9rem;
+  align-items: center;
+}
+.lsm-cell {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: var(--tx);
+  background: var(--c-query-soft);
+  border: 1px solid var(--c-query);
+  border-radius: var(--r-sm);
+  padding: 0.18rem 0.45rem;
+}
+.lsm-cell--tomb {
+  background: var(--c-danger-soft);
+  border-color: var(--c-danger);
+  color: var(--c-danger);
+}
+.lsm-empty {
+  font-size: 0.8rem;
+  font-style: italic;
+}
+.lsm-levels {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+.lsm-level {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+.lsm-level-name {
+  width: 1.8rem;
+  flex: none;
+  color: var(--c-storage);
+  font-weight: 700;
+  font-size: 0.82rem;
+  padding-top: 0.25rem;
+}
+.lsm-tables {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  min-height: 1.7rem;
+  align-items: center;
+}
+.lsm-sst {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  background: var(--c-storage-soft);
+  border: 1px solid var(--c-storage);
+  border-radius: var(--r-sm);
+  padding: 0.3rem 0.45rem;
+}
+.lsm-sst--merged {
+  border-style: solid;
+  box-shadow: inset 0 0 0 1px var(--c-storage-soft);
+}
+.lsm-sst-id {
+  font-size: 0.66rem;
+  color: var(--c-storage);
+  letter-spacing: 0.03em;
+}
+.lsm-sst-cells {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+.lsm-sst .lsm-cell {
+  background: var(--s2);
+  border-color: var(--line2);
+  color: var(--tx2);
+  font-size: 0.76rem;
+  padding: 0.12rem 0.38rem;
+}
+.lsm-sst .lsm-cell--tomb {
+  background: var(--c-danger-soft);
+  border-color: var(--c-danger);
+  color: var(--c-danger);
+}
+.lsm-read {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.55rem;
+  background: var(--s2);
+  border: 1px solid var(--line2);
+  border-radius: var(--r-md);
+  padding: 0.5rem 0.65rem;
+}
+.lsm-read-q {
+  font-size: 0.84rem;
+  color: var(--accent-bright);
+  font-weight: 700;
+}
+.lsm-read-steps {
+  font-size: 0.78rem;
+  flex: 1 1 200px;
+}
+.lsm-read-out {
+  font-size: 0.82rem;
+  font-weight: 700;
+  padding: 0.12rem 0.5rem;
+  border-radius: var(--r-sm);
+}
+.lsm-read-out.ok {
+  color: var(--c-commit);
+  background: var(--c-commit-soft);
+}
+.lsm-read-out.miss {
+  color: var(--tx3);
+  background: var(--bg);
+  border: 1px solid var(--line2);
+}
+.lsm-amp {
+  flex: 1 1 230px;
+  background: var(--bg);
+  border: 1px solid var(--line2);
+  border-radius: var(--r-md);
+  padding: 0.7rem 0.8rem;
+  min-width: 0;
+}
+.lsm-amp-head {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.6rem;
+}
+.lsm-amp-row {
+  margin-bottom: 0.6rem;
+}
+.lsm-amp-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: 0.8rem;
+  color: var(--tx2);
+  margin-bottom: 0.22rem;
+}
+.lsm-amp-word {
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  font-weight: 700;
+}
+.lsm-amp-track {
+  height: 8px;
+  background: var(--s2);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.lsm-amp-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.3s var(--ease);
+}
+.lsm-amp-foot {
+  font-size: 0.74rem;
+  line-height: 1.45;
+  margin: 0.5rem 0 0;
+}
+.lsm-key {
+  font-family: var(--font-mono);
+  color: var(--c-danger);
+  font-weight: 700;
+}
+
+/* CHANGED (S8): M16 Query Planner / EXPLAIN sim. */
+.qplan-sql {
+  background: var(--bg);
+  border: 1px solid var(--line2);
+  border-left: 3px solid var(--c-query);
+  border-radius: var(--r-sm);
+  padding: 0.6rem 0.8rem;
+  font-size: 0.84rem;
+  color: var(--tx);
+  overflow-x: auto;
+  margin: 0 0 0.8rem;
+}
+.qplan-toggles {
+  gap: 1.2rem;
+}
+.qplan-toggle {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+.qplan-toggle-label {
+  font-size: 0.74rem;
+}
+.qplan-body {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.9rem;
+  align-items: stretch;
+}
+.qplan-plan {
+  flex: 1 1 360px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+.qplan-plan-head {
+  font-size: 0.74rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.35rem;
+}
+.qplan-tree {
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  padding: 0.6rem 0.7rem;
+  overflow-x: auto;
+  flex: 1;
+  margin: 0;
+}
+.qplan-tree-line {
+  font-size: 0.78rem;
+  line-height: 1.55;
+  color: var(--tx2);
+  white-space: pre;
+}
+.qplan-tree-root {
+  color: var(--accent-bright);
+  font-weight: 700;
+}
+.qplan-line--index {
+  color: var(--c-storage);
+}
+.qplan-line--seq {
+  color: var(--c-analytics);
+}
+.qplan-side {
+  flex: 1 1 220px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+.qplan-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.qplan-chip {
+  flex: 1 1 100px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  background: var(--bg);
+  border: 1px solid var(--line2);
+  border-left: 3px solid var(--chip, var(--accent));
+  border-radius: var(--r-sm);
+  padding: 0.4rem 0.55rem;
+}
+.qplan-chip-k {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.qplan-chip-v {
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--chip, var(--tx));
+}
+.qplan-metrics {
+  display: flex;
+  gap: 0.8rem;
+  margin: 0;
+}
+.qplan-metrics div {
+  flex: 1;
+}
+.qplan-metrics dt {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.qplan-metrics dd {
+  margin: 0.1rem 0 0;
+  font-size: 1rem;
+  color: var(--tx);
+}
+.qplan-meter {
+  height: 8px;
+  background: var(--s2);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.qplan-meter-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.3s var(--ease), background 0.3s var(--ease);
+}
+.qplan-why {
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: var(--tx2);
+  margin: 0;
+}
