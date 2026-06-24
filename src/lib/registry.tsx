@@ -12,6 +12,9 @@ import { IndexPicker } from '../components/sims/IndexPicker';
 // CHANGED (S8): M15 LSM compaction stepper + M16 Query Planner / EXPLAIN.
 import { LsmSim } from '../components/sims/LsmSim';
 import { QueryPlannerSim } from '../components/sims/QueryPlannerSim';
+// CHANGED (S9): M17 ACID/WAL crash-recovery stepper + M18 Isolation anomalies sim.
+import { AcidWalSim } from '../components/sims/AcidWalSim';
+import { IsolationSim } from '../components/sims/IsolationSim';
 import { BTreeNodeAnatomy } from '../components/figures/BTreeNodeAnatomy';
 // CHANGED (S2): M1 + M3 figures.
 import { FilesVsDbms } from '../components/figures/FilesVsDbms';
@@ -34,6 +37,11 @@ import { IndexOnlyScan } from '../components/figures/IndexOnlyScan';
 // CHANGED (S8): M15 B-Tree-vs-LSM write paths + M16 EXPLAIN plan tree.
 import { LsmVsBtree } from '../components/figures/LsmVsBtree';
 import { PlanTree } from '../components/figures/PlanTree';
+// CHANGED (S9): M17 WAL + checkpoint figure + M18 level×anomaly matrix.
+import { WalCheckpoint } from '../components/figures/WalCheckpoint';
+import { LevelAnomalyMatrix } from '../components/figures/LevelAnomalyMatrix';
+// CHANGED (S9): pre-built for M19 (S10) — deadlock wait-for cycle figure.
+import { DeadlockCycle } from '../components/figures/DeadlockCycle';
 
 /*
  * Registry — content references figures and sims by KEY (CLAUDE.md §4), resolved here.
@@ -48,6 +56,8 @@ export const sims: Record<string, ComponentType> = {
   'index-picker': IndexPicker, // CHANGED (S7)
   'lsm-tree': LsmSim, // CHANGED (S8)
   'query-planner': QueryPlannerSim, // CHANGED (S8)
+  'acid-wal': AcidWalSim, // CHANGED (S9)
+  isolation: IsolationSim, // CHANGED (S9)
 };
 
 export const figures: Record<string, ComponentType> = {
@@ -66,6 +76,9 @@ export const figures: Record<string, ComponentType> = {
   'index-only-scan': IndexOnlyScan, // CHANGED (S7)
   'lsm-vs-btree': LsmVsBtree, // CHANGED (S8)
   'plan-tree': PlanTree, // CHANGED (S8)
+  'wal-checkpoint': WalCheckpoint, // CHANGED (S9)
+  'level-anomaly-matrix': LevelAnomalyMatrix, // CHANGED (S9)
+  'deadlock-cycle': DeadlockCycle, // CHANGED (S9): pre-built; M19 references it in S10
 };
 
 export const getSim = (key: string): ComponentType | undefined => sims[key];

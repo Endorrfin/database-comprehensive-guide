@@ -512,4 +512,86 @@ export const glossary: GlossaryEntry[] = [
     },
     seeAlso: ['nested loop join', 'hash join'],
   },
+  // CHANGED (S9): M17 ACID/WAL + M18 isolation terms (ACID, WAL, isolation level, write-skew,
+  // snapshot isolation already seeded earlier).
+  {
+    term: 'durability',
+    def: {
+      en: 'The D in ACID: once a transaction is reported committed, its effects survive a crash or power loss. In PostgreSQL it is delivered by fsync-ing the WAL at commit; recovery replays the log.',
+      uk: 'D в ACID: щойно транзакцію повідомлено зафіксованою, її ефекти переживають збій чи втрату живлення. У PostgreSQL це дає fsync WAL на commit; відновлення відтворює лог.',
+    },
+    seeAlso: ['WAL', 'checkpoint', 'ACID'],
+  },
+  {
+    term: 'checkpoint',
+    def: {
+      en: 'A point at which all dirty data pages up to then are flushed to the data files and a checkpoint record is written. Crash recovery (REDO) replays the WAL only from the last checkpoint forward, so it bounds recovery time.',
+      uk: 'Момент, коли всі брудні data pages до нього скидаються в data files і пишеться checkpoint-запис. Відновлення після збою (REDO) відтворює WAL лише від останнього checkpoint уперед, тож обмежує час відновлення.',
+    },
+    seeAlso: ['WAL', 'crash recovery'],
+  },
+  {
+    term: 'crash recovery',
+    def: {
+      en: 'Roll-forward (REDO): after a crash the database replays the WAL from the last checkpoint to re-apply committed changes the data files never received. A transaction with no COMMIT record is treated as aborted.',
+      uk: 'Roll-forward (REDO): після збою база відтворює WAL від останнього checkpoint, щоб повторно застосувати зафіксовані зміни, яких data files не отримали. Транзакція без COMMIT-запису трактується як aborted.',
+    },
+    seeAlso: ['WAL', 'checkpoint', 'durability'],
+  },
+  {
+    term: 'dirty read',
+    def: {
+      en: "Reading another transaction's uncommitted write — a value that may be rolled back. Allowed only at Read Uncommitted in the SQL standard; PostgreSQL never permits it (Read Uncommitted is mapped to Read Committed).",
+      uk: 'Читання незафіксованого запису іншої транзакції — значення, яке можуть відкотити. Дозволено лише на Read Uncommitted у SQL-стандарті; PostgreSQL ніколи не дозволяє (Read Uncommitted зведено до Read Committed).',
+    },
+    seeAlso: ['isolation level', 'snapshot isolation'],
+  },
+  {
+    term: 'non-repeatable read',
+    def: {
+      en: 'Re-reading one row within a transaction and getting a different value because another transaction updated and committed it in between. Prevented at Repeatable Read and above.',
+      uk: 'Повторне читання одного рядка в межах транзакції дає інше значення, бо інша транзакція оновила й зафіксувала його поміж. Запобігається на Repeatable Read і вище.',
+    },
+    seeAlso: ['phantom read', 'isolation level'],
+  },
+  {
+    term: 'phantom read',
+    def: {
+      en: "Re-running a query and finding the set of matching rows changed (a row appeared or vanished) because another transaction committed an INSERT/DELETE. The SQL standard prevents it only at Serializable; PostgreSQL's Repeatable Read (Snapshot Isolation) already prevents it.",
+      uk: 'Повторний запит знаходить змінену множину відповідних рядків (рядок зʼявився чи зник), бо інша транзакція зафіксувала INSERT/DELETE. SQL-стандарт запобігає лише на Serializable; Repeatable Read у PostgreSQL (Snapshot Isolation) уже запобігає.',
+    },
+    seeAlso: ['non-repeatable read', 'snapshot isolation'],
+  },
+  {
+    term: 'lost update',
+    def: {
+      en: 'Two transactions read a value, each computes a new one from it, and both write back — so one update silently overwrites the other. Avoid with an atomic UPDATE, SELECT … FOR UPDATE, or a level that aborts the loser (Repeatable Read raises 40001).',
+      uk: 'Дві транзакції читають значення, кожна обчислює з нього нове, й обидві записують назад — тож один update тихо перезаписує інший. Уникайте атомарним UPDATE, SELECT … FOR UPDATE або рівнем, що скасовує програвшого (Repeatable Read кидає 40001).',
+    },
+    seeAlso: ['write-skew', 'isolation level'],
+  },
+  {
+    term: 'serializability',
+    def: {
+      en: 'The correctness guarantee that a set of concurrent transactions produces the same result as some serial (one-at-a-time) execution. The strongest isolation level; no anomaly is observable under it.',
+      uk: 'Гарантія коректності, що набір конкурентних транзакцій дає той самий результат, що й якесь серійне (по одній) виконання. Найсильніший рівень isolation; під ним не спостерігається жодна аномалія.',
+    },
+    seeAlso: ['SSI', 'snapshot isolation', 'write-skew'],
+  },
+  {
+    term: 'SSI',
+    def: {
+      en: 'Serializable Snapshot Isolation — how PostgreSQL implements Serializable (since 9.1). It runs at snapshot-isolation speed but tracks read/write dependencies with non-blocking predicate locks (SIReadLock) and aborts one transaction with SQLSTATE 40001 on a serialization anomaly (e.g. write-skew).',
+      uk: 'Serializable Snapshot Isolation — як PostgreSQL реалізує Serializable (від 9.1). Працює на швидкості snapshot isolation, але відстежує read/write-залежності неблокувальними predicate locks (SIReadLock) і скасовує одну транзакцію з SQLSTATE 40001 на serialization-аномалії (напр., write-skew).',
+    },
+    seeAlso: ['serializability', 'snapshot isolation', 'write-skew'],
+  },
+  {
+    term: 'two-phase locking (2PL)',
+    def: {
+      en: 'A lock-based concurrency-control protocol: a transaction acquires locks in a growing phase and releases them in a shrinking phase, holding them to commit (strict 2PL). It serializes by waiting, which can deadlock — the classic alternative to PostgreSQL’s lock-free SSI.',
+      uk: 'Lock-based протокол контролю конкурентності: транзакція набирає locks у фазі зростання й звільняє у фазі спадання, тримаючи їх до commit (strict 2PL). Серіалізує очікуванням, що може призвести до deadlock — класична альтернатива безблокувальному SSI у PostgreSQL.',
+    },
+    seeAlso: ['SSI', 'isolation level'],
+  },
 ];
