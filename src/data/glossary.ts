@@ -594,4 +594,102 @@ export const glossary: GlossaryEntry[] = [
     },
     seeAlso: ['SSI', 'isolation level'],
   },
+  // CHANGED (S10): M19 MVCC/concurrency terms (MVCC, snapshot isolation, 2PL already seeded earlier).
+  {
+    term: 'VACUUM',
+    def: {
+      en: 'The process that reclaims space from dead tuples left by MVCC, in place, so a table does not grow without bound. It also updates the visibility map (for index-only scans), refreshes statistics, and freezes old XIDs. Usually run automatically by autovacuum; VACUUM FULL instead rewrites the whole table but takes an ACCESS EXCLUSIVE lock.',
+      uk: 'Процес, що звільняє місце від мертвих tuples, лишених MVCC, на місці, щоб таблиця не росла безмежно. Він також оновлює visibility map (для index-only scans), освіжає statistics і freeze-ить старі XID. Зазвичай запускається автоматично через autovacuum; VACUUM FULL натомість переписує всю таблицю, але бере ACCESS EXCLUSIVE lock.',
+    },
+    seeAlso: ['dead tuple', 'autovacuum', 'MVCC'],
+  },
+  {
+    term: 'dead tuple',
+    def: {
+      en: 'An old row version that no running or future snapshot can see, left behind by an UPDATE or DELETE under MVCC. Dead tuples accumulate as bloat until VACUUM reclaims their space — which is why an update-heavy table needs vacuuming even if it never grows in live rows.',
+      uk: 'Стара версія рядка, яку жоден поточний чи майбутній snapshot не бачить, лишена UPDATE чи DELETE за MVCC. Мертві tuples накопичуються як bloat, доки VACUUM не звільнить їхнє місце — тому таблиця з рясними оновленнями потребує вакуумінгу, навіть якщо кількість живих рядків не росте.',
+    },
+    seeAlso: ['VACUUM', 'MVCC'],
+  },
+  {
+    term: 'autovacuum',
+    def: {
+      en: 'The PostgreSQL background daemon that runs VACUUM and ANALYZE automatically when a table’s dead tuples cross a threshold (default 50 + 20% of the row count; PG18 adds an absolute cap). Its defaults are tuned for small tables — lower the per-table scale factor on big, hot tables to keep bloat flat.',
+      uk: 'Фоновий демон PostgreSQL, що запускає VACUUM і ANALYZE автоматично, коли мертві tuples таблиці перетинають поріг (дефолт 50 + 20% кількості рядків; PG18 додає абсолютну стелю). Його дефолти налаштовані на малі таблиці — знижуйте per-table scale factor на великих гарячих таблицях, щоб тримати bloat пласким.',
+    },
+    seeAlso: ['VACUUM', 'dead tuple'],
+  },
+  {
+    term: 'HOT update',
+    def: {
+      en: 'Heap-Only Tuple update — when an UPDATE changes no indexed column and the page has room, PostgreSQL writes the new row version on the same page, reached via a redirect, with NO new index entries. Leaving free space (a lower fillfactor) lets more updates qualify, cutting index bloat on update-heavy tables.',
+      uk: 'Heap-Only Tuple update — коли UPDATE не змінює жодної індексованої колонки і на page є місце, PostgreSQL пише нову версію рядка на тій самій page, доступну через redirect, БЕЗ нових index-записів. Залишене вільне місце (нижчий fillfactor) дає більше оновлень кваліфікуватися, зменшуючи index-bloat на таблицях із рясними оновленнями.',
+    },
+    seeAlso: ['fillfactor', 'dead tuple'],
+  },
+  {
+    term: 'transaction ID wraparound',
+    def: {
+      en: 'PostgreSQL’s transaction ids are 32-bit (~4.2 billion) and wrap around; a live tuple left unvacuumed for >2 billion transactions would appear to be "in the future" and vanish. VACUUM freezes old tuples to prevent it; if freezing falls far enough behind, the database stops accepting writes to protect itself.',
+      uk: 'Transaction id у PostgreSQL — 32-бітні (~4,2 мільярда) і обертаються по колу; живий tuple, лишений невакуумованим понад 2 мільярди транзакцій, видавався б «у майбутньому» і зник би. VACUUM freeze-ить старі tuples, щоб цьому запобігти; якщо freezing відстане досить далеко, база припиняє приймати записи, щоб себе захистити.',
+    },
+    seeAlso: ['VACUUM', 'MVCC'],
+  },
+  {
+    term: 'deadlock',
+    def: {
+      en: 'A cycle in the wait-for graph: T1 holds a lock T2 wants while T2 holds a lock T1 wants, so neither proceeds. PostgreSQL waits deadlock_timeout (default 1s), detects the cycle, and aborts one transaction (the victim) with SQLSTATE 40P01. Prevent by locking objects in a consistent order; survive by retrying.',
+      uk: 'Цикл у wait-for graph: T1 тримає lock, який хоче T2, а T2 тримає lock, який хоче T1, тож жодна не просувається. PostgreSQL чекає deadlock_timeout (дефолт 1с), виявляє цикл і скасовує одну транзакцію (жертву) з SQLSTATE 40P01. Запобігайте блокуванням обʼєктів в узгодженому порядку; переживайте повтором.',
+    },
+    seeAlso: ['two-phase locking (2PL)', 'isolation level'],
+  },
+  // CHANGED (S10): M20 distributed-transaction terms.
+  {
+    term: 'two-phase commit (2PC)',
+    def: {
+      en: 'A protocol to commit a transaction atomically across multiple participants: a coordinator runs a prepare/vote round, then a commit/abort round. Its fatal flaw is blocking — if the coordinator crashes after the yes votes, prepared participants are in-doubt and hold their locks. In PostgreSQL it is off by default (max_prepared_transactions = 0) and meant for an external transaction manager (XA).',
+      uk: 'Протокол для атомарної фіксації транзакції між кількома учасниками: координатор виконує раунд prepare/vote, тоді раунд commit/abort. Його фатальна вада — блокування: якщо координатор падає після голосів yes, підготовлені учасники в сумніві й тримають свої locks. У PostgreSQL вимкнено за замовчуванням (max_prepared_transactions = 0) і призначено для зовнішнього transaction manager (XA).',
+    },
+    seeAlso: ['saga', 'two-phase locking (2PL)'],
+  },
+  {
+    term: 'saga',
+    def: {
+      en: 'A long transaction split into a sequence of local transactions, each committing in its own service, where each step has a compensating transaction that semantically undoes it on failure. Coordinated by orchestration (central) or choreography (events). It gives ACD without isolation — intermediate states are visible.',
+      uk: 'Довга транзакція, розбита на послідовність локальних транзакцій, кожна фіксується у своєму сервісі, де кожен крок має компенсуючу транзакцію, що його семантично скасовує при збої. Координується orchestration (центральна) чи choreography (події). Дає ACD без isolation — проміжні стани видимі.',
+    },
+    seeAlso: ['compensating transaction', 'two-phase commit (2PC)'],
+  },
+  {
+    term: 'compensating transaction',
+    def: {
+      en: 'The action that semantically undoes a committed saga step. It is forward-undo, not a rollback — the original step already happened and was visible, so the compensation is a new business operation (a refund, a cancellation) that must itself be idempotent.',
+      uk: 'Дія, що семантично скасовує зафіксований крок saga. Це forward-undo, не rollback — оригінальний крок уже стався й був видимий, тож компенсація — це нова бізнес-операція (повернення, скасування), яка сама має бути ідемпотентною.',
+    },
+    seeAlso: ['saga', 'idempotency'],
+  },
+  {
+    term: 'transactional outbox',
+    def: {
+      en: 'A pattern that solves the dual-write problem (you cannot atomically update a database AND publish to a broker): write the business row and an event row into an outbox table in the SAME local transaction, then a relay publishes the events — by polling the table or tailing the WAL via logical decoding (CDC). The relay is at-least-once, so consumers must be idempotent.',
+      uk: 'Патерн, що розвʼязує dual-write problem (не можна атомарно оновити базу І опублікувати в broker): запишіть бізнес-рядок і рядок події в таблицю outbox у ТІЙ САМІЙ локальній транзакції, тоді relay публікує події — опитуючи таблицю чи читаючи WAL через logical decoding (CDC). Relay — at-least-once, тож споживачі мають бути ідемпотентними.',
+    },
+    seeAlso: ['idempotency', 'exactly-once'],
+  },
+  {
+    term: 'idempotency',
+    def: {
+      en: 'The property that applying an operation twice has the same effect as applying it once. Essential under at-least-once delivery: consumers dedup with an idempotency key (ideally recorded in the same transaction as the side effect) so a redelivered message — or a retried payment — is not applied twice.',
+      uk: 'Властивість, за якої застосувати операцію двічі дає той самий ефект, що й раз. Незамінна за at-least-once доставки: споживачі роблять dedup за idempotency key (ідеально записаним у тій самій транзакції, що й побічний ефект), щоб передоставлене повідомлення — чи повторений платіж — не застосувалося двічі.',
+    },
+    seeAlso: ['transactional outbox', 'exactly-once'],
+  },
+  {
+    term: 'exactly-once',
+    def: {
+      en: 'A widely misused term. Exactly-once DELIVERY is impossible over an unreliable network (Two Generals / FLP). What is achievable is at-least-once delivery plus idempotent processing, producing the effect of exactly-once ("effectively-once"). Kafka’s exactly-once semantics holds only within Kafka’s read-process-write loop, not for external side effects.',
+      uk: 'Широко неправильно вживаний термін. Exactly-once ДОСТАВКА неможлива через ненадійну мережу (Two Generals / FLP). Досяжне — at-least-once доставка плюс ідемпотентна обробка, що дає ефект exactly-once («effectively-once»). Exactly-once semantics у Kafka тримається лише в її циклі read-process-write, не для зовнішніх побічних ефектів.',
+    },
+    seeAlso: ['idempotency', 'transactional outbox'],
+  },
 ];

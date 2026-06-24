@@ -2574,3 +2574,339 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* CHANGED (S10): M19 MVCC sim. Version chain + snapshot visibility + lock-mode contrast. */
+.mvcc-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  margin-top: 0.6rem;
+}
+.mvcc-lane {
+  background: var(--surface);
+  border: 1px solid var(--line2);
+  border-radius: var(--r-md);
+  padding: 0.6rem 0.7rem;
+  transition: border-color 0.25s var(--ease), box-shadow 0.25s var(--ease);
+}
+.mvcc-lane--hot {
+  border-color: var(--accent);
+  box-shadow: var(--shadow-glow);
+}
+.mvcc-lane--block {
+  border-color: var(--c-danger);
+  box-shadow: 0 0 0 1px var(--c-danger-soft);
+}
+.mvcc-lane-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.6rem;
+  margin-bottom: 0.4rem;
+}
+.mvcc-actor {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 0.82rem;
+}
+.mvcc-phase {
+  font-size: 0.74rem;
+}
+.mvcc-lane-name {
+  font-weight: 700;
+  font-size: 0.82rem;
+}
+.mvcc-lane-tag {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+}
+.mvcc-sql {
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--c-query);
+  border-radius: var(--r-sm);
+  padding: 0.45rem 0.6rem;
+  font-size: 0.78rem;
+  color: var(--tx);
+  overflow-x: auto;
+  margin: 0;
+}
+.mvcc-op.mvcc-lane--block .mvcc-sql {
+  border-left-color: var(--c-danger);
+  color: var(--c-danger);
+}
+/* Heap version chain */
+.mvcc-chain {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.mvcc-tuple {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 168px;
+  background: var(--bg);
+  border: 1.5px solid var(--line2);
+  border-radius: var(--r-sm);
+  padding: 0.4rem 0.55rem;
+  transition: opacity 0.25s var(--ease), border-color 0.25s var(--ease);
+}
+.mvcc-tuple--live {
+  border-color: var(--c-storage);
+}
+.mvcc-tuple--new {
+  border-style: dashed;
+  border-color: var(--c-dist);
+  background: var(--c-dist-soft);
+}
+.mvcc-tuple--dead {
+  border-style: dashed;
+  border-color: var(--c-danger);
+  opacity: 0.72;
+}
+.mvcc-tuple--dead .mvcc-tuple-val {
+  text-decoration: line-through;
+  color: var(--c-danger);
+}
+.mvcc-tuple--gone {
+  border-style: dashed;
+  border-color: var(--c-danger);
+  opacity: 0.32;
+}
+.mvcc-tuple-v {
+  font-weight: 700;
+  font-size: 0.82rem;
+  color: var(--tx);
+}
+.mvcc-tuple-meta {
+  font-size: 0.68rem;
+  color: var(--tx3);
+}
+.mvcc-tuple-val {
+  font-size: 0.82rem;
+  color: var(--tx);
+}
+.mvcc-tuple-state {
+  font-size: 0.66rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--tx2);
+}
+.mvcc-tuple--live .mvcc-tuple-state {
+  color: var(--c-storage);
+}
+.mvcc-tuple--new .mvcc-tuple-state {
+  color: var(--c-dist);
+}
+.mvcc-tuple--dead .mvcc-tuple-state,
+.mvcc-tuple--gone .mvcc-tuple-state {
+  color: var(--c-danger);
+}
+/* Lock-mode single row */
+.mvcc-lockrow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+}
+.mvcc-lockrow-val {
+  font-size: 0.86rem;
+  color: var(--tx);
+  background: var(--bg);
+  border: 1.5px solid var(--c-storage);
+  border-radius: var(--r-sm);
+  padding: 0.35rem 0.6rem;
+}
+.mvcc-locks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  align-items: center;
+}
+.mvcc-lock {
+  font-size: 0.72rem;
+  font-family: var(--font-mono);
+  border: 1px solid var(--line2);
+  border-radius: 999px;
+  padding: 0.12rem 0.5rem;
+}
+.mvcc-lock-none {
+  font-size: 0.74rem;
+}
+.mvcc-wait {
+  font-size: 0.72rem;
+  font-family: var(--font-mono);
+  color: var(--c-danger);
+  border: 1px dashed var(--c-danger);
+  background: var(--c-danger-soft);
+  border-radius: 999px;
+  padding: 0.12rem 0.5rem;
+}
+/* Visibility strip */
+.mvcc-sees-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  margin-top: 0.35rem;
+}
+.mvcc-see {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+.mvcc-see-who {
+  font-size: 0.78rem;
+  font-weight: 700;
+  min-width: 150px;
+}
+.mvcc-see-arrow {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.mvcc-see-val {
+  font-size: 0.8rem;
+  color: var(--tx);
+}
+.mvcc-outcome {
+  border-radius: var(--r-md);
+  padding: 0.55rem 0.75rem;
+  font-size: 0.84rem;
+  line-height: 1.5;
+  color: var(--tx);
+}
+.mvcc-outcome--good {
+  background: var(--c-commit-soft);
+  border: 1px solid var(--c-commit);
+}
+.mvcc-outcome--info {
+  background: var(--c-analytics-soft);
+  border: 1px solid var(--c-analytics);
+}
+
+/* CHANGED (S10): M20 two-phase-commit stepper (pulled forward from backlog at user request). */
+.tpc-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  margin-top: 0.6rem;
+}
+.tpc-coord {
+  background: var(--c-query-soft);
+  border: 1.5px solid var(--c-query);
+  border-radius: var(--r-md);
+  padding: 0.6rem 0.7rem;
+  transition: border-color 0.25s var(--ease), background 0.25s var(--ease);
+}
+.tpc-coord--crashed {
+  background: var(--c-danger-soft);
+  border-color: var(--c-danger);
+}
+.tpc-coord-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.6rem;
+}
+.tpc-coord-name {
+  font-weight: 700;
+  font-size: 0.86rem;
+}
+.tpc-coord-status {
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  color: var(--tx2);
+  border: 1px solid var(--line2);
+  border-radius: 999px;
+  padding: 0.06rem 0.5rem;
+}
+.tpc-coord-status--crashed {
+  color: var(--c-danger);
+  border-color: var(--c-danger);
+}
+.tpc-msg {
+  margin: 0.45rem 0 0;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--c-query);
+  border-radius: var(--r-sm);
+  padding: 0.35rem 0.6rem;
+  font-size: 0.78rem;
+  color: var(--tx);
+  overflow-x: auto;
+}
+.tpc-msg--crash {
+  border-left-color: var(--c-danger);
+  color: var(--c-danger);
+}
+.tpc-parts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.6rem;
+}
+.tpc-part {
+  background: var(--bg);
+  border: 1.5px solid var(--line2);
+  border-radius: var(--r-sm);
+  padding: 0.5rem 0.6rem;
+  transition: border-color 0.25s var(--ease), opacity 0.25s var(--ease);
+}
+.tpc-part--prepared {
+  border-color: var(--c-analytics);
+}
+.tpc-part--committed {
+  border-color: var(--c-commit);
+}
+.tpc-part--indoubt {
+  border-color: var(--c-danger);
+  border-style: dashed;
+}
+.tpc-part-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 0.2rem;
+}
+.tpc-part-name {
+  font-weight: 700;
+  font-size: 0.82rem;
+}
+.tpc-locks {
+  font-size: 0.82rem;
+}
+.tpc-part-state {
+  font-size: 0.72rem;
+  color: var(--tx2);
+}
+.tpc-part--prepared .tpc-part-state {
+  color: var(--c-analytics);
+}
+.tpc-part--committed .tpc-part-state {
+  color: var(--c-commit);
+}
+.tpc-part--indoubt .tpc-part-state {
+  color: var(--c-danger);
+}
+.tpc-outcome {
+  border-radius: var(--r-md);
+  padding: 0.55rem 0.75rem;
+  font-size: 0.84rem;
+  line-height: 1.5;
+  color: var(--tx);
+}
+.tpc-outcome--good {
+  background: var(--c-commit-soft);
+  border: 1px solid var(--c-commit);
+}
+.tpc-outcome--bad {
+  background: var(--c-danger-soft);
+  border: 1px solid var(--c-danger);
+}
+@media (max-width: 560px) {
+  .tpc-parts {
+    grid-template-columns: 1fr;
+  }
+}

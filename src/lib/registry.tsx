@@ -15,6 +15,10 @@ import { QueryPlannerSim } from '../components/sims/QueryPlannerSim';
 // CHANGED (S9): M17 ACID/WAL crash-recovery stepper + M18 Isolation anomalies sim.
 import { AcidWalSim } from '../components/sims/AcidWalSim';
 import { IsolationSim } from '../components/sims/IsolationSim';
+// CHANGED (S10): M19 MVCC version-chain + lock-contrast sim.
+import { MvccSim } from '../components/sims/MvccSim';
+// CHANGED (S10): M20 two-phase-commit stepper (pulled forward from the §13 backlog at user request).
+import { TwoPhaseCommitSim } from '../components/sims/TwoPhaseCommitSim';
 import { BTreeNodeAnatomy } from '../components/figures/BTreeNodeAnatomy';
 // CHANGED (S2): M1 + M3 figures.
 import { FilesVsDbms } from '../components/figures/FilesVsDbms';
@@ -42,6 +46,10 @@ import { WalCheckpoint } from '../components/figures/WalCheckpoint';
 import { LevelAnomalyMatrix } from '../components/figures/LevelAnomalyMatrix';
 // CHANGED (S9): pre-built for M19 (S10) — deadlock wait-for cycle figure.
 import { DeadlockCycle } from '../components/figures/DeadlockCycle';
+// CHANGED (S10): M20 distributed-transaction figures.
+import { TwoPhaseCommit } from '../components/figures/TwoPhaseCommit';
+import { SagaCompensation } from '../components/figures/SagaCompensation';
+import { OutboxPattern } from '../components/figures/OutboxPattern';
 
 /*
  * Registry — content references figures and sims by KEY (CLAUDE.md §4), resolved here.
@@ -58,6 +66,8 @@ export const sims: Record<string, ComponentType> = {
   'query-planner': QueryPlannerSim, // CHANGED (S8)
   'acid-wal': AcidWalSim, // CHANGED (S9)
   isolation: IsolationSim, // CHANGED (S9)
+  mvcc: MvccSim, // CHANGED (S10)
+  '2pc': TwoPhaseCommitSim, // CHANGED (S10): M20 stepper, pulled forward from backlog
 };
 
 export const figures: Record<string, ComponentType> = {
@@ -79,6 +89,9 @@ export const figures: Record<string, ComponentType> = {
   'wal-checkpoint': WalCheckpoint, // CHANGED (S9)
   'level-anomaly-matrix': LevelAnomalyMatrix, // CHANGED (S9)
   'deadlock-cycle': DeadlockCycle, // CHANGED (S9): pre-built; M19 references it in S10
+  'two-phase-commit': TwoPhaseCommit, // CHANGED (S10)
+  'saga-compensation': SagaCompensation, // CHANGED (S10)
+  'outbox-pattern': OutboxPattern, // CHANGED (S10)
 };
 
 export const getSim = (key: string): ComponentType | undefined => sims[key];

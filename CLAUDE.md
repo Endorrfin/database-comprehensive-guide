@@ -870,3 +870,93 @@ Footer: **"Vasyl Krupka · Senior Fullstack Engineer"** + 🇺🇦. Dark is prim
   M20 Distributed transactions. **Pending
   user:** repo is live (§11) — S9 appears live once committed & **merged to `main`**; locally `npm install` (darwin-arm64)
   + `npm run verify`; optional cleanup `rm -rf dist-s2 dist-s3 dist-s4 dist-s5 dist-s6 dist-s7 dist-s8 dist-s9 dist-s9b`.
+
+- **2026-06-24 · S10 Concurrency (MVCC / distributed transactions)** *(branch `s10-mvcc-distributed-tx`)* —
+  Authored the two remaining Section-IV modules **fully EN+UA** to the M13 depth bar, **completing Section IV**
+  (M17–M20) and lifting authored modules from 18 → **20**. **M19 (signature)** ships the ★ MVCC sim and references
+  the pre-built `deadlock-cycle` figure; **M20 is figures-only** (3 new figures) per the locked plan, with a 2PC
+  stepper flagged to backlog. **M19 · Concurrency control** `[staff]` *(signature)* (4 topics: pessimistic vs
+  optimistic [locking vs MVCC] · the MVCC mechanism [xmin/xmax · snapshots · visibility · UPDATE = new version ·
+  HOT] · locking/2PL/deadlocks · the cost of MVCC [dead tuples/bloat · VACUUM/autovacuum · the long-txn
+  xmin-horizon trap · 32-bit XID wraparound & freezing]); the ★ **MVCC sim** + the now-referenced **deadlock-cycle**
+  figure, a MVCC↔locking **compare**, a row-lock-modes table, a VACUUM-vs-VACUUM-FULL table, 5 callouts, 5
+  keyPoints, 3 pitfalls, 3 interview Q&A [senior/staff/staff], 6 web-verified sources). **M20 · Distributed
+  transactions** `[staff]` *(figures-only)* (4 topics: why distribution breaks single-node ACID / the dual-write
+  problem · 2PC + the blocking problem + PG `PREPARE TRANSACTION` · sagas & compensation, orchestration vs
+  choreography · the outbox + idempotency + the "exactly-once" myth); 3 new figures, a **2PC-vs-saga** compare, a
+  `PREPARE TRANSACTION` + `pg_prepared_xacts` code block, 4 callouts (incl. the orphaned-prepared-xact `warn` and an
+  idempotency-key `security`), 5 keyPoints, 3 pitfalls, 3 interview Q&A [senior/staff/staff], 6 sources).
+  **★ MVCC sim** (`sims/MvccSim.tsx`, key `mvcc`): an 8-frame deterministic schedule on one `accounts` row — v1 →
+  T1 reads its snapshot → T2 `UPDATE` forks v2 (stamps v1.xmax) → T1 **still** reads v1 (readers don't block
+  writers) → T2 commits → T3 sees v2 → T1 ends (v1 dead) → **VACUUM** reclaims v1; a **MVCC↔Lock-based (2PL)** toggle
+  replays the same schedule as a blocking **wait** (T2's exclusive lock waits on T1's shared lock). Version chain
+  with xmin/xmax + a who-sees-what visibility strip + outcome; play/pause/step + reduced-motion fallback + ARIA live
+  region (mirrors AcidWalSim). New `.mvcc-*` CSS block appended to `components.css`. **3 new figures** (`figures/`):
+  **`two-phase-commit`** (coordinator + 2 participants; prepare/vote then commit, with the coordinator-crash
+  blocking band), **`saga-compensation`** (T1→T2→T3 forward, C2←C1 compensate-backward on failure; a compensation is
+  forward-undo, not rollback), **`outbox-pattern`** (business row + event row in ONE local txn → relay polls / tails
+  the WAL via CDC → broker → idempotent consumer).
+  **Web-verified this session** (sources in module `sources[]`, primary = PG 18 docs): MVCC headline property
+  (mvcc-intro 13.1, verbatim "reading never blocks writing and writing never blocks reading"); xmin/xmax + snapshot
+  visibility + `pg_xact` (transaction-id); UPDATE = delete+insert and **HOT** (no indexed column changed + page
+  room) (storage-hot); row-lock modes FOR UPDATE/NO KEY UPDATE/SHARE/KEY SHARE + deadlock detection
+  (`deadlock_timeout` 1s → 40P01) (explicit-locking); VACUUM vs **VACUUM FULL** (ACCESS EXCLUSIVE) + autovacuum
+  thresholds (50 + 0.2·rows, **PG18 `autovacuum_vacuum_max_threshold` 100M**) + visibility map + freezing +
+  `autovacuum_freeze_max_age` 200M + **32-bit XIDs still core in PG18** (`xid8` = snapshot reporting only)
+  (routine-vacuuming). **2PC** (Gray 1978; Gray & Lamport 2006) blocking problem + 3PC impracticality; PG
+  `PREPARE TRANSACTION`/`COMMIT PREPARED`, **`max_prepared_transactions` default 0** (2PC off), "not for
+  applications"/XA, **orphaned prepared xacts hold locks + block VACUUM / pin the xmin horizon** (sql-prepare-
+  transaction · pg_prepared_xacts); **sagas** (Garcia-Molina & Salem, SIGMOD 1987) + compensation + orchestration vs
+  choreography + **ACD without I** (microservices.io saga); **transactional outbox** + the dual-write problem +
+  CDC/Debezium via logical decoding + LISTEN/NOTIFY not durable (microservices.io outbox); idempotency /
+  at-least-once + the **exactly-once myth** (Two Generals / FLP; Kafka EOS is within-Kafka only) (Confluent
+  delivery-semantics). PG stable **18.4**, 19 Beta 1.
+  **Wiring:** `concepts.ts` imports m19/m20 (stubs replaced, S10 note); `registry.tsx` **+1 sim** (`mvcc`) **+3
+  figures** (`two-phase-commit`, `saga-compensation`, `outbox-pattern`); glossary **+12 terms** (VACUUM, dead tuple,
+  autovacuum, HOT update, transaction ID wraparound, deadlock; two-phase commit (2PC), saga, compensating
+  transaction, transactional outbox, idempotency, exactly-once) → **85**.
+  **Scope decision (recorded):** **M20 is figures-only**, per the locked plan — §5/§6 reserve sims for the 8
+  signature spots + the opportunistic ER/Normalization/Sharding set, and a 2PC interactive is not among them; the
+  user's own S10 directive specified the MVCC sim only. The high-insight 2PC/blocking + saga/compensation ideas are
+  delivered statically by the three new figures + the 2PC-vs-saga compare. **A ★ 2PC / coordinator-crash stepper is
+  added to the §13 backlog (slot S19–S20)**, exactly as S5/S6 deferred the FLOAT-drift and window-frame steppers.
+  Because S10 carried a lighter sim load (one signature sim, not two), the 2PC stepper can be pulled forward if the
+  user wants it.
+  **Verification (repo, linux-arm64):** `tsc -b --noEmit` ✓ · ESLint ✓ (clean) · `check:data` ✓ (**8 sections, 36
+  modules [20 authored, 16 stubs], 2015 Localized EN+UA pairs**, **11 sims + 21 figures**, 85 glossary terms, all
+  registry keys resolve, cross-links valid) · `test:btree` ✓ (346 checks) · **render+content smoke** ✓
+  (`react-dom/server` of the `mvcc` sim inside `LangProvider` + the 3 figures — asserts mvcc default v1/`xmin 90`/
+  `balance 500`/MVCC+Lock toggles/visibility strip/VACUUM; two-phase-commit Coordinator/prepare?/vote yes/in-doubt;
+  saga reserve/ship/refund/compensate-backward; outbox Service+PostgreSQL/Message Relay/Debezium/idempotent) ·
+  `vite build` ✓ (**97 modules**, JS **400.34 KB gzip** / CSS 9.41 KB gzip, relative `./assets/` base).
+  **Bundle watch:** JS gzip **348 → 400 KB (+52)** for two dense bilingual staff modules + 1 sim + 3 figures; Vite
+  still warns the raw chunk is **>900 KB** (now ~1.31 MB). Reinforces the §13 code-split backlog (updated to "20
+  modules") — still slated **S10–S12** per the user's S9 decision; recommend doing it in **S11** before Section V's
+  sims pile on.
+  **Sandbox gotchas (expected, §12):** linux helpers (`@esbuild/linux-arm64`, `@rolldown/binding-linux-arm64-gnu`)
+  already present from prior sessions → all tooling ran; built into fresh `dist-s10/` (unlink blocked; `dist-*/`
+  gitignored). Render-smoke file gitignored (`scripts/_smoke-*.ts`) — **user can `rm scripts/_smoke-s10.ts`** (and
+  any stale `_smoke-s9`). **No stale `.git/index.lock` this session** (checked — absent; avoided running `git status`
+  in-sandbox).
+  **Next (S11):** Distribution — M21 Replication (+ **Replication & failover sim**); M22 Partitioning & sharding (+
+  **sharding sim**) — Section V begins; consider the bundle **code-split** here. **Pending user:** repo is live
+  (§11) — S10 appears live once committed & **merged to `main`**; locally `npm install` (darwin-arm64) +
+  `npm run verify`; optional cleanup `rm -rf dist-s2 dist-s3 dist-s4 dist-s5 dist-s6 dist-s7 dist-s8 dist-s9 dist-s9b dist-s10`.
+  **S10 follow-up (user request):** **pulled the ★ 2PC coordinator-crash stepper forward** from the §13 backlog
+  (it was slated S19–S20). New **`sims/TwoPhaseCommitSim.tsx`** (key **`2pc`**): a coordinator + 2 participants
+  with a **Commit (happy path) ↔ Coordinator crash** toggle — happy path walks prepare → vote YES (durably
+  prepared, holding locks) → decide COMMIT → phase-2 commit (atomic); crash walks prepare → vote YES → **the
+  coordinator crashes before the decision** → A & B go **in-doubt, BLOCKED, holding locks** (the blocking problem;
+  in PG = an orphaned prepared xact that also blocks VACUUM, ties to M19). Play/pause/step + reduced-motion
+  fallback + ARIA, mirrors AcidWalSim/MvccSim; new `.tpc-*` CSS appended to `components.css`. Inserted the `2pc`
+  **sim block** into M20 topic 2 (after the blocking-problem prose, beside the static `two-phase-commit` figure —
+  the figure = the protocol map, the sim = drive it & break it, the same figure+sim pairing the other signature
+  modules use), registered the sim, and flipped **M20 `signature: false → true`** (the codebase `signature` flag
+  marks any module with a notable interactive — already used for light sims like families-map/er/normalization — so
+  this is consistent; the §6 "8 hero sims" target is unchanged in spirit, this is the 9th interactive). Re-verified
+  **all green**: `tsc -b --noEmit` ✓ · ESLint ✓ (clean) · `check:data` ✓ (**12 sims** now [+`2pc`], 21 figures, 36
+  modules [20 authored], 2015 Localized pairs, 85 glossary terms) · `test:btree` ✓ (346) · render+content smoke ✓
+  (now also asserts the `2pc` sim: Commit/Coordinator-crash toggle, Participant A/B, "blocking problem") ·
+  `vite build` ✓ (built into fresh `dist-s10b/`; JS **403.43 KB gzip** / CSS 9.63 KB gzip, +3 KB for the sim+CSS).
+  Scratch smoke file `scripts/_smoke-s10.ts` is gitignored (it did not persist between sandbox calls — re-`rm` not
+  needed). No stale `.git/index.lock`. **§13 backlog:** the 2PC-stepper item is now **done** (built in S10).
