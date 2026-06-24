@@ -399,4 +399,117 @@ export const glossary: GlossaryEntry[] = [
     },
     seeAlso: ['index-only scan'],
   },
+  // CHANGED (S8): M15 LSM-trees + M16 query planning terms.
+  {
+    term: 'LSM-tree',
+    def: {
+      en: 'Log-Structured Merge-tree — a write-optimized storage structure that buffers writes in an in-memory memtable and flushes them as immutable sorted SSTables, sorting/merging later via compaction. Trades read and space amplification for sequential, high-throughput writes.',
+      uk: 'Log-Structured Merge-tree — write-optimized структура зберігання, що буферизує записи в memtable у памʼяті й скидає їх як immutable відсортовані SSTables, сортуючи/зливаючи пізніше через compaction. Міняє read і space amplification на послідовні, високопродуктивні записи.',
+    },
+    seeAlso: ['memtable', 'SSTable', 'compaction'],
+  },
+  {
+    term: 'memtable',
+    def: {
+      en: 'The in-memory, sorted write buffer at the top of an LSM-tree. Every write goes to a WAL (for durability) and into the memtable; when it fills, it is frozen and flushed to disk as one immutable SSTable.',
+      uk: 'Впорядкований буфер запису в памʼяті на вершині LSM-tree. Кожен запис іде у WAL (для durability) і в memtable; коли той заповнюється, він заморожується й скидається на диск як один immutable SSTable.',
+    },
+    seeAlso: ['LSM-tree', 'SSTable', 'WAL'],
+  },
+  {
+    term: 'SSTable',
+    def: {
+      en: 'Sorted String Table — an immutable, sorted on-disk file produced by flushing a memtable. Never updated in place; superseded versions and tombstones are removed later by compaction. Read with the help of a Bloom filter and a sparse index.',
+      uk: 'Sorted String Table — immutable, відсортований файл на диску, створений скиданням memtable. Ніколи не оновлюється на місці; застарілі версії й tombstones прибираються пізніше через compaction. Читається за допомогою Bloom filter і sparse index.',
+    },
+    seeAlso: ['LSM-tree', 'memtable', 'compaction', 'Bloom filter'],
+  },
+  {
+    term: 'compaction',
+    def: {
+      en: 'The background process in an LSM-tree that merge-sorts SSTables together: keeping the newest version of each key, purging tombstones and superseded versions, and reclaiming space. Leveled compaction trades write amplification for tight space/reads; size-tiered trades space/reads for cheap writes.',
+      uk: 'Фоновий процес в LSM-tree, що merge-sort-ить SSTables разом: зберігає найновішу версію кожного ключа, вичищає tombstones і застарілі версії, звільняє місце. Leveled compaction міняє write amplification на щільні space/reads; size-tiered міняє space/reads на дешеві записи.',
+    },
+    seeAlso: ['LSM-tree', 'SSTable', 'amplification (read / write / space)'],
+  },
+  {
+    term: 'Bloom filter',
+    def: {
+      en: 'A compact, probabilistic set-membership test used per SSTable. It answers “definitely not present” (always correct — skip the file, zero disk reads) or “maybe present” (possibly a false positive). It never gives a false negative, so a lookup for an absent key can skip almost every SSTable instantly.',
+      uk: 'Компактний імовірнісний тест належності до множини, що вживається на кожен SSTable. Відповідає «точно немає» (завжди правильно — пропустити файл, нуль читань диска) або «можливо є» (можливо false positive). Він ніколи не дає false negative, тож пошук відсутнього ключа може миттєво пропустити майже кожен SSTable.',
+    },
+    seeAlso: ['SSTable', 'LSM-tree'],
+  },
+  {
+    term: 'tombstone',
+    def: {
+      en: 'A delete marker in an LSM-tree (or wide-column store). You cannot erase a key from an immutable SSTable, so a delete writes a tombstone recording the intent; compaction applies and purges it later. Range scans over heavily deleted ranges still read through tombstones until then.',
+      uk: 'Маркер видалення в LSM-tree (чи wide-column сховищі). Ключ не можна стерти з immutable SSTable, тож видалення пише tombstone із записом наміру; compaction застосовує й вичищає його пізніше. Range scans по рясно видалених діапазонах досі читають крізь tombstones доти.',
+    },
+    seeAlso: ['compaction', 'SSTable'],
+  },
+  {
+    term: 'amplification (read / write / space)',
+    def: {
+      en: 'The three-way trade every storage engine makes: read amplification (physical reads per logical read), write amplification (bytes written per byte of data), space amplification (bytes on disk per byte of live data). The RUM conjecture: optimize two and the third worsens.',
+      uk: 'Тристоронній компроміс, що його робить кожен storage engine: read amplification (фізичні читання на логічне), write amplification (записані байти на байт даних), space amplification (байти на диску на байт живих даних). RUM conjecture: оптимізуєш два — третій гіршає.',
+    },
+    seeAlso: ['LSM-tree', 'compaction'],
+  },
+  {
+    term: 'cardinality',
+    def: {
+      en: 'The number of rows a query step is estimated (or measured) to produce. The decisive input to the planner’s cost model: get the row counts right and the plan is usually good; get them wrong and every downstream decision is built on a bad estimate.',
+      uk: 'Кількість рядків, яку крок запиту оцінено (чи виміряно) видати. Вирішальний вхід для cost model планувальника: вгадай кількість рядків правильно — і план зазвичай добрий; помились — і кожне подальше рішення збудоване на поганій оцінці.',
+    },
+    seeAlso: ['selectivity', 'cost-based optimizer'],
+  },
+  {
+    term: 'selectivity',
+    def: {
+      en: 'The fraction of a table’s rows a predicate is estimated to keep (0 = none, 1 = all). Computed from statistics — the MCV list for equality, the histogram for ranges — then multiplied by the table size to estimate cardinality.',
+      uk: 'Частка рядків таблиці, яку, за оцінкою, лишає предикат (0 = жодного, 1 = усі). Обчислюється зі statistics — MCV list для рівності, histogram для діапазонів — тоді множиться на розмір таблиці для оцінки cardinality.',
+    },
+    seeAlso: ['cardinality', 'cost-based optimizer'],
+  },
+  {
+    term: 'cost-based optimizer',
+    def: {
+      en: 'A query planner that assigns every candidate physical plan an estimated cost (in seq_page_cost units, not milliseconds) and picks the cheapest — rather than following fixed rules. PostgreSQL’s planner is cost-based; the cost rests entirely on estimated cardinality from statistics.',
+      uk: 'Планувальник запитів, що присвоює кожному плану-кандидату оцінений cost (в одиницях seq_page_cost, а не мілісекундах) і обирає найдешевший — а не йде за фіксованими правилами. Planner PostgreSQL cost-based; cost цілком спирається на оцінену cardinality зі statistics.',
+    },
+    seeAlso: ['cardinality', 'selectivity', 'EXPLAIN'],
+  },
+  {
+    term: 'EXPLAIN',
+    def: {
+      en: 'The command that shows the plan the planner chose, with its estimates (cost=startup..total, rows, width). EXPLAIN ANALYZE additionally runs the query and prints the actuals (time, rows, loops) — and, since PostgreSQL 18, BUFFERS by default. The misestimate to hunt is the lowest node where estimated and actual rows diverge.',
+      uk: 'Команда, що показує план, обраний планувальником, з його оцінками (cost=startup..total, rows, width). EXPLAIN ANALYZE додатково виконує запит і друкує фактичні дані (час, рядки, loops) — і, від PostgreSQL 18, BUFFERS за замовчуванням. Misestimate, який шукають, — найнижчий вузол, де оцінені й фактичні рядки розходяться.',
+    },
+    seeAlso: ['cost-based optimizer', 'cardinality'],
+  },
+  {
+    term: 'nested loop join',
+    def: {
+      en: 'A join that scans the inner relation once for every row of the outer relation. Cheapest when the outer side is small and the inner is indexed — but dangerous, because its cost scales with the outer row count, so an under-estimated outer input can make it execute millions of times.',
+      uk: 'Join, що сканує внутрішню relation раз на кожен рядок зовнішньої. Найдешевший, коли зовнішній бік малий, а внутрішній індексований — але небезпечний, бо його cost масштабується з кількістю зовнішніх рядків, тож недооцінений зовнішній вхід може змусити його виконатися мільйони разів.',
+    },
+    seeAlso: ['hash join', 'merge join', 'cardinality'],
+  },
+  {
+    term: 'hash join',
+    def: {
+      en: 'A join that builds a hash table over the smaller input and probes it with the other. Best for large equality joins; needs work_mem and produces unordered output, but degrades gracefully under a bad row estimate where a nested loop would not.',
+      uk: 'Join, що будує hash-таблицю над меншим входом і зондує її іншим. Найкращий для великих equality-join-ів; потребує work_mem і дає невпорядкований вихід, зате плавно деградує за поганої оцінки рядків там, де nested loop ні.',
+    },
+    seeAlso: ['nested loop join', 'merge join'],
+  },
+  {
+    term: 'merge join',
+    def: {
+      en: 'A join that requires both inputs sorted on the join key (read pre-sorted from indexes, or sorted first), then merges them in one pass. Strong when the inputs are already ordered or very large.',
+      uk: 'Join, що потребує обидва входи відсортованими за ключем join (прочитані вже відсортованими з indexes або спершу відсортовані), тоді зливає їх за один прохід. Сильний, коли входи вже впорядковані чи дуже великі.',
+    },
+    seeAlso: ['nested loop join', 'hash join'],
+  },
 ];

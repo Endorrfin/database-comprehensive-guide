@@ -19,6 +19,9 @@ import { m11 } from './modules/m11-views-procedural';
 import { m12 } from './modules/m12-storage';
 import { m13 } from './modules/m13-btree';
 import { m14 } from './modules/m14-index-toolbox';
+// CHANGED (S8): M15 + M16 authored from stubs (two signature sims). Section III complete.
+import { m15 } from './modules/m15-lsm';
+import { m16 } from './modules/m16-query-planning';
 
 /*
  * concepts.ts — the SINGLE SOURCE OF TRUTH (CLAUDE.md §2, §4).
@@ -154,44 +157,10 @@ export const modules: Module[] = [
   m12,
   m13, // ★ GOLDEN — fully authored
   m14, // ★ index access-path picker
-  stub({
-    id: 'm15-lsm',
-    num: 15,
-    section: 's3-storage',
-    order: 4,
-    level: 'staff',
-    signature: true,
-    title: { en: 'LSM-trees & write-optimized storage', uk: 'LSM-trees і зберігання, оптимізоване під запис' },
-    tagline: {
-      en: 'Memtable → SSTable → compaction; read/write/space amplification vs the B-Tree.',
-      uk: 'Memtable → SSTable → compaction; read/write/space amplification проти B-Tree.',
-    },
-    readMins: 12,
-    mentalModel: {
-      en: 'Buffer writes in memory, sort them later — trade read effort for write speed.',
-      uk: 'Буферизуйте записи в памʼяті, сортуйте пізніше — міняйте зусилля читання на швидкість запису.',
-    },
-    seeAlso: ['m13-btree'],
-  }),
-  stub({
-    id: 'm16-query-planning',
-    num: 16,
-    section: 's3-storage',
-    order: 5,
-    level: 'staff',
-    signature: true,
-    title: { en: 'Query planning & optimization', uk: 'Планування та оптимізація запитів' },
-    tagline: {
-      en: 'Cost model, statistics, access paths, join order/algorithms, reading EXPLAIN ANALYZE.',
-      uk: 'Cost model, statistics, access paths, порядок/алгоритми join, читання EXPLAIN ANALYZE.',
-    },
-    readMins: 14,
-    mentalModel: {
-      en: 'The planner bets on statistics; bad estimates, bad plans.',
-      uk: 'Planner робить ставку на statistics; погані оцінки — погані плани.',
-    },
-    seeAlso: ['m13-btree'],
-  }),
+  // CHANGED (S8): M15 + M16 now fully authored (imported above). M15 ships the ★ LSM compaction
+  // stepper; M16 ships the ★ Query Planner / EXPLAIN sim. Section III (storage internals) complete.
+  m15, // ★ LSM-tree compaction stepper
+  m16, // ★ Query Planner / EXPLAIN
 
   // ── Section IV · Transactions & concurrency ──────────────────────────────
   stub({

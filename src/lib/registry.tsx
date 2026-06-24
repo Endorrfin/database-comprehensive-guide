@@ -9,6 +9,9 @@ import { ErExplorer } from '../components/sims/ErExplorer';
 import { NormalizationSim } from '../components/sims/NormalizationSim';
 // CHANGED (S7): M14 index access-path picker.
 import { IndexPicker } from '../components/sims/IndexPicker';
+// CHANGED (S8): M15 LSM compaction stepper + M16 Query Planner / EXPLAIN.
+import { LsmSim } from '../components/sims/LsmSim';
+import { QueryPlannerSim } from '../components/sims/QueryPlannerSim';
 import { BTreeNodeAnatomy } from '../components/figures/BTreeNodeAnatomy';
 // CHANGED (S2): M1 + M3 figures.
 import { FilesVsDbms } from '../components/figures/FilesVsDbms';
@@ -28,6 +31,9 @@ import { ViewVsMatview } from '../components/figures/ViewVsMatview';
 import { MemoryHierarchy } from '../components/figures/MemoryHierarchy';
 import { HeapPage } from '../components/figures/HeapPage';
 import { IndexOnlyScan } from '../components/figures/IndexOnlyScan';
+// CHANGED (S8): M15 B-Tree-vs-LSM write paths + M16 EXPLAIN plan tree.
+import { LsmVsBtree } from '../components/figures/LsmVsBtree';
+import { PlanTree } from '../components/figures/PlanTree';
 
 /*
  * Registry — content references figures and sims by KEY (CLAUDE.md §4), resolved here.
@@ -40,6 +46,8 @@ export const sims: Record<string, ComponentType> = {
   'er-explorer': ErExplorer, // CHANGED (S4)
   'normalization-stepper': NormalizationSim, // CHANGED (S4)
   'index-picker': IndexPicker, // CHANGED (S7)
+  'lsm-tree': LsmSim, // CHANGED (S8)
+  'query-planner': QueryPlannerSim, // CHANGED (S8)
 };
 
 export const figures: Record<string, ComponentType> = {
@@ -56,6 +64,8 @@ export const figures: Record<string, ComponentType> = {
   'memory-hierarchy': MemoryHierarchy, // CHANGED (S7)
   'heap-page': HeapPage, // CHANGED (S7)
   'index-only-scan': IndexOnlyScan, // CHANGED (S7)
+  'lsm-vs-btree': LsmVsBtree, // CHANGED (S8)
+  'plan-tree': PlanTree, // CHANGED (S8)
 };
 
 export const getSim = (key: string): ComponentType | undefined => sims[key];
