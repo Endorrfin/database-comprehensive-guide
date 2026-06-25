@@ -28,6 +28,9 @@ import { m18 } from './modules/m18-isolation';
 // CHANGED (S10): M19 + M20 authored from stubs (MVCC sim + distributed-tx figures). Section IV complete.
 import { m19 } from './modules/m19-mvcc';
 import { m20 } from './modules/m20-distributed-tx';
+// CHANGED (S11): M21 + M22 authored from stubs (Replication sim + Sharding sim). Section V begins.
+import { m21 } from './modules/m21-replication';
+import { m22 } from './modules/m22-sharding';
 
 /*
  * concepts.ts — the SINGLE SOURCE OF TRUTH (CLAUDE.md §2, §4).
@@ -180,42 +183,9 @@ export const modules: Module[] = [
   m20,
 
   // ── Section V · Distribution, scale & reliability ────────────────────────
-  stub({
-    id: 'm21-replication',
-    num: 21,
-    section: 's5-distribution',
-    order: 1,
-    level: 'senior',
-    signature: true,
-    title: { en: 'Replication', uk: 'Replication' },
-    tagline: {
-      en: 'Leader/follower, sync vs async, physical vs logical, failover, replication lag.',
-      uk: 'Leader/follower, sync проти async, physical проти logical, failover, replication lag.',
-    },
-    readMins: 12,
-    mentalModel: {
-      en: 'Copies cost you latency or safety — pick which one consciously.',
-      uk: 'Копії коштують вам latency або safety — обирайте свідомо.',
-    },
-  }),
-  stub({
-    id: 'm22-sharding',
-    num: 22,
-    section: 's5-distribution',
-    order: 2,
-    level: 'senior',
-    signature: true,
-    title: { en: 'Partitioning & sharding', uk: 'Partitioning та sharding' },
-    tagline: {
-      en: 'Vertical/horizontal, the shard key, routing & rebalancing, hotspots.',
-      uk: 'Vertical/horizontal, shard key, маршрутизація і ребалансування, hotspots.',
-    },
-    readMins: 12,
-    mentalModel: {
-      en: 'The shard key is destiny — it decides every future query and hotspot.',
-      uk: 'Shard key — це доля: він вирішує кожен майбутній запит і hotspot.',
-    },
-  }),
+  // CHANGED (S11): M21 + M22 authored (replication sim + sharding sim).
+  m21, // ★ Replication & failover sim
+  m22, // ★ Sharding strategy sim
   stub({
     id: 'm23-cap',
     num: 23,

@@ -19,6 +19,9 @@ import { IsolationSim } from '../components/sims/IsolationSim';
 import { MvccSim } from '../components/sims/MvccSim';
 // CHANGED (S10): M20 two-phase-commit stepper (pulled forward from the §13 backlog at user request).
 import { TwoPhaseCommitSim } from '../components/sims/TwoPhaseCommitSim';
+// CHANGED (S11): M21 Replication & failover sim + M22 Sharding strategy sim.
+import { ReplicationSim } from '../components/sims/ReplicationSim';
+import { ShardingSim } from '../components/sims/ShardingSim';
 import { BTreeNodeAnatomy } from '../components/figures/BTreeNodeAnatomy';
 // CHANGED (S2): M1 + M3 figures.
 import { FilesVsDbms } from '../components/figures/FilesVsDbms';
@@ -50,6 +53,9 @@ import { DeadlockCycle } from '../components/figures/DeadlockCycle';
 import { TwoPhaseCommit } from '../components/figures/TwoPhaseCommit';
 import { SagaCompensation } from '../components/figures/SagaCompensation';
 import { OutboxPattern } from '../components/figures/OutboxPattern';
+// CHANGED (S11): M21 streaming-replication figure + M22 consistent-hashing figure.
+import { StreamingReplication } from '../components/figures/StreamingReplication';
+import { ConsistentHashing } from '../components/figures/ConsistentHashing';
 
 /*
  * Registry — content references figures and sims by KEY (CLAUDE.md §4), resolved here.
@@ -68,6 +74,8 @@ export const sims: Record<string, ComponentType> = {
   isolation: IsolationSim, // CHANGED (S9)
   mvcc: MvccSim, // CHANGED (S10)
   '2pc': TwoPhaseCommitSim, // CHANGED (S10): M20 stepper, pulled forward from backlog
+  replication: ReplicationSim, // CHANGED (S11)
+  sharding: ShardingSim,       // CHANGED (S11)
 };
 
 export const figures: Record<string, ComponentType> = {
@@ -92,6 +100,8 @@ export const figures: Record<string, ComponentType> = {
   'two-phase-commit': TwoPhaseCommit, // CHANGED (S10)
   'saga-compensation': SagaCompensation, // CHANGED (S10)
   'outbox-pattern': OutboxPattern, // CHANGED (S10)
+  'streaming-replication': StreamingReplication, // CHANGED (S11)
+  'consistent-hashing': ConsistentHashing,       // CHANGED (S11)
 };
 
 export const getSim = (key: string): ComponentType | undefined => sims[key];
