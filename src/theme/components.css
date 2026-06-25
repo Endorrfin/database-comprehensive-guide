@@ -3254,3 +3254,118 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* ── CapSim — CAP/PACELC consistency sim (S12 · M23) ─────────────────────── */
+.cap-sim {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  font-family: var(--font-body);
+}
+.cap-header {
+  font-size: 0.78rem;
+  color: var(--tx3);
+  text-align: center;
+}
+.cap-scenario-tabs,
+.cap-choice-tabs {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+.cap-tab,
+.cap-choice {
+  padding: 0.3rem 0.85rem;
+  border-radius: 5px;
+  border: 1px solid var(--line2);
+  background: var(--s2);
+  color: var(--tx2);
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+}
+.cap-tab--active {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.cap-choice--active {
+  border-color: var(--c-commit);
+  color: var(--c-commit);
+}
+.cap-stage {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+.cap-nodes {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.cap-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.5rem 0.7rem;
+  border-radius: 8px;
+  border: 1.5px solid var(--line2);
+  background: var(--s2);
+  min-width: 88px;
+  font-size: 0.8rem;
+}
+.cap-node--ok      { border-color: var(--c-commit); }
+.cap-node--partitioned { border-color: var(--c-danger); }
+.cap-node--refusing    { border-color: var(--c-warn); }
+.cap-node--stale       { border-color: var(--c-warn); }
+.cap-node--syncing     { border-color: var(--accent); }
+.cap-highlight--write { color: var(--accent); font-weight: 700; }
+.cap-highlight--read  { color: var(--c-cyan); font-weight: 700; }
+.cap-highlight--error { color: var(--c-danger); font-weight: 700; }
+.cap-highlight--ok    { color: var(--c-commit); font-weight: 700; }
+.cap-highlight--stale { color: var(--c-warn); font-weight: 700; }
+.cap-partition-line {
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--c-danger);
+  border-top: 2px dashed var(--c-danger);
+  padding-top: 0.3rem;
+  margin: 0 0.5rem;
+}
+.cap-outcome {
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  border: 1px solid var(--line2);
+  background: var(--s2);
+}
+.cap-outcome--ok    { border-color: var(--c-commit); background: var(--c-commit-soft); }
+.cap-outcome--error { border-color: var(--c-danger); background: var(--c-danger-soft); }
+.cap-outcome--stale { border-color: var(--c-warn);   background: rgba(242,169,59,0.08); }
+.cap-verdict {
+  font-weight: 700;
+  margin-right: 0.4rem;
+}
+.cap-desc {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 0.5rem 0.8rem;
+  background: var(--s2);
+  border-radius: 6px;
+  font-size: 0.82rem;
+  border-left: 3px solid var(--accent);
+}
+.cap-desc-label { color: var(--accent); font-weight: 600; font-size: 0.78rem; }
+.cap-desc-detail { color: var(--tx2); line-height: 1.5; }
+.cap-controls {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+.cap-progress {
+  font-size: 0.75rem;
+  color: var(--tx3);
+  align-self: center;
+}

@@ -20,4 +20,5 @@ _examples/
 #Temp
 _arhive/
 scripts/_smoke-*.ts
+scripts/_smoke-*.tsx
 

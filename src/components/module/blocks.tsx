@@ -1,3 +1,5 @@
+// CHANGED (S12): Suspense added for lazy sims/figures (code-split via registry.tsx).
+import { Suspense } from 'react';
 import type { Block, Localized } from '../../data/types';
 import { useLang } from '../../i18n/lang';
 import { getFigure, getSim } from '../../lib/registry';
@@ -35,7 +37,10 @@ function FigureBlock({ fig, caption }: { fig: string; caption?: Localized }) {
   return (
     <figure className="figure">
       <div className="figure-stage">
-        {Fig ? <Fig /> : <div className="placeholder">figure: {fig}</div>}
+        {/* CHANGED (S12): Suspense boundary for lazy-loaded figure chunks */}
+        <Suspense fallback={<div className="placeholder">Loading figure…</div>}>
+          {Fig ? <Fig /> : <div className="placeholder">figure: {fig}</div>}
+        </Suspense>
       </div>
       {caption && <figcaption className="figure-cap">{t(caption)}</figcaption>}
     </figure>
@@ -46,9 +51,12 @@ function SimBlock({ sim }: { sim: string }) {
   const Sim = getSim(sim);
   if (!Sim) return <div className="placeholder placeholder--sim">sim: {sim}</div>;
   return (
-    <div className="sim-wrap">
-      <Sim />
-    </div>
+    // CHANGED (S12): Suspense boundary for lazy-loaded sim chunks
+    <Suspense fallback={<div className="placeholder placeholder--sim">Loading simulator…</div>}>
+      <div className="sim-wrap">
+        <Sim />
+      </div>
+    </Suspense>
   );
 }
 

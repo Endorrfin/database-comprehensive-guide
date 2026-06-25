@@ -31,6 +31,9 @@ import { m20 } from './modules/m20-distributed-tx';
 // CHANGED (S11): M21 + M22 authored from stubs (Replication sim + Sharding sim). Section V begins.
 import { m21 } from './modules/m21-replication';
 import { m22 } from './modules/m22-sharding';
+// CHANGED (S12): M23 + M24 authored from stubs (CAP/consistency sim + HA/backups figures). Section V complete.
+import { m23 } from './modules/m23-cap';
+import { m24 } from './modules/m24-ha-backups-dr';
 
 /*
  * concepts.ts — the SINGLE SOURCE OF TRUTH (CLAUDE.md §2, §4).
@@ -184,43 +187,11 @@ export const modules: Module[] = [
 
   // ── Section V · Distribution, scale & reliability ────────────────────────
   // CHANGED (S11): M21 + M22 authored (replication sim + sharding sim).
+  // CHANGED (S12): M23 + M24 authored (CAP/consistency sim + HA/backups figures). Section V complete.
   m21, // ★ Replication & failover sim
   m22, // ★ Sharding strategy sim
-  stub({
-    id: 'm23-cap',
-    num: 23,
-    section: 's5-distribution',
-    order: 3,
-    level: 'staff',
-    signature: true,
-    title: { en: 'CAP, PACELC & consensus', uk: 'CAP, PACELC та consensus' },
-    tagline: {
-      en: "CAP stated precisely, PACELC's latency trade, consistency models, quorums, Raft/Paxos.",
-      uk: 'CAP точно сформульований, компроміс latency у PACELC, моделі consistency, quorums, Raft/Paxos.',
-    },
-    readMins: 13,
-    mentalModel: {
-      en: 'During a partition you answer wrong or not at all — CAP is that choice.',
-      uk: 'Під час partition ви відповідаєте неправильно або ніяк — CAP саме про цей вибір.',
-    },
-  }),
-  stub({
-    id: 'm24-ha-backups-dr',
-    num: 24,
-    section: 's5-distribution',
-    order: 4,
-    level: 'senior',
-    title: { en: 'High availability, backups & DR', uk: 'Висока доступність, backups і DR' },
-    tagline: {
-      en: 'Patroni/etcd, PITR & the WAL archive, RPO/RTO, testing restores.',
-      uk: 'Patroni/etcd, PITR і WAL archive, RPO/RTO, тестування відновлень.',
-    },
-    readMins: 11,
-    mentalModel: {
-      en: "HA is fast failover; DR is surviving the region — and an untested backup doesn't exist.",
-      uk: 'HA — це швидкий failover; DR — пережити втрату регіону; а неперевірений backup не існує.',
-    },
-  }),
+  m23, // ★ CAP/consistency sim
+  m24, // HA, backups & DR (figures: ha-cluster, backup-pitr)
 
   // ── Section VI · The NoSQL families in depth ─────────────────────────────
   stub({

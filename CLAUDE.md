@@ -417,12 +417,14 @@ Footer: **"Vasyl Krupka · Senior Fullstack Engineer"** + 🇺🇦. Dark is prim
   in S6** to keep the two dense modules tight and avoid bundle growth before the code-split below. Follow BTreeSim
   conventions (deterministic, play/pause/step, reduced-motion fallback, ARIA); register a sim key and flip M10's
   `window-frame` block from `figure` → `sim`. Slot opportunistically (S19–S20).
-- **Bundle code-split / per-module lazy-load (≈S10–S12)** — JS is **~348 KB gzip at 18 authored modules** (+41 in S9;
-  Vite now warns the raw chunk is >900 KB) and grows with bilingual content; before it gets heavy, route-split so each
-  module's data/figures/sims load on demand
-  (dynamic `import()` per module in the hash router + `React.lazy` for sims). Must keep `check:data`, the render
-  smoke, and SSR/route smoke working across the split, and preserve global search (which currently indexes all
-  modules eagerly — may need a lightweight prebuilt index).
+- **Bundle code-split / per-module lazy-load — ✅ DONE S12:** React.lazy for all 15 sims + 26 figures
+  in `registry.tsx` (typed `lazyNamed()` helper); `<Suspense>` in `blocks.tsx` FigureBlock/SimBlock; lazy
+  route pages in `App.tsx`; `manualChunks` for `react-vendor`. Result: 441 KB gzip monolith → 328 KB
+  gzip index + 60 KB react-vendor + on-demand sim/figure chunks (~1–5 KB each). Remaining index bulk =
+  **`concepts.ts`** (Sidebar/TopBar import eagerly for nav/search). Next lever (backlog): **meta.ts
+  data-split** — separate module metadata from content bodies + prebuilt search index (the `gen:meta`
+  + `meta.ts` pattern from Claude guide S10c; would drop index from 328 → ~60 KB gzip). Slot S16–S17
+  or S19–S20 buffer.
 
 ## 14. Status / progress log
 
@@ -1036,3 +1038,108 @@ Footer: **"Vasyl Krupka · Senior Fullstack Engineer"** + 🇺🇦. Dark is prim
   **Recommend doing the §13 code-split here (S12)** before the bundle grows further — or defer to S12b.
   **Pending user:** repo is live (§11) — S11 appears live once committed & **merged to `main`**; locally
   `npm install` (darwin-arm64) + `npm run verify`; optional cleanup `rm -rf dist-s11`.
+
+- **2026-06-25 · S12 Distribution (CAP/PACELC · HA/backups · §13 code-split)** *(branch
+  `s12-cap-ha-backups-codesplit`)* — Authored the two remaining Section-V modules **fully EN+UA**
+  to the M13 depth bar, **completing Section V** (M21–M24) and lifting authored modules from 22 →
+  **24**. Shipped **one signature sim** (M23 CAP/consistency) + **figures-only for M24** per the
+  locked plan. Also implemented the **§13 code-split** (user's directive this session).
+  **M23 · CAP, PACELC & consensus** `[staff]` *(signature)* (4 topics: CAP stated precisely ·
+  PACELC — the normal-operation trade · consistency models hierarchy · Raft/Paxos & quorum; new
+  **pacelc-tree** SVG figure [if-partition→A-or-C / else→L-or-C decision tree with PA/PC/EL/EC
+  leaves + Cassandra/ZooKeeper/async-PG/sync-PG engine labels], the ★ **CAP/consistency sim**, a
+  PACELC engine table [Cassandra PA/EL · DynamoDB PA/EL · async PG PA/EL · sync PG PC/EC ·
+  ZooKeeper PC/EC · HBase PC/EC · MongoDB PC/EC], a consistency-models table [linearizability /
+  sequential / causal / eventual], a Raft↔Paxos **compare**, 3 callouts [partitions-are-not-optional
+  · AP-is-not-chaos · CAP-is-about-partitions-not-operations], 6 keyPoints, 3 pitfalls, 3 interview
+  Q&A [senior/senior/staff], 7 web-verified sources). **M24 · High availability, backups & DR**
+  `[senior]` *(figures-only)* (4 topics: Patroni/etcd HA building blocks · backups [logical vs
+  physical, pgBackRest, Barman] · PITR [WAL archive setup, workflow, named restore points] ·
+  RPO/RTO + testing recovery ["an untested backup doesn't exist"]; new **ha-cluster** SVG figure
+  [Primary+leader-lock → Standby A sync + Standby B async + etcd DCS + pg_rewind box + HAProxy/VIP
+  box + DCS-poll links] + new **backup-pitr** SVG figure [PITR timeline: T0 base backup → continuous
+  WAL archive band → recovery_target_time marker → pause/promote + restore window bracket], a
+  backup-tool **compare** table [pg_dump / pg_basebackup / pgBackRest / Barman × 7 features],
+  Patroni **config table** [ttl/loop_wait/retry_timeout/maximum_lag_on_failover/master_start_timeout/
+  synchronous_mode], a **HA↔DR compare** [failure scope / RTO / mechanism / RPO / trigger], 4
+  callouts [DCS-quorum-failure-takes-down-cluster / untested-backup-doesnt-exist /
+  ha-and-backup-are-not-substitutes / named-restore-points], 6 keyPoints, 3 pitfalls, 3 interview
+  Q&A [senior/senior/senior], 7 web-verified sources).
+  **★ CAP/consistency sim** (`sims/CapSim.tsx`, key `cap-consistency`): two top-level tabs —
+  **During Partition (CAP)** × **Normal Operation (PACELC)**. Partition tab: toggle CP↔AP → step
+  through 4 frames; CP: N3 behind a partition **refuses write/read** (no quorum → ERROR 503 →
+  Consistency preserved, client retries); AP: both sides write independently → values diverge
+  (77 vs 99) → N3 **stale read** returns old value (Availability preserved, consistency sacrificed).
+  PACELC tab: toggle Sync↔Async → 3 frames; Sync: primary waits for N2+N3 ACK before responding
+  (~20 ms, fully consistent, extra latency); Async: primary responds immediately (~3 ms), followers
+  catch up asynchronously (stale window shown). Three-node cluster diagram per frame; node status
+  (ok/partitioned/refusing/stale/syncing), outcome strip (ok/error/stale), PACELC verdict. Toggle-
+  driven; play/pause/step; reduced-motion fallback (Play hidden); ARIA tablist + live region.
+  New `.cap-*` CSS block appended to `components.css`; both M23 assets registered.
+  **Web-verified this session** (sources in module `sources[]`): **Brewer PODC 2000** (CAP conjecture)
+  + **Gilbert & Lynch 2002** formal proof (C = linearizability, A = every request receives a non-error
+  response, P = partition tolerance; network partitions are not optional); **Brewer 2012** IEEE Computer
+  "CAP Twelve Years Later" (CP vs AP is too simplistic — most real systems are spectrum, not binary;
+  the real insight: during a partition you choose to answer stale or not at all); **Abadi 2012**
+  PACELC (IEEE Computer 45(2):37-42 — PA/EL: Cassandra, DynamoDB; PC/EC: ZooKeeper, HBase; MongoDB
+  configurable; async PG = PA/EL, sync PG = PC/EC; "Else" is the non-partition normal case, latency
+  vs consistency); **Ongaro & Ousterhout USENIX ATC 2014** Raft (randomized election timeouts;
+  quorum ⌊N/2⌋+1; log-completeness invariant; leader has all committed entries; etcd/CockroachDB/
+  TiKV); **Herlihy & Wing 1990** linearizability (JACM 37(2):463-492); **Vogels 2009** eventual
+  consistency (CACM 52(1):40-45). **Patroni v4.1.3** (2026-05-05, github.com/patroni/patroni/
+  releases): moved to patroni/patroni org; DCS backends etcd/Consul/ZooKeeper/K8s; key params
+  ttl=30s/loop_wait=10s/retry_timeout=10s/master_start_timeout=300s. **pg_rewind** (PG18 docs):
+  requires wal_log_hints=on OR data checksums (PG18 enables checksums at initdb by default); never
+  run without a fresh backup — mid-process failure → unrecoverable data dir. **pgBackRest v2.58.0**
+  (pgbackrest.org, 2026-01-19): April 2026 maintainer crisis (archived); coalition revived May 2026
+  (AWS/Supabase/pgEdge/Percona/Eon.io/Xata/Dalibo/Tiger Data/Data Egret). **Barman v3.18.0**
+  (2026-03-12, github.com/EnterpriseDB/barman). **PITR PG18**: no recovery.conf since PG12;
+  postgresql.conf + recovery.signal; archive_mode/archive_command/restore_command/
+  recovery_target_time; named restore points via pg_create_restore_point(). **Cloud HA**: RDS
+  Multi-AZ ~60–120 s, Multi-AZ Cluster ~35 s, Aurora ~< 30 s with replicas.
+  **Wiring:** `concepts.ts` imports m23/m24 (stubs replaced, CHANGED(S12)); `registry.tsx` **+1 sim**
+  (`cap-consistency`) **+3 figures** (`pacelc-tree`, `ha-cluster`, `backup-pitr`); glossary **+11
+  terms** (CAP theorem, PACELC, linearizability, eventual consistency, quorum, Raft, high availability
+  (HA), Patroni, PITR, RPO/RTO, pgBackRest) → **109**.
+  **§13 code-split (done this session):** `registry.tsx` rewritten — all 15 sims + 26 figures are
+  now **`React.lazy` dynamic imports** via a typed `lazyNamed()` helper that adapts named exports to
+  `{ default }`. `blocks.tsx` wraps `FigureBlock` and `SimBlock` in `<Suspense>`. `App.tsx` lazy-loads
+  the 5 route pages (LandscapeMap, ModulePage, GlossaryPage, MentalModelsPage, ComingSoon) behind one
+  `<Suspense>`. `vite.config.ts` adds a `manualChunks` function separating `react-vendor` (190 KB /
+  60 KB gzip, stable cache). **Result (dist-s12):** monolith 1.45 MB / 441 KB gzip → index 1,041 KB /
+  **328 KB gzip** + react-vendor 190 KB / 60 KB + **15 sim + 26 figure on-demand chunks** (0.5–17 KB
+  each). First-paint landing (index + react-vendor + LandscapeMap) ≈ **390 KB gzip** — down from 441
+  KB gzip monolith. Vite still warns the raw index chunk > 900 KB; the remaining bulk is **`concepts.ts`
+  (24 authored modules' content)** imported eagerly by Sidebar + TopBar for nav/search — the
+  **meta.ts data-split (like S10c in Claude guide)** is the documented next lever (§13 backlog,
+  updated below).
+  **Verification (repo, linux-arm64; tsx in node_modules):** `tsc -b --noEmit` ✓ (strict — caught &
+  fixed: unused `t` in CapSim, `lazy()` return needs `as unknown as ComponentType`, `manualChunks`
+  needs function form not object) · ESLint ✓ (clean) · `check:data` ✓ (**8 sections, 36 modules [24
+  authored, 12 stubs], 2460 Localized EN+UA pairs**, **15 sims + 26 figures**, 109 glossary terms, all
+  registry keys resolve, cross-links valid) · `test:btree` ✓ (346 checks) · **render+content smoke** ✓
+  (`react-dom/server` renderToStaticMarkup of CapSim + PacelcTree + HaCluster + BackupPitr inside
+  LangProvider — asserts CapSim shows cap-sim/CP/Partition/N1; PacelcTree shows PACELC/PA/Cassandra/
+  sync-PG; HaCluster shows Primary/etcd/pg_rewind/leader-lock; BackupPitr shows PITR/WAL-archive/
+  recovery.signal/Base-backup) · `vite build` ✓ (**dist-s12**, index 1,041 KB / 328 KB gzip +
+  react-vendor 190 KB / 60 KB gzip + 15 sim + 26 figure lazy chunks).
+  **Caught & fixed before commit:** (1) `CapSim.tsx` — destructured `t` from `useLang()` but never
+  used it (only `lang` is needed for the `lang === 'uk' ? x.uk : x.en` pattern); removed `t`.
+  (2) `registry.tsx` — `lazy()` returns `LazyExoticComponent<T>` which TypeScript's strict generics
+  can't directly compare to `ComponentType`; fixed with `as unknown as ComponentType` double cast.
+  (3) `vite.config.ts` — Rollup types in this Vite version expect `manualChunks` to be a function,
+  not a `Record<string, string[]>` object; switched to function form.
+  **Sandbox note:** `scripts/_smoke-s12.tsx` is gitignored (`scripts/_smoke-*.ts`). No stale
+  `.git/index.lock` this session.
+  **§13 backlog update:** "code-split" item is now **done** (S12). Remaining item: **meta.ts data-split**
+  — separate module metadata (title/tagline/mentalModel/topics) from content bodies in `concepts.ts`
+  so the Sidebar/TopBar search can use a lightweight prebuilt index rather than importing all authored
+  bilingual content eagerly. This is the `gen:meta` + `meta.ts` pattern from S10c of the Claude guide;
+  it would drop the index chunk from 328 → ~60 KB gzip. Slot opportunistically (S16–S17 once the index
+  chunk becomes the primary bottleneck, or S19–S20 buffer). Also still in backlog: ★ FLOAT-vs-numeric
+  drift stepper (M9), ★ Window-frame stepper (M10), ★ 2PC coordinator-crash stepper (now **done, S10**).
+  **Next (S13):** NoSQL families — M25 Document databases (MongoDB model & internals, aggregation
+  pipeline, indexing); M26 Key-value & caching (Redis/Valkey, data structures, eviction, persistence,
+  the licensing story). **Pending user:** repo is live (§11) — S12 appears live once committed &
+  **merged to `main`**; locally `npm install` (darwin-arm64) + `npm run verify`; optional cleanup
+  `rm -rf dist-s11 dist-s12`.
