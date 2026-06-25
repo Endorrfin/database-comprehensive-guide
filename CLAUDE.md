@@ -960,3 +960,79 @@ Footer: **"Vasyl Krupka · Senior Fullstack Engineer"** + 🇺🇦. Dark is prim
   `vite build` ✓ (built into fresh `dist-s10b/`; JS **403.43 KB gzip** / CSS 9.63 KB gzip, +3 KB for the sim+CSS).
   Scratch smoke file `scripts/_smoke-s10.ts` is gitignored (it did not persist between sandbox calls — re-`rm` not
   needed). No stale `.git/index.lock`. **§13 backlog:** the 2PC-stepper item is now **done** (built in S10).
+
+- **2026-06-25 · S11 Distribution (replication / sharding)** *(branch `s11-replication-sharding`)* —
+  Authored the first two Section-V modules **fully EN+UA** to the M13 depth bar, lifting authored modules
+  from 20 → **22** (Section V begins: M21, M22; M23–M24 land in S12). Shipped **both confirmed signature
+  sims** (no trim). **M21 · Replication** `[senior]` *(signature)* (5 topics: how streaming replication
+  works · sync vs async · physical vs logical · monitoring replication lag · Patroni + failover; new
+  **streaming-replication** SVG figure [Primary/walsender → Standby A (sync) + Standby B (async), ACK
+  dashed, replication slot badge, pg_stat_replication label], the ★ **Replication & failover sim**, a
+  sync-level compare (`synchronous_commit off/local/remote_write/on/remote_apply`), a pg_stat_replication
+  columns table, a physical-vs-logical compare, a `CREATE PUBLICATION/SUBSCRIPTION` DDL block, a
+  Patroni HA stack table, 4 callouts [sync-perf/replication-slot-danger/logical-DDL-gap/dont-roll-your-own-ha],
+  5 keyPoints, 3 pitfalls, 3 interview Q&A [senior/senior/staff], 6 web-verified sources). **M22 ·
+  Partitioning & sharding** `[senior]` *(signature)* (4 topics: PostgreSQL declarative partitioning ·
+  sharding — when and why · shard key & hotspots · cross-shard operations; new **consistent-hashing**
+  SVG figure [ring with N1/N2/N3 + colored ownership arcs + K1–K6 keys + inset showing N4 addition →
+  only K/N keys move], the ★ **Sharding strategy sim**, a partitioning-strategy table
+  [RANGE/LIST/HASH + pg_partman], a DB-level partitioning vs application sharding compare, a cross-shard
+  operations table, a RANGE DDL code block, callouts [hash-vs-range-hotspot / consistent-hashing ring /
+  co-location-first / Citus 100%-open-source], 5 keyPoints, 3 pitfalls, 3 interview Q&A [senior/senior/staff],
+  5 sources).
+  **★ Replication & failover sim** (`sims/ReplicationSim.tsx`, key `replication`): toggle **Async ↔ Sync**
+  — Async (6 frames): commit returns without waiting → crash gap shows the unreplicated WAL window →
+  **data loss**; Sync (7 frames): primary holds client → waits for Standby A flush ACK → then commits →
+  crash → **zero data loss**. Three-lane layout (Primary | WAL stream | Standby A + Standby B); LSN
+  progress boxes, WAL stream / ACK / success arrows; crash animation. Play/pause/step + reduced-motion
+  fallback + ARIA live region (mirrors AcidWalSim/MvccSim). **★ Sharding strategy sim** (`sims/ShardingSim.tsx`,
+  key `sharding`): toggle **Hash (id%3) ↔ Range (monotonic IDs)** — insert IDs 1001–1009 one-by-one or
+  all-at-once; Hash shows 3/3/3 balance; Range shows S3 accumulating all 9 newest rows with a **HOT badge
+  + hotspot warning** — the classic monotonic-key-and-range-shard trap. ID chips color-coded by owner shard.
+  Outcome summary on completion. Toggle-driven + step; inherently reduced-motion-safe; ARIA tablist +
+  live region.
+  **Web-verified this session** (sources in module `sources[]`, primary = PG 18 docs + upstream READMEs):
+  **Streaming replication** — `wal_level=replica` + `hot_standby=on`; `pg_basebackup`; walsender/walreceiver;
+  `synchronous_standby_names` + `synchronous_commit` five values (off/local/remote_write/on/remote_apply);
+  `synchronous_standby_names` supports **FIRST n(…)** priority and **ANY n(…)** quorum (PG 10+);
+  `pg_stat_replication`: sent/write/flush/replay_lsn + write/flush/replay_lag; **replication slots**
+  prevent WAL recycling — dangerous if slot stalls (PG 18 adds `idle_replication_slot_timeout`); physical
+  replication = byte-level WAL, logical = row-level events (`CREATE PUBLICATION`/`SUBSCRIPTION`, native
+  since **PG 10**; DDL not replicated — common gotcha). **Patroni v4.1.3** (2026-02-17 — verified on
+  GitHub): etcd/Consul/ZooKeeper/K8s DCS, `pg_promote()` + `pg_rewind`; latest stable PG **18.4** / 19
+  Beta 1. **Partitioning** — PG 10 declarative RANGE/LIST, PG 11 HASH + partition-wise joins/aggregates
+  (OFF by default); `pg_partman v5.4.3` (2026-03-05): declarative-only since v5, BGW, requires PG ≥ 14.
+  **Consistent hashing** — ring, virtual nodes (Cassandra default 256/node), only K/N keys move on
+  rebalance vs ~N-1/N for mod-N. **Hot spots** — monotonic IDs (SERIAL/IDENTITY) → all writes to latest
+  range shard; mitigations: hash sharding, UUIDs, `uuidv7()` (time-ordered, PG 18 native), key salting.
+  **Citus v14.0.0** (Feb 2026): 100% open source (PostgreSQL License since Citus 11, June 2022; verified),
+  supports PG 16/17/18; `create_distributed_table()` + `create_reference_table()` + co-location.
+  **Wiring:** `concepts.ts` imports m21/m22 (stubs replaced, CHANGED(S11) note); `registry.tsx` **+2 sims**
+  (`replication`, `sharding`) **+2 figures** (`streaming-replication`, `consistent-hashing`); glossary
+  **+13 terms** (streaming replication, replication slot, synchronous replication, logical replication,
+  replication lag, Patroni, table partitioning, partition pruning, consistent hashing, shard key,
+  co-location, scatter-gather, hot spot) → **98**.
+  **Verification (repo, linux-arm64; tsx available in node_modules):** `tsc -b --noEmit` ✓ (clean;
+  **fixed ConsistentHashing.tsx**: removed broken `useLang` import, made static SVG — same pattern as all
+  existing figures; also eliminated unused `n4/n2/n1/n3` declarations) · ESLint ✓ (clean) · `check:data`
+  ✓ (**8 sections, 36 modules [22 authored, 14 stubs], 2222 Localized EN+UA pairs**, **14 sims + 23
+  figures**, 98 glossary terms, all registry keys resolve, cross-links valid) · `test:btree` ✓ (346
+  checks) · **render+content smoke** ✓ (`react-dom/server` renderToStaticMarkup of both new sims + both
+  figures inside the real `LangProvider` — asserts `replication` shows Primary/Standby A/WAL, `sharding`
+  shows Shard 1/Hash/Range/Insert-next, `streaming-replication` shows walsender/replication-slot/
+  pg_stat_replication, `consistent-hashing` shows N1/N4/hash-ring/only-K/N-keys-move) · `vite build` ✓
+  (**104 modules**, JS **441 KB gzip** / CSS 10.57 KB gzip, relative `./assets/` base, `dist-s11/`).
+  **Caught & fixed before commit:** (1) `ConsistentHashing.tsx` initially used `import { useLang } from
+  '../../i18n/LangContext'` (non-existent path) + the `lang[key]` TS7053 index pattern — same root cause
+  as the other three new files; all fixed by removing `useLang` entirely (figures are always static English
+  SVGs). (2) Unused `n4/n2/n1/n3` `ixy()` call results → `noUnusedLocals` error; replaced with direct use
+  of `ixy()` in the inset node map.
+  **Bundle watch:** JS gzip **403 → 441 KB (+38)** for two dense bilingual senior modules + 2 sims + 2
+  figures. Raw chunk now **~1.45 MB** (Vite warns >900 KB). Reinforces the §13 code-split backlog (updated
+  to "22 modules"); recommend doing it in **S12** before M23 (CAP sim) and M24 add more weight.
+  **Sandbox note:** `scripts/_smoke-s11.ts` is gitignored (`scripts/_smoke-*.ts`) — no cleanup needed on
+  user's Mac. No stale `.git/index.lock` this session.
+  **Next (S12):** Distribution cont. — M23 CAP/PACELC (+ **CAP/consistency sim**); M24 HA, backups & DR.
+  **Recommend doing the §13 code-split here (S12)** before the bundle grows further — or defer to S12b.
+  **Pending user:** repo is live (§11) — S11 appears live once committed & **merged to `main`**; locally
+  `npm install` (darwin-arm64) + `npm run verify`; optional cleanup `rm -rf dist-s11`.

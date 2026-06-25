@@ -692,4 +692,109 @@ export const glossary: GlossaryEntry[] = [
     },
     seeAlso: ['idempotency', 'transactional outbox'],
   },
+  // CHANGED (S11): M21 replication + M22 sharding terms (+12 → 97 total).
+  {
+    term: 'streaming replication',
+    def: {
+      en: "PostgreSQL's primary HA mechanism: the primary ships WAL records to standbys in real time via a walsender/walreceiver TCP connection. Standbys apply the WAL continuously and can serve read-only queries (hot_standby=on). Physical streaming replication copies byte-for-byte; the standby must match the same OS/arch/major version.",
+      uk: 'Основний механізм HA у PostgreSQL: primary доставляє WAL-записи на standbys у реальному часі через TCP-зʼєднання walsender/walreceiver. Standbys безперервно застосовують WAL і можуть обслуговувати read-only запити (hot_standby=on). Physical streaming replication копіює байт-за-байтом; standby має відповідати тій самій ОС/arch/major версії.',
+    },
+    seeAlso: ['WAL', 'replication slot', 'logical replication'],
+  },
+  {
+    term: 'replication slot',
+    def: {
+      en: "A named, durable cursor PostgreSQL keeps on the primary that prevents WAL segments from being recycled until the slot's consumer has replayed them. Guarantees no data loss from WAL recycling; the risk is unbounded WAL accumulation if a slot's consumer stops — PG 18 adds idle_replication_slot_timeout to auto-drop stale slots.",
+      uk: 'Іменований, довговічний курсор, який PostgreSQL тримає на primary та який запобігає видаленню WAL-сегментів, поки їх не відтворить споживач slot. Гарантує відсутність втрати даних від видалення WAL; ризик — необмежене накопичення WAL, якщо споживач slot зупиняється. PG 18 додає idle_replication_slot_timeout для автовидалення застарілих slot.',
+    },
+    seeAlso: ['streaming replication', 'WAL', 'logical replication'],
+  },
+  {
+    term: 'synchronous replication',
+    def: {
+      en: 'A replication mode where the primary waits for one or more standbys to acknowledge flushing a WAL record before returning SUCCESS to the client. Set via synchronous_commit and synchronous_standby_names (FIRST n / ANY n quorum). Guarantees zero data loss on failover at the cost of added write latency.',
+      uk: 'Режим replication, де primary чекає підтвердження flush WAL-запису від одного або кількох standbys перед поверненням SUCCESS клієнту. Встановлюється через synchronous_commit і synchronous_standby_names (FIRST n / ANY n кворум). Гарантує нульову втрату даних при failover ціною доданої затримки запису.',
+    },
+    seeAlso: ['streaming replication', 'replication lag', 'Patroni'],
+  },
+  {
+    term: 'logical replication',
+    def: {
+      en: 'A row-level replication mode (CREATE PUBLICATION / CREATE SUBSCRIPTION, native since PG 10) that ships decoded row changes (INSERT/UPDATE/DELETE) rather than raw WAL bytes. Allows cross-version, cross-platform replication and selective table replication. DDL is not replicated automatically.',
+      uk: 'Режим replication на рівні рядків (CREATE PUBLICATION / CREATE SUBSCRIPTION, нативний з PG 10), що доставляє декодовані зміни рядків (INSERT/UPDATE/DELETE), а не сирі WAL-байти. Дозволяє cross-version, cross-platform replication і вибіркову реплікацію таблиць. DDL не реплікується автоматично.',
+    },
+    seeAlso: ['streaming replication', 'WAL', 'replication slot'],
+  },
+  {
+    term: 'replication lag',
+    def: {
+      en: 'The delay between a change being committed on the primary and being visible on a standby. Measured as write_lag, flush_lag, and replay_lag in pg_stat_replication. Lag means standby reads can return stale data and a lagged async standby promoted on failover can lose commits.',
+      uk: 'Затримка між фіксацією зміни на primary і її видимістю на standby. Вимірюється як write_lag, flush_lag і replay_lag у pg_stat_replication. Lag означає, що читання standby може повернути застарілі дані, а підвищений при failover async standby з відставанням може втратити commits.',
+    },
+    seeAlso: ['streaming replication', 'synchronous replication'],
+  },
+  {
+    term: 'Patroni',
+    def: {
+      en: 'The de-facto open-source HA solution for PostgreSQL (Python; by Zalando). Uses a distributed consensus store (DCS: etcd, Consul, ZooKeeper, or Kubernetes) as a leader lease. On primary failure, the most up-to-date eligible standby acquires the lease and calls pg_promote(). Uses pg_rewind to heal and rejoin the old primary as a new standby.',
+      uk: 'Де-факто open-source HA-рішення для PostgreSQL (Python; від Zalando). Використовує distributed consensus store (DCS: etcd, Consul, ZooKeeper або Kubernetes) як leader lease. При відмові primary, найактуальніший eligible standby отримує lease і викликає pg_promote(). Використовує pg_rewind для відновлення старого primary як нового standby.',
+    },
+    seeAlso: ['streaming replication', 'synchronous replication'],
+  },
+  {
+    term: 'table partitioning',
+    def: {
+      en: 'Splitting a single logical table into multiple physical child tables on the same server via RANGE, LIST, or HASH keys. The database presents the parent as one table; queries use partition pruning to skip irrelevant partitions. Gives full ACID guarantees with no distributed coordination — unlike sharding.',
+      uk: 'Розбиття однієї логічної таблиці на кілька фізичних дочірніх таблиць на одному сервері за ключами RANGE, LIST або HASH. База представляє батьківську як одну таблицю; запити використовують partition pruning для пропуску нерелевантних партицій. Надає повні ACID-гарантії без розподіленої координації — на відміну від sharding.',
+    },
+    seeAlso: ['sharding', 'partition pruning'],
+  },
+  {
+    term: 'partition pruning',
+    def: {
+      en: "The planner's ability to skip partitions whose key range cannot match a query predicate. Works at planning time (PG 10) and execution time for parameterized queries (PG 11). The core optimization that makes large partitioned tables fast for range and point queries.",
+      uk: "Здатність планувальника пропускати партиції, чий діапазон ключів не може відповідати предикату запиту. Працює під час планування (PG 10) і під час виконання для параметризованих запитів (PG 11). Ключова оптимізація, що робить великі партиційовані таблиці швидкими для range і point запитів.",
+    },
+    seeAlso: ['table partitioning'],
+  },
+  {
+    term: 'consistent hashing',
+    def: {
+      en: 'A sharding strategy that maps both keys and nodes to a virtual ring. A key is assigned to the nearest clockwise node. Adding or removing a node moves only K/N keys on average (K = total keys, N = node count), versus ~75% for simple mod-N. Virtual nodes (vnodes) improve balance under skewed distributions.',
+      uk: 'Стратегія sharding, що відображає ключі та вузли на віртуальне кільце. Ключ призначається найближчому вузлу за годинниковою стрілкою. Додавання або видалення вузла переміщує в середньому лише K/N ключів (K = загальна кількість, N = вузлів) проти ~75% для простого mod-N. Virtual nodes (vnodes) покращують баланс при перекошених розподілах.',
+    },
+    seeAlso: ['sharding', 'shard key'],
+  },
+  {
+    term: 'shard key',
+    def: {
+      en: 'The column (or combination) used to route a row to a shard. The most consequential design decision in a sharded system: it determines which queries are single-shard (fast, fully ACID) vs scatter-gather (expensive). Monotonic keys (SERIAL, timestamps) create hotspots in range sharding.',
+      uk: 'Колонка (або комбінація), що маршрутизує рядок до shard. Найважливіше дизайнерське рішення в шардованій системі: визначає, які запити single-shard (швидкі, повністю ACID) проти scatter-gather (дорогі). Монотонні ключі (SERIAL, timestamps) створюють hotspots у range sharding.',
+    },
+    seeAlso: ['sharding', 'consistent hashing', 'hot spot'],
+  },
+  {
+    term: 'co-location',
+    def: {
+      en: 'The sharding discipline of placing related rows on the same shard by using the same distribution column for all related tables. With co-location, joins and writes within one entity scope (e.g. one tenant) need zero cross-shard coordination and run as ordinary local operations.',
+      uk: "Дисципліна sharding розміщення пов'язаних рядків в одному shard за однаковим distribution column для всіх пов'язаних таблиць. З co-location join'и та записи в межах одного скоупу сутності (напр. одного tenant) не потребують cross-shard координації і виконуються як звичайні локальні операції.",
+    },
+    seeAlso: ['shard key', 'sharding', 'scatter-gather'],
+  },
+  {
+    term: 'scatter-gather',
+    def: {
+      en: 'The execution pattern for a cross-shard query: the coordinator fans the query to every shard, each executes its local portion, and the coordinator merges the results. Latency is set by the slowest shard. Minimized by co-location; unavoidable for queries without a shard-key predicate.',
+      uk: 'Патерн виконання cross-shard-запиту: координатор розгортає запит на кожен shard, кожен виконує локальну частину, координатор зливає результати. Latency визначається найповільнішим shard. Мінімізується co-location; неминучий для запитів без предиката shard key.',
+    },
+    seeAlso: ['sharding', 'co-location', 'shard key'],
+  },
+  {
+    term: 'hot spot',
+    def: {
+      en: 'A shard, node, or page that receives a disproportionate share of reads or writes and becomes a bottleneck while peers are underutilized. In sharded systems, the most common cause is a monotonically increasing shard key under range routing — all new inserts hit the same shard. Mitigated by hash sharding, UUIDs, uuidv7(), or key salting.',
+      uk: "Shard, вузол або page, що отримує непропорційну частку читань або записів і стає вузьким місцем, поки peers недовантажені. У шардованих системах найпоширеніша причина — монотонно зростаючий shard key при range routing — всі нові вставки потрапляють в один shard. Пом'якшується hash sharding, UUIDs, uuidv7() або key salting.",
+    },
+    seeAlso: ['shard key', 'sharding', 'consistent hashing'],
+  },
 ];
