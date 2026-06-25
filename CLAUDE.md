@@ -1143,3 +1143,85 @@ Footer: **"Vasyl Krupka · Senior Fullstack Engineer"** + 🇺🇦. Dark is prim
   the licensing story). **Pending user:** repo is live (§11) — S12 appears live once committed &
   **merged to `main`**; locally `npm install` (darwin-arm64) + `npm run verify`; optional cleanup
   `rm -rf dist-s11 dist-s12`.
+
+- **2026-06-25 · S13 NoSQL families (document / key-value)** *(branch `s13-nosql-document-keyvalue`)* —
+  Authored the first two Section-VI modules **fully EN+UA** to the M13 depth bar, **beginning Section VI**
+  and lifting authored modules from 24 → **26**. Both are **figures-only** per the locked plan (§6 —
+  neither is among the 8 signature sims); M25 and M26 each get one bespoke SVG figure.
+  **M25 · Document databases** `[middle]` (5 topics: the document model & BSON · embed vs reference ·
+  WiredTiger storage engine · the aggregation pipeline · write concern & transactions; new **embed-vs-reference**
+  SVG figure [left: order + items array co-located in one document — 1 read = complete order; right:
+  order doc with `item_ids` pointing to a separate `items` collection via `$lookup` — items shared,
+  no duplication], a document-vs-relational **compare**, a BSON-type table, an embed-vs-reference
+  decision table [when to embed vs reference: owned/bounded/few vs shared/unbounded/many], an aggregation
+  stages table [$match/$group/$project/$lookup/$unwind/$sort/$limit + what each does], a write-concern
+  levels table [w:0/1/majority × durability], a MongoDB 4.0/4.2 multi-doc ACID callout, 4 callouts
+  [schema-on-read is not schema-less · the $lookup ≠ SQL JOIN callout · 16 MB document cap ·
+  transactions exist but use them sparingly], 5 keyPoints, 3 pitfalls, 3 interview Q&A
+  [middle/middle/senior], 6 web-verified sources). **M26 · Key-value & caching** `[middle]` (5 topics:
+  the key-value model · data structures beyond strings · caching patterns · eviction & persistence ·
+  the Redis/Valkey story; new **cache-aside-flow** SVG figure [App → Cache(Redis/Valkey) → Database;
+  HIT path in green: DB never touched; MISS path: ① GET miss → ② read DB → ③ result → ④ SET key ttl;
+  TTL note at bottom], a key-value data-structures table [String/Hash/List/Set/Sorted Set/Stream/
+  HyperLogLog + canonical use-case], a caching-patterns **compare** [cache-aside vs write-through vs
+  write-behind × consistency/complexity/when], an eviction-policy table [noeviction/allkeys-lru/lfu/
+  volatile-lru/lfu/ttl/random], a persistence-options **compare** [RDB vs AOF × durability/perf/
+  recovery], a **Redis licensing timeline** table [2009 BSD·open → Mar 2024 SSPL+RSALv2 → May 2025
+  tri-license adds AGPLv3 → 2024 fork Valkey = Linux Foundation BSD-3], 4 callouts [Pub/Sub is not
+  durable—Stream is · noeviction on a cache will crash the app · without persistence Redis is a cache
+  not a store · Valkey is the new default in Fedora/Ubuntu/Debian/AWS], 5 keyPoints, 3 pitfalls, 3
+  interview Q&A [middle/middle/senior], 6 web-verified sources).
+  **Web-verified this session** (sources in module `sources[]`): **MongoDB 8.3** (latest stable, May 7
+  2026; MongoDB Blog release notes); WiredTiger = default storage engine (B+Tree, MVCC, Snappy
+  compression, 60s checkpoint, WAL); 16 MB document cap; BSON (Binary JSON — types richer than JSON:
+  ObjectId, Date, Int32/Int64, Decimal128, Binary, etc.); multi-doc ACID transactions since **4.0
+  (replica sets, 2018)** and **4.2 (sharded clusters, 2019)**; aggregation pipeline stages
+  ($match/$group/$project/$lookup/$unwind etc.) — MongoDB Aggregation documentation; write concern
+  w:0/1/majority — MongoDB Write Concern documentation. **Redis:** latest **Redis 8.8.0** (June 2026);
+  **tri-license since May 2025** — Redis 8 release (Redis.io blog, May 2025): BSD 2-Clause + SSPLv1 +
+  RSALv2 (March 2024 dual-licence) **plus AGPLv3 added**; 7 core data structure types (String, Hash,
+  List, Set, Sorted Set, Stream [v5.0+], HyperLogLog); eviction policies (noeviction, allkeys-lru/lfu,
+  volatile-lru/lfu/ttl/random) — Redis Eviction policies docs; persistence: RDB (BGSAVE, configurable
+  snapshots) + AOF (`appendonly yes`, `appendfsync everysec` default) — Redis Persistence docs.
+  **Valkey:** **Valkey 9.1** (2026, new I/O threading model); Valkey = Linux Foundation fork from
+  **Redis 7.2.4, March 2024** (BSD-3-Clause); default in **Fedora 42 / Ubuntu 26.04 LTS / Debian 13 /
+  Arch Linux**; **AWS ElastiCache default** (9.0 GA 2025); ~90% Redis-command-compatible — Valkey 9.0
+  Linux Foundation blog + AWS ElastiCache Valkey announcement.
+  **Wiring:** `concepts.ts` imports m25/m26 (stubs replaced, CHANGED(S13)); `registry.tsx` **+2 figures**
+  (`embed-vs-reference`, `cache-aside-flow`; total 15 sims + **28 figures**); glossary **+13 terms**
+  (document database, BSON, ObjectId, aggregation pipeline, schema-on-read, write concern, key-value
+  store, Valkey, TTL (time to live), cache-aside, eviction, cache stampede, AOF (Append-Only File))
+  → **122**.
+  **Bugs caught & fixed before commit:** (1) **JSX curly-brace parse error in EmbedVsReference.tsx:**
+  `{ _id: ObjectId("i1"), sku: "A-42", … }` inside SVG `<text>` elements — JSX treats `{` as an
+  expression start → blank render. Fixed with `{'{ _id: ObjectId("i1"), sku: "A-42", … }'}` (JSX
+  string literal expression). Also caught a token-typo `fill="var(--tx3"` (missing `)`) in the same
+  file. (2) **Ukrainian-apostrophe TS1002 in m25-document.ts:** single-quoted JS strings containing
+  Ukrainian words with ASCII apostrophes (`об'єкт`, `пов'язані`, `з'єднують`) terminated strings
+  prematurely. Fix applied in two passes via a Python byte-position state machine: (a) escape `\'`
+  at all Cyrillic+apostrophe+Cyrillic positions inside single-quoted strings; (b) then remove
+  unnecessary escapes at positions that turned out to be inside backtick template literals (where `'`
+  is never a terminator) — `no-useless-escape` flagged these 6 positions.
+  **Verification (repo, linux-arm64; tsx in node_modules; linux bindings `@esbuild/linux-arm64` +
+  `@rolldown/binding-linux-arm64-gnu` installed `--no-save`):** `tsc -b --noEmit` ✓ (clean) · ESLint ✓
+  (clean) · `check:data` ✓ (**8 sections, 36 modules [26 authored, 10 stubs], 2667 Localized EN+UA
+  pairs**, **15 sims + 28 figures**, 122 glossary terms, all registry keys resolve, cross-links valid)
+  · `test:btree` ✓ (346 checks) · **render+content smoke** ✓ (`react-dom/server` renderToStaticMarkup
+  of both new figures inside `LangProvider` + module data assertions — EmbedVsReference shows EMBEDDED/
+  REFERENCED/ObjectId/embed-rule; CacheAsideFlow shows Cache-Aside/CACHE HIT/CACHE MISS/Redis;
+  M25 5 topics / 6 sources / embed-vs-reference figure block; M26 5 topics / 6 sources / redis-valkey-
+  story topic / cache-aside-flow figure block) · `vite build` ✓ (**dist-s13**, index 1,132 KB /
+  **357 KB gzip** + react-vendor 190 KB / 60 KB gzip + 15 sim + 28 figure on-demand chunks).
+  **Bundle watch:** JS gzip **441 → 357 KB** (already code-split in S12; the index contains
+  concepts.ts which grows with each session; S12 result was 328 KB gzip; +29 KB for M25+M26). The
+  §13 backlog meta.ts data-split remains the documented next lever.
+  **Sandbox gotchas (expected, §12):** linux helpers (`@esbuild/linux-arm64`,
+  `@rolldown/binding-linux-arm64-gnu`) installed `--no-save`; built into fresh `dist-s13/` (unlink
+  blocked; `dist-*/` gitignored). Render-smoke file `scripts/_smoke-s13.tsx` is gitignored
+  (`scripts/_smoke-*.ts`) — **user can `rm scripts/_smoke-s13.tsx`** (and any stale `_smoke-s11/s12`).
+  **No stale `.git/index.lock` this session** (avoided running `git status` in-sandbox).
+  **Next (S14):** NoSQL families cont. — M27 Wide-column stores (Cassandra/ScyllaDB, partition/
+  clustering model, tunable consistency, LSM heritage); M28 Graph databases (property graph vs RDF,
+  traversal, Cypher, when relationships ARE the data). **Pending user:** repo is live (§11) — S13
+  appears live once committed & **merged to `main`**; locally `npm install` (darwin-arm64) +
+  `npm run verify`; optional cleanup `rm -rf dist-s13`.
