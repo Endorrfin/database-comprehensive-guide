@@ -34,6 +34,9 @@ import { m22 } from './modules/m22-sharding';
 // CHANGED (S12): M23 + M24 authored from stubs (CAP/consistency sim + HA/backups figures). Section V complete.
 import { m23 } from './modules/m23-cap';
 import { m24 } from './modules/m24-ha-backups-dr';
+// CHANGED (S13): M25 + M26 authored from stubs (figures-only: embed-vs-reference, cache-aside-flow). Section VI begins.
+import { m25 } from './modules/m25-document';
+import { m26 } from './modules/m26-key-value';
 
 /*
  * concepts.ts — the SINGLE SOURCE OF TRUTH (CLAUDE.md §2, §4).
@@ -194,40 +197,9 @@ export const modules: Module[] = [
   m24, // HA, backups & DR (figures: ha-cluster, backup-pitr)
 
   // ── Section VI · The NoSQL families in depth ─────────────────────────────
-  stub({
-    id: 'm25-document',
-    num: 25,
-    section: 's6-nosql',
-    order: 1,
-    level: 'middle',
-    title: { en: 'Document databases', uk: 'Document databases' },
-    tagline: {
-      en: "MongoDB's model & internals, embed vs reference, the aggregation pipeline.",
-      uk: 'Модель і внутрішня будова MongoDB, embed проти reference, aggregation pipeline.',
-    },
-    readMins: 12,
-    mentalModel: {
-      en: 'Store together what you read together — the document is your access pattern.',
-      uk: 'Зберігайте разом те, що читаєте разом — document і є вашим access pattern.',
-    },
-  }),
-  stub({
-    id: 'm26-key-value',
-    num: 26,
-    section: 's6-nosql',
-    order: 2,
-    level: 'middle',
-    title: { en: 'Key-value & caching', uk: 'Key-value та кешування' },
-    tagline: {
-      en: 'Redis/Valkey structures, caching patterns, eviction & persistence, the 2024 license fork.',
-      uk: 'Структури Redis/Valkey, патерни кешування, eviction і persistence, ліцензійний fork 2024.',
-    },
-    readMins: 12,
-    mentalModel: {
-      en: 'Fast because it forgets — and because it lives in memory.',
-      uk: 'Швидкий, бо забуває — і бо живе в памʼяті.',
-    },
-  }),
+  // CHANGED (S13): M25 + M26 fully authored (imported above). Section VI begins (M25, M26).
+  m25, // document databases: MongoDB model, embed/ref, aggregation, WiredTiger
+  m26, // key-value & caching: Redis/Valkey structures, caching patterns, licensing story
   stub({
     id: 'm27-wide-column',
     num: 27,

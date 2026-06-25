@@ -70,6 +70,8 @@ export const figures: Record<string, ComponentType> = {
   'pacelc-tree':         lazyNamed(() => import('../components/figures/PacelcTree'),          'PacelcTree'),        // S12
   'ha-cluster':          lazyNamed(() => import('../components/figures/HaCluster'),           'HaCluster'),         // S12
   'backup-pitr':         lazyNamed(() => import('../components/figures/BackupPitr'),          'BackupPitr'),        // S12
+  'embed-vs-reference':  lazyNamed(() => import('../components/figures/EmbedVsReference'),    'EmbedVsReference'),  // S13
+  'cache-aside-flow':    lazyNamed(() => import('../components/figures/CacheAsideFlow'),      'CacheAsideFlow'),    // S13
 };
 
 export const getSim    = (key: string): ComponentType | undefined => sims[key];

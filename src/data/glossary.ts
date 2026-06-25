@@ -887,4 +887,109 @@ export const glossary: GlossaryEntry[] = [
     },
     seeAlso: ['PITR (Point-in-Time Recovery)', 'WAL (Write-Ahead Log)'],
   },
+  // CHANGED (S13): M25 document + M26 key-value terms.
+  {
+    term: 'document database',
+    def: {
+      en: 'A NoSQL database that stores semi-structured data as self-describing documents (typically JSON/BSON). No fixed schema — each document can have different fields. Designed around the access pattern: data you read together should be stored together (embedding). MongoDB is the dominant engine.',
+      uk: 'NoSQL база даних, що зберігає напівструктуровані дані як самоописові документи (зазвичай JSON/BSON). Без фіксованої схеми — кожен документ може мати різні поля. Розроблена навколо access pattern: дані, що читаються разом, зберігаються разом (embedding). MongoDB — домінуючий движок.',
+    },
+    seeAlso: ['BSON', 'schema-on-read', 'aggregation pipeline'],
+  },
+  {
+    term: 'BSON',
+    def: {
+      en: "Binary JSON — MongoDB's wire and storage format. Extends JSON with typed values (ObjectId, Date, Decimal128, Binary, Int32/Int64) and length-prefixed encoding for O(1) document size computation and fast field-by-field traversal. BSON documents are limited to 16 MB.",
+      uk: "Binary JSON — формат дроту та зберігання MongoDB. Розширює JSON типізованими значеннями (ObjectId, Date, Decimal128, Binary, Int32/Int64) і кодуванням із length-prefix для O(1) обчислення розміру документа та швидкого обходу поля за полем. BSON документи обмежені 16 МБ.",
+    },
+    seeAlso: ['document database', 'ObjectId'],
+  },
+  {
+    term: 'ObjectId',
+    def: {
+      en: "MongoDB's default 12-byte document identifier: 4-byte Unix timestamp + 5-byte random value (machine+process) + 3-byte incrementing counter. Monotonically increasing within a second, globally unique without a central coordinator, and sortable by creation time. The _id field type.",
+      uk: "Стандартний 12-байтовий ідентифікатор документа MongoDB: 4-байтовий Unix timestamp + 5-байтове випадкове значення (machine+process) + 3-байтовий лічильник. Монотонно зростаючий в межах секунди, глобально унікальний без центрального координатора та сортований за часом створення. Тип поля _id.",
+    },
+    seeAlso: ['BSON', 'document database'],
+  },
+  {
+    term: 'aggregation pipeline',
+    def: {
+      en: "MongoDB's server-side data-processing framework: an array of stages ($match, $group, $project, $sort, $lookup, $unwind, $limit…) that transform a stream of documents. Executes on the server — avoids pulling all data to the client. The correct tool for any non-trivial MongoDB query that goes beyond a simple find().",
+      uk: "Серверний фреймворк обробки даних MongoDB: масив стадій ($match, $group, $project, $sort, $lookup, $unwind, $limit…), що перетворюють потік документів. Виконується на сервері — уникає витягування всіх даних на клієнт. Правильний інструмент для будь-якого нетривіального MongoDB-запиту, що виходить за межі простого find().",
+    },
+    seeAlso: ['document database'],
+  },
+  {
+    term: 'schema-on-read',
+    def: {
+      en: 'A data modelling philosophy (contrast: schema-on-write in RDBMS) where the structure is interpreted at query time, not enforced at write time. Document databases are schema-on-read by default — you can insert any shape of document. The risk: no enforcement means corrupt or inconsistent data; use validator rules / JSON Schema to add lightweight constraints.',
+      uk: "Філософія моделювання даних (контраст: schema-on-write у RDBMS), де структура інтерпретується під час запиту, а не забезпечується під час запису. Document databases — schema-on-read за замовчуванням — ви можете вставляти документи будь-якої форми. Ризик: відсутність примусу означає пошкоджені або непослідовні дані; використовуйте validator rules / JSON Schema для легковагих обмежень.",
+    },
+    seeAlso: ['document database'],
+  },
+  {
+    term: 'write concern',
+    def: {
+      en: "MongoDB's durability knob for write operations: w:0 (fire-and-forget, no ack), w:1 (primary ack only — default, data loss risk on failover), w:'majority' (majority of replica set members must acknowledge — safe for critical data). Combine with j:true to require WAL (journal) flush before ack.",
+      uk: "Регулятор durability MongoDB для операцій запису: w:0 (fire-and-forget, без підтвердження), w:1 (лише підтвердження primary — дефолт, ризик втрати даних при failover), w:'majority' (більшість членів replica set мусить підтвердити — безпечно для критичних даних). Комбінуйте з j:true для вимоги flush WAL (journal) перед підтвердженням.",
+    },
+    seeAlso: ['document database', 'durability'],
+  },
+  {
+    term: 'key-value store',
+    def: {
+      en: 'The simplest data model: map an opaque key (a string) to a value and retrieve it in O(1). Redis and Valkey extend this with rich typed values (String, Hash, List, Set, Sorted Set, Stream) that enable server-side operations. Excels at caching, session storage, rate limiting, and distributed locks.',
+      uk: "Найпростіша модель даних: відображення непрозорого ключа (рядка) на значення та отримання за O(1). Redis і Valkey розширюють це з багатими типізованими значеннями (String, Hash, List, Set, Sorted Set, Stream), що дозволяють серверні операції. Відмінно підходить для кешування, session storage, rate limiting і distributed locks.",
+    },
+    seeAlso: ['Valkey', 'cache-aside', 'eviction'],
+  },
+  {
+    term: 'Valkey',
+    def: {
+      en: 'An open-source BSD-3-Clause in-memory key-value store, forked from Redis 7.2.4 by the Linux Foundation in March 2024 after Redis relicensed to SSPL/RSALv2. Founding backers: AWS, Google Cloud, Oracle, Ericsson, Snap. Valkey 9.1 (2026) adds a new I/O threading model and 40%+ throughput gains. Default in Fedora 42, Ubuntu 26.04, Debian 13, Arch, and AWS ElastiCache.',
+      uk: "Open-source BSD-3-Clause in-memory key-value сховище, форкнуте від Redis 7.2.4 Linux Foundation у березні 2024 р. після переходу Redis на SSPL/RSALv2. Засновники: AWS, Google Cloud, Oracle, Ericsson, Snap. Valkey 9.1 (2026 р.) додає нову I/O threading модель та +40% throughput. Стандарт у Fedora 42, Ubuntu 26.04, Debian 13, Arch і AWS ElastiCache.",
+    },
+    seeAlso: ['key-value store', 'cache-aside'],
+  },
+  {
+    term: 'TTL (time to live)',
+    def: {
+      en: "An expiry duration set on a cache key: the server automatically deletes the key when it expires. TTL is the primary cache-freshness lever in Redis/Valkey (SETEX / EXPIRE). Short TTLs reduce staleness but increase DB load; long TTLs reduce load but risk serving outdated data. TTL also drives cache stampedes when many hot keys expire simultaneously.",
+      uk: "Тривалість закінчення, встановлена на ключ кешу: сервер автоматично видаляє ключ при закінченні. TTL — основний важіль свіжості кешу у Redis/Valkey (SETEX / EXPIRE). Короткі TTL зменшують застарілість, але збільшують навантаження на БД; довгі TTL знижують навантаження, але ризикують видавати застарілі дані. TTL також спричиняє cache stampede, коли багато гарячих ключів закінчуються одночасно.",
+    },
+    seeAlso: ['cache-aside', 'eviction', 'cache stampede'],
+  },
+  {
+    term: 'cache-aside',
+    def: {
+      en: 'The most common caching pattern (also called lazy loading): the application checks the cache, reads the database on a miss, populates the cache with a TTL, and returns the result. The database is never touched on a hit. Puts the application in control of all cache interactions.',
+      uk: "Найпоширеніший патерн кешування (також lazy loading): застосунок перевіряє кеш, читає базу при miss, заповнює кеш з TTL і повертає результат. База не чіпається при hit. Дає застосунку контроль над усіма взаємодіями з кешем.",
+    },
+    seeAlso: ['key-value store', 'TTL (time to live)', 'cache stampede'],
+  },
+  {
+    term: 'eviction',
+    def: {
+      en: "The policy Redis/Valkey uses to remove keys when maxmemory is reached. Common policies: allkeys-lru (evict least-recently-used key — best for most caches), allkeys-lfu (least-frequently-used — better for skewed access patterns), noeviction (return errors — correct for a primary data store, catastrophic for a cache), volatile-lru/lfu (only keys with TTL set). Set via maxmemory-policy.",
+      uk: "Політика, яку Redis/Valkey використовує для видалення ключів при досягненні maxmemory. Поширені політики: allkeys-lru (видаляти least-recently-used ключ — найкраще для більшості кешів), allkeys-lfu (least-frequently-used — краще для skewed access patterns), noeviction (повертати помилки — правильно для основного сховища, катастрофічно для кешу), volatile-lru/lfu (лише ключі з TTL). Встановлюється через maxmemory-policy.",
+    },
+    seeAlso: ['key-value store', 'TTL (time to live)'],
+  },
+  {
+    term: 'cache stampede',
+    def: {
+      en: 'A production incident where many concurrent requests simultaneously miss the same cache key (e.g. after TTL expiry) and all hit the database at once, overwhelming it. Mitigations: mutex lock (only one request repopulates), probabilistic early expiry (XFetch), or background pre-warming before TTL expires.',
+      uk: "Production-інцидент, де багато конкурентних запитів одночасно промахуються по одному і тому ж ключу кешу (наприклад, після закінчення TTL) і всі одночасно звертаються до бази, перевантажуючи її. Захисти: mutex lock (лише один запит заповнює кеш), probabilistic early expiry (XFetch) або фонове попереднє прогрівання до закінчення TTL.",
+    },
+    seeAlso: ['cache-aside', 'TTL (time to live)'],
+  },
+  {
+    term: 'AOF (Append-Only File)',
+    def: {
+      en: 'Redis/Valkey persistence mode: every write command is appended to a log file and replayed on startup. appendfsync everysec (default) provides ≤ 1 second data loss guarantee. AOF rewrite (BGREWRITEAOF) compacts the log to the minimal command set. More durable than RDB snapshots; slower to load on restart.',
+      uk: 'Режим persistence Redis/Valkey: кожна write-команда дописується в лог-файл і відтворюється при запуску. appendfsync everysec (дефолт) надає гарантію втрати даних ≤ 1 секунди. AOF rewrite (BGREWRITEAOF) стискає лог до мінімального набору команд. Більш довговічний ніж RDB snapshots; повільніше завантажується при рестарті.',
+    },
+    seeAlso: ['key-value store', 'Valkey'],
+  },
 ];
