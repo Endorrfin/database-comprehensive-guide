@@ -797,4 +797,94 @@ export const glossary: GlossaryEntry[] = [
     },
     seeAlso: ['shard key', 'sharding', 'consistent hashing'],
   },
+
+  // ── S12 · M23 CAP/PACELC + M24 HA/Backups ─────────────────────────────────
+  {
+    term: 'CAP theorem',
+    def: {
+      en: "Brewer's theorem (2000, proven Gilbert & Lynch 2002): a distributed system can guarantee at most two of Consistency (every read sees the latest write), Availability (every request gets a non-error response), and Partition tolerance (the system operates despite dropped messages). Since network partitions are inevitable, the real choice is whether to sacrifice C or A during a partition.",
+      uk: "Теорема Брюера (2000, доведена Gilbert & Lynch 2002): розподілена система може гарантувати щонайбільше дві з трьох властивостей — Consistency (кожне читання бачить останній запис), Availability (кожен запит отримує відповідь без помилки) та Partition tolerance (система працює попри втрату повідомлень). Оскільки мережеві partitions неминучі, реальний вибір — жертвувати C чи A під час partition.",
+    },
+    seeAlso: ['PACELC', 'linearizability', 'eventual consistency', 'quorum'],
+  },
+  {
+    term: 'PACELC',
+    def: {
+      en: 'Abadi (2012) extension to CAP: If Partition, choose between Availability and Consistency (the CAP trade); Else (normal operation), choose between Latency and Consistency. PACELC captures the everyday trade-off — even when the network is healthy, reducing replication latency (EL) comes at the cost of potentially stale reads.',
+      uk: "Розширення CAP Абаді (2012): якщо Partition — обирай між Availability і Consistency (компроміс CAP); Else (нормальна робота) — між Latency і Consistency. PACELC фіксує повсякденний компроміс — навіть при справній мережі зниження latency реплікації (EL) коштує потенційно застарілих читань.",
+    },
+    seeAlso: ['CAP theorem', 'linearizability', 'eventual consistency'],
+  },
+  {
+    term: 'linearizability',
+    def: {
+      en: "The strongest consistency model (Herlihy & Wing 1990): operations appear to execute atomically at a single point in time between their invocation and completion. Every read sees the latest write globally. CP systems (ZooKeeper, etcd, synchronous PostgreSQL) provide linearizability at the cost of blocking during partitions.",
+      uk: "Найсильніша модель consistency (Herlihy & Wing 1990): операції виглядають як атомарно виконані в єдиній точці часу між їх викликом і завершенням. Кожне читання бачить останній глобальний запис. CP-системи (ZooKeeper, etcd, синхронний PostgreSQL) забезпечують linearizability коштом блокування під час partitions.",
+    },
+    seeAlso: ['CAP theorem', 'eventual consistency', 'quorum'],
+  },
+  {
+    term: 'eventual consistency',
+    def: {
+      en: "A weak consistency model (Vogels 2009): if no new updates are made to an object, all replicas will eventually converge to the same value. Reads may return stale data in the meantime. Used by AP systems (Cassandra, DynamoDB in default mode) to maximize availability and reduce write latency.",
+      uk: "Слабка модель consistency (Vogels 2009): якщо до об'єкта не надходять нові оновлення, всі репліки зрештою сходяться до однакового значення. Читання тим часом можуть повертати застарілі дані. Використовується AP-системами (Cassandra, DynamoDB у дефолтному режимі) для максимізації availability та зменшення write latency.",
+    },
+    seeAlso: ['CAP theorem', 'linearizability', 'replication lag'],
+  },
+  {
+    term: 'quorum',
+    def: {
+      en: 'The minimum number of nodes that must acknowledge a read or write for it to be considered successful. In a cluster of N nodes, a quorum of ⌊N/2⌋+1 nodes guarantees that any two quorums share at least one node — so reads and writes cannot diverge. Used in Raft, Paxos, and tunable systems like Cassandra (W+R > N for strong consistency).',
+      uk: 'Мінімальна кількість вузлів, які повинні підтвердити читання або запис для його успіху. У кластері з N вузлів кворум ⌊N/2⌋+1 гарантує, що будь-які два кворуми мають спільний вузол — тому читання та записи не можуть розходитися. Використовується в Raft, Paxos та налаштовуваних системах на кшталт Cassandra (W+R > N для сильної consistency).',
+    },
+    seeAlso: ['CAP theorem', 'Raft', 'linearizability'],
+  },
+  {
+    term: 'Raft',
+    def: {
+      en: "Consensus algorithm (Ongaro & Ousterhout, USENIX ATC 2014) designed for understandability. A cluster elects a leader using randomized election timeouts; the leader replicates log entries to followers and commits when a majority confirms. Guarantees linearizability for committed entries. Used in etcd, CockroachDB, TiKV, and many distributed systems.",
+      uk: "Алгоритм consensus (Ongaro & Ousterhout, USENIX ATC 2014), розроблений для зрозумілості. Кластер обирає лідера через рандомізовані election timeouts; лідер реплікує записи log на followers та фіксує їх при підтвердженні більшістю. Гарантує linearizability для зафіксованих записів. Використовується в etcd, CockroachDB, TiKV та багатьох розподілених системах.",
+    },
+    seeAlso: ['quorum', 'CAP theorem', 'linearizability'],
+  },
+  {
+    term: 'high availability (HA)',
+    def: {
+      en: 'The property of a system that remains operational despite individual component failures. For PostgreSQL, HA typically means automatic failover from a failed primary to a standby in seconds, orchestrated by tools like Patroni (v4.1.3). HA targets infrastructure failures; it does not protect against logical errors (use PITR for those).',
+      uk: "Властивість системи залишатися операційною попри відмови окремих компонентів. Для PostgreSQL HA означає автоматичний failover від відмовившого primary до standby за секунди, оркестрований інструментами на кшталт Patroni (v4.1.3). HA націлений на збої інфраструктури; від логічних помилок не захищає (для цього — PITR).",
+    },
+    seeAlso: ['Patroni', 'replication lag', 'RPO / RTO'],
+  },
+  {
+    term: 'Patroni',
+    def: {
+      en: 'Open-source PostgreSQL HA orchestrator (v4.1.3, 2026-05-05). Runs as a daemon on each node; the primary continuously renews a leader lock in a DCS (etcd, Consul, ZooKeeper, Kubernetes) with a configurable TTL. If the lock expires, a standby wins an atomic race to acquire it and promotes via pg_promote(). pg_rewind resyncs the old primary without a full re-backup.',
+      uk: 'Open-source HA-оркестратор PostgreSQL (v4.1.3, 2026-05-05). Запускається як daemon на кожному вузлі; primary безперервно оновлює leader lock у DCS (etcd, Consul, ZooKeeper, Kubernetes) з конфігурованим TTL. При закінченні lock standby виграє атомарну гонку за захоплення і підвищується через pg_promote(). pg_rewind ресинхронізує старий primary без повного перебекапу.',
+    },
+    seeAlso: ['high availability (HA)', 'streaming replication', 'RPO / RTO'],
+  },
+  {
+    term: 'PITR (Point-in-Time Recovery)',
+    def: {
+      en: 'PostgreSQL recovery mode that replays the WAL archive from a base backup to any target timestamp, LSN, named restore point, or transaction ID. Requires archive_mode=on and a continuous WAL archive. Since PG 12, recovery parameters go in postgresql.conf and a recovery.signal file triggers PITR mode (no more recovery.conf).',
+      uk: "Режим відновлення PostgreSQL, що відтворює WAL archive від base backup до будь-якого цільового timestamp, LSN, named restore point або transaction ID. Вимагає archive_mode=on та безперервного WAL archive. З PG 12 параметри відновлення задаються в postgresql.conf, а файл recovery.signal активує PITR-режим (recovery.conf більше немає).",
+    },
+    seeAlso: ['WAL (Write-Ahead Log)', 'RPO / RTO', 'high availability (HA)'],
+  },
+  {
+    term: 'RPO / RTO',
+    def: {
+      en: 'Recovery Point Objective (RPO): the maximum acceptable data loss, measured in time. Recovery Time Objective (RTO): the maximum acceptable time to restore service after a failure. These business agreements drive all HA and backup strategy decisions — replication sync level, backup frequency, standby placement, and failover automation.',
+      uk: 'Recovery Point Objective (RPO): максимально допустима втрата даних, виміряна в часі. Recovery Time Objective (RTO): максимально допустимий час відновлення сервісу після збою. Ці бізнес-угоди визначають усі рішення щодо HA та backup стратегії — рівень синхронізації реплікації, частоту backup, розміщення standby та автоматизацію failover.',
+    },
+    seeAlso: ['high availability (HA)', 'PITR (Point-in-Time Recovery)', 'streaming replication'],
+  },
+  {
+    term: 'pgBackRest',
+    def: {
+      en: 'Full-featured PostgreSQL backup tool (v2.58.0) offering block-level incremental backups, parallel backup/restore, native S3/GCS/Azure object storage, AES-256-CBC encryption, deduplication, and tight WAL archiving integration. The leading open-source physical backup solution for PostgreSQL (coalition-funded since May 2026 after a maintainer transition).',
+      uk: "Повнофункціональний інструмент backup PostgreSQL (v2.58.0) з block-level incremental backup-ами, паралельним backup/restore, нативним об'єктним сховищем S3/GCS/Azure, AES-256-CBC шифруванням, дедуплікацією та щільною WAL archiving integration. Провідне open-source фізичне backup-рішення для PostgreSQL (фінансується коаліцією з травня 2026 після зміни супроводжувача).",
+    },
+    seeAlso: ['PITR (Point-in-Time Recovery)', 'WAL (Write-Ahead Log)'],
+  },
 ];
