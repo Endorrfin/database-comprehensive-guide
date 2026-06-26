@@ -1187,4 +1187,158 @@ export const glossary: GlossaryEntry[] = [
     },
     seeAlso: ['NewSQL', 'optimistic concurrency control'],
   },
+
+  // CHANGED (S16): M31 (analytics/columnar/time-series) + M32 (cloud-native & modern DBA) terms.
+  {
+    term: 'columnar storage',
+    def: {
+      en: 'Storing a table by column rather than by row, so each column is contiguous on disk. Reads touch only the columns a query needs and compress them hard (similar values sit adjacent) — the foundation of OLAP engines.',
+      uk: 'Зберігання таблиці по колонках, а не по рядках, тож кожна колонка суцільна на диску. Читання торкаються лише потрібних запиту колонок і добре їх стискають (схожі значення лежать поруч) — основа OLAP-движків.',
+    },
+    seeAlso: ['OLAP', 'vectorized execution', 'Parquet'],
+  },
+  {
+    term: 'vectorized execution',
+    def: {
+      en: 'Processing data in batches of thousands of values through tight CPU loops (often SIMD) instead of one tuple at a time (the Volcano model). Amortizes per-row overhead — a core reason columnar OLAP engines are fast.',
+      uk: 'Обробка даних батчами по тисячі значень через щільні CPU-цикли (часто SIMD) замість одного tuple за раз (модель Volcano). Амортизує накладні витрати на рядок — ключова причина швидкості columnar OLAP-движків.',
+    },
+    seeAlso: ['columnar storage', 'OLAP'],
+  },
+  {
+    term: 'ClickHouse',
+    def: {
+      en: 'An open-source columnar database server for large-scale, high-concurrency real-time analytics. Stores data in the MergeTree engine family (sorted immutable parts, background merges) with vectorized execution and materialized views that aggregate on INSERT.',
+      uk: 'Open-source колонковий сервер бази даних для масштабної real-time аналітики з високою конкурентністю. Зберігає дані у родині движків MergeTree (сортовані незмінні parts, фонові merges) з vectorized execution та materialized views, що агрегують на INSERT.',
+    },
+    seeAlso: ['columnar storage', 'OLAP', 'LSM-tree'],
+  },
+  {
+    term: 'DuckDB',
+    def: {
+      en: 'An in-process (embedded) columnar SQL OLAP engine — "the SQLite of analytics". Runs inside your process, queries Parquet/CSV/JSON directly (including from object storage) with predicate pushdown, and needs no server.',
+      uk: 'In-process (вбудований) колонковий SQL OLAP-движок — «SQLite для аналітики». Працює всередині вашого процесу, запитує Parquet/CSV/JSON напряму (зокрема з object storage) з predicate pushdown і не потребує сервера.',
+    },
+    seeAlso: ['columnar storage', 'Parquet', 'lakehouse'],
+  },
+  {
+    term: 'hypertable',
+    def: {
+      en: 'A TimescaleDB abstraction: one logical table automatically partitioned into time-ordered (and optionally space) chunks. The planner prunes to the chunks a query needs; old chunks can be compressed columnar and dropped by a retention policy.',
+      uk: 'Абстракція TimescaleDB: одна логічна таблиця, автоматично розбита на time-ordered (і опційно space) chunks. Планувальник відсікає до chunks, потрібних запиту; старі chunks можна стиснути columnar і видалити політикою retention.',
+    },
+    seeAlso: ['TimescaleDB', 'continuous aggregate', 'table partitioning'],
+  },
+  {
+    term: 'continuous aggregate',
+    def: {
+      en: 'A TimescaleDB rollup (materialized view over a hypertable) that refreshes incrementally — only the time buckets whose source rows changed are recomputed, and the live recent tail can be included — unlike REFRESH MATERIALIZED VIEW, which recomputes everything.',
+      uk: 'Rollup TimescaleDB (materialized view над hypertable), що оновлюється інкрементально — перераховуються лише time buckets, чиї source-рядки змінились, і можна включати живий свіжий хвіст — на відміну від REFRESH MATERIALIZED VIEW, що перераховує все.',
+    },
+    seeAlso: ['hypertable', 'materialized view', 'TimescaleDB'],
+  },
+  {
+    term: 'TimescaleDB',
+    def: {
+      en: 'A PostgreSQL extension for time-series: hypertables, continuous aggregates, columnar compression, and retention. Dual-licensed — Apache-2 core plus the Timescale License (TSL) for the advanced features (free to self-host, may not be resold as a managed service). The company rebranded to TigerData in 2025.',
+      uk: 'PostgreSQL extension для time-series: hypertables, continuous aggregates, columnar compression та retention. Подвійна ліцензія — Apache-2 core плюс Timescale License (TSL) для розширених функцій (безкоштовно для self-host, не можна перепродавати як керований сервіс). Компанія перейменувалась на TigerData у 2025.',
+    },
+    seeAlso: ['hypertable', 'continuous aggregate'],
+  },
+  {
+    term: 'lakehouse',
+    def: {
+      en: 'An architecture that puts an open table format (Iceberg/Delta/Hudi) over Parquet files in object storage, adding ACID transactions, schema evolution, and time travel. Decouples storage from compute so any engine can query the same data.',
+      uk: 'Архітектура, що кладе open table format (Iceberg/Delta/Hudi) над Parquet-файлами в object storage, додаючи ACID-транзакції, schema evolution та time travel. Розділяє storage і compute, тож будь-який движок може запитувати ті самі дані.',
+    },
+    seeAlso: ['Apache Iceberg', 'Parquet', 'OLAP'],
+  },
+  {
+    term: 'Apache Iceberg',
+    def: {
+      en: 'An open table format for the lakehouse — vendor-neutral, with partition evolution, schema evolution, and time travel over Parquet files. The format the industry is converging on (AWS S3 Tables, Snowflake Polaris, BigQuery, and DuckDB all support it).',
+      uk: 'Open table format для lakehouse — vendor-neutral, з partition evolution, schema evolution та time travel над Parquet-файлами. Формат, на який конвергує галузь (AWS S3 Tables, Snowflake Polaris, BigQuery та DuckDB — усі його підтримують).',
+    },
+    seeAlso: ['lakehouse', 'Parquet'],
+  },
+  {
+    term: 'Parquet',
+    def: {
+      en: 'An open, columnar, compressed file format for analytical data. The physical layer of the lakehouse — engines read only the columns and row-groups a query needs, directly from object storage.',
+      uk: 'Відкритий, колонковий, стиснутий файловий формат для аналітичних даних. Фізичний шар lakehouse — движки читають лише потрібні запиту колонки та row-groups, напряму з object storage.',
+    },
+    seeAlso: ['columnar storage', 'lakehouse', 'Apache Iceberg'],
+  },
+  {
+    term: 'managed database (DBaaS)',
+    def: {
+      en: 'A database run by a cloud provider, which owns provisioning, patching, backups, HA/failover, and monitoring. You gain reliability and time but give up superuser/OS access and some extensions/configs, and accept a cost premium and lock-in (e.g. RDS, Aurora, Cloud SQL, AlloyDB, Atlas).',
+      uk: 'База даних, якою керує хмарний провайдер, що володіє provisioning, патчингом, backups, HA/failover та monitoring. Ви отримуєте надійність і час, але віддаєте superuser/доступ до ОС і частину extensions/configs та приймаєте премію до ціни і lock-in (напр. RDS, Aurora, Cloud SQL, AlloyDB, Atlas).',
+    },
+    seeAlso: ['shared responsibility model', 'high availability (HA)'],
+  },
+  {
+    term: 'shared responsibility model',
+    def: {
+      en: 'The split of who owns each layer of a system between you and a cloud provider. With a managed database the provider takes the bottom (hardware, OS, patching, backups, failover) and you keep the top (schema, indexes, queries, data) — the line moves up but never reaches the top.',
+      uk: 'Розподіл того, хто володіє кожним шаром системи, між вами та хмарним провайдером. З керованою базою провайдер бере низ (hardware, ОС, патчинг, backups, failover), а ви тримаєте верх (schema, indexes, queries, data) — лінія піднімається, але ніколи не сягає самого верху.',
+    },
+    seeAlso: ['managed database (DBaaS)'],
+  },
+  {
+    term: 'Kubernetes operator',
+    def: {
+      en: 'A pattern for running stateful software on Kubernetes: a Custom Resource Definition (CRD) plus a controller running a reconciliation loop that drives actual state toward the declared spec — encoding operational knowledge (failover, backups, upgrades) as code. CloudNativePG is the leading Postgres operator.',
+      uk: 'Патерн для запуску stateful-софту на Kubernetes: Custom Resource Definition (CRD) плюс controller із reconciliation loop, що зводить фактичний стан до задекларованого spec — кодуючи операційні знання (failover, backups, upgrades) як код. CloudNativePG — провідний Postgres operator.',
+    },
+    seeAlso: ['CloudNativePG'],
+  },
+  {
+    term: 'CloudNativePG',
+    def: {
+      en: 'A community-governed, vendor-neutral Kubernetes operator for PostgreSQL (CNCF Sandbox since January 2025). Manages the full lifecycle of an HA Postgres cluster via streaming replication: provisioning, failover, backups, and rolling upgrades.',
+      uk: 'Community-governed, vendor-neutral Kubernetes operator для PostgreSQL (CNCF Sandbox з січня 2025). Керує повним життєвим циклом HA Postgres-кластера через streaming replication: provisioning, failover, backups та rolling upgrades.',
+    },
+    seeAlso: ['Kubernetes operator', 'streaming replication'],
+  },
+  {
+    term: 'infrastructure as code (IaC)',
+    def: {
+      en: 'Defining infrastructure as declarative, version-controlled code applied reproducibly, instead of clicking consoles. Terraform/OpenTofu provision cloud resources; Ansible configures software on them. Key disciplines: idempotency and watching for drift.',
+      uk: 'Опис інфраструктури як декларативного, version-controlled коду, застосованого відтворювано, замість клацання в консолях. Terraform/OpenTofu provision хмарні ресурси; Ansible конфігурує софт на них. Ключові дисципліни: idempotency та спостереження за drift.',
+    },
+    seeAlso: ['Terraform', 'OpenTofu'],
+  },
+  {
+    term: 'Terraform',
+    def: {
+      en: 'The dominant infrastructure-as-code provisioning tool: declare resources, diff against tracked state (plan), then apply. HashiCorp moved it to the BSL license in 2023 and was acquired by IBM (2025); each version reverts to MPL four years after release.',
+      uk: 'Домінантний infrastructure-as-code інструмент provisioning: декларуй ресурси, порівняй з відстеженим state (plan), потім apply. HashiCorp перевів його на ліцензію BSL у 2023 і був придбаний IBM (2025); кожна версія повертається до MPL через чотири роки після релізу.',
+    },
+    seeAlso: ['infrastructure as code (IaC)', 'OpenTofu'],
+  },
+  {
+    term: 'OpenTofu',
+    def: {
+      en: 'The open-source, Linux-Foundation-governed fork of Terraform, created after HashiCorp\'s 2023 BSL relicense. A near-drop-in replacement for the Terraform CLI (reached 1.9 in early 2026).',
+      uk: 'Open-source форк Terraform під керуванням Linux Foundation, створений після BSL-перереліцензування HashiCorp у 2023. Майже-drop-in заміна Terraform CLI (досяг 1.9 на початку 2026).',
+    },
+    seeAlso: ['Terraform', 'infrastructure as code (IaC)'],
+  },
+  {
+    term: 'pg_stat_statements',
+    def: {
+      en: 'The PostgreSQL extension that tracks cumulative execution statistics per normalized query (calls, total/mean time, rows, buffer hits). Loaded via shared_preload_libraries. The single most valuable tool for finding the queries that cost the most overall — sort by total time, not the slowest single call.',
+      uk: 'PostgreSQL extension, що відстежує кумулятивну статистику виконання на нормалізований запит (calls, total/mean time, rows, buffer hits). Завантажується через shared_preload_libraries. Найцінніший інструмент для пошуку запитів, що коштують найбільше загалом — сортуйте за сумарним часом, а не за одним найповільнішим викликом.',
+    },
+    seeAlso: ['observability', 'EXPLAIN'],
+  },
+  {
+    term: 'observability',
+    def: {
+      en: 'Understanding a running system from its outputs — metrics, logs, and traces. For databases: pg_stat_statements/activity/io feeding postgres_exporter → Prometheus → Grafana, watching the golden signals (latency, traffic, errors, saturation).',
+      uk: 'Розуміння робочої системи з її виходів — metrics, logs та traces. Для баз даних: pg_stat_statements/activity/io, що живлять postgres_exporter → Prometheus → Grafana, зі спостереженням за golden signals (latency, traffic, errors, saturation).',
+    },
+    seeAlso: ['pg_stat_statements'],
+  },
 ];

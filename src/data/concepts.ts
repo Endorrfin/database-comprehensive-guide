@@ -43,6 +43,9 @@ import { m28 } from './modules/m28-graph';
 // CHANGED (S15): M29 + M30 authored from stubs (★ Vector/ANN sim + Distributed SQL figures). Section VII begins.
 import m29 from './modules/m29-vector';
 import m30 from './modules/m30-distributed-sql';
+// CHANGED (S16): M31 + M32 authored from stubs (figures-only: columnar-scan, hypertable, shared-responsibility).
+import m31 from './modules/m31-analytics';
+import m32 from './modules/m32-cloud-native';
 
 /*
  * concepts.ts — the SINGLE SOURCE OF TRUTH (CLAUDE.md §2, §4).
@@ -214,40 +217,9 @@ export const modules: Module[] = [
   // CHANGED (S15): M29 + M30 fully authored (imported above). Section VII begins.
   m29, // vector databases & AI: embeddings, HNSW, pgvector, Qdrant/Milvus/Weaviate, RAG (★ vector-search sim)
   m30, // distributed SQL / NewSQL: CockroachDB, TiDB HTAP, YugabyteDB, Spanner TrueTime, Aurora DSQL
-  stub({
-    id: 'm31-analytics',
-    num: 31,
-    section: 's7-modern',
-    order: 3,
-    level: 'senior',
-    title: { en: 'Analytics, columnar & time-series', uk: 'Аналітика, columnar і time-series' },
-    tagline: {
-      en: 'Columnar + vectorized execution, ClickHouse & DuckDB, TimescaleDB/InfluxDB, the lakehouse.',
-      uk: 'Columnar + vectorized execution, ClickHouse і DuckDB, TimescaleDB/InfluxDB, lakehouse.',
-    },
-    readMins: 12,
-    mentalModel: {
-      en: 'Scan columns, not rows — OLAP is a different machine from OLTP.',
-      uk: 'Скануйте колонки, а не рядки — OLAP — це інша машина, ніж OLTP.',
-    },
-  }),
-  stub({
-    id: 'm32-cloud-native',
-    num: 32,
-    section: 's7-modern',
-    order: 4,
-    level: 'senior',
-    title: { en: 'Cloud-native & the modern DBA', uk: 'Cloud-native і сучасний DBA' },
-    tagline: {
-      en: 'Managed DBs, Docker/K8s operators, IaC, observability, autoscaling.',
-      uk: 'Керовані БД, Docker/K8s operators, IaC, observability, autoscaling.',
-    },
-    readMins: 11,
-    mentalModel: {
-      en: 'The DBA moved up the stack — from tuning disks to wiring platforms.',
-      uk: 'DBA піднявся стеком — від тюнінгу дисків до звʼязування платформ.',
-    },
-  }),
+  // CHANGED (S16): M31 + M32 now fully authored (imported above). Section VII continues.
+  m31, // analytics, columnar & time-series: ClickHouse/DuckDB, TimescaleDB/InfluxDB 3, the lakehouse
+  m32, // cloud-native & the modern DBA: managed DBs, K8s operators, IaC, observability
 
   // ── Section VIII · Mastery ───────────────────────────────────────────────
   stub({

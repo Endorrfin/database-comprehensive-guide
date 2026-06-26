@@ -1374,3 +1374,76 @@ Footer: **"Vasyl Krupka · Senior Fullstack Engineer"** + 🇺🇦. Dark is prim
   observability, autoscaling). **Pending user:** repo is live (§11) — S15 appears live once committed &
   **merged to `main`**; locally `npm install` (darwin-arm64) + `npm run verify`; optional cleanup
   `rm -rf dist-s15 scripts/_smoke-s15.tsx`.
+
+- **2026-06-26 · S16 Modern engines (analytics / cloud-native)** *(branch `s16-analytics-cloud-native`)* —
+  Authored the two remaining Section-VII modules **fully EN+UA** to the M13 depth bar, **completing Section VII**
+  (M29–M32) and lifting authored modules from 30 → **32**. Both are **figures-only** per the locked plan (§6 — the
+  8 signature sims are all built; the last, ★ Vector/ANN, shipped in S15). **M31 · Analytics, columnar & time-series**
+  `[senior]` (4 topics: columnar storage & vectorized execution · ClickHouse & DuckDB · time-series TimescaleDB &
+  InfluxDB 3 · the lakehouse; new **columnar-scan** SVG figure [same `SELECT sum(amount)` — row store reads all 5
+  columns (4/5 wasted I/O) vs column store reads only `amount`, compressed] + new **hypertable** SVG figure [one
+  logical hypertable → time chunks: recent row/uncompressed, older compressed columnar ~90%, oldest dropped by
+  retention; continuous-aggregate chip], a compression-encodings table [RLE/dictionary/delta/FOR], an OLTP-vs-OLAP
+  **compare**, an OLAP-engines table [ClickHouse/DuckDB/StarRocks·Doris/Druid·Pinot], a TimescaleDB-vs-InfluxDB-3
+  **compare**, an open-table-formats table [Iceberg/Delta/Hudi], a ClickHouse-MergeTree + DuckDB-over-Parquet code
+  block and a TimescaleDB hypertable+CAGG+compression/retention code block, 6 callouts [compression-is-first-class /
+  ClickHouse-MV≠PG-matview / DuckDB-needs-no-server / TimescaleDB-TSL-licensing-warn / storage-compute-decoupling /
+  query-Parquet-without-a-warehouse], 5 keyPoints, 3 pitfalls, 3 interview Q&A [senior/senior/staff], 7 web-verified
+  sources). **M32 · Cloud-native & the modern DBA** `[senior]` (4 topics: managed databases · containers & K8s
+  operators · infrastructure as code · observability & the modern DBA dashboard; new **shared-responsibility** SVG
+  figure [self-hosted = you own all 7 layers; managed = provider owns bottom 4, you keep schema/queries/data; "the
+  line moves up"], a managed-PostgreSQL-options table [RDS/Aurora/Cloud SQL·AlloyDB/Azure], a DBaaS-vs-operator
+  **compare**, a pg_stat_* views table [statements/activity/io/user_tables], a CloudNativePG `Cluster` YAML block and
+  a Terraform `aws_db_instance` HCL block, 6 callouts [responsibility-line-moves-up / cost-and-lock-in /
+  do-not-hand-roll-stateful-PG-on-K8s / IaC-state-and-secrets-security / Terraform-vs-Ansible-and-OpenTofu /
+  pg_stat_statements-highest-value / the-DBA-moved-up-the-stack], 5 keyPoints, 3 pitfalls, 3 interview Q&A
+  [senior/senior/staff], 7 sources).
+  **Web-verified this session** (sources in module `sources[]`): **ClickHouse v26.2** (2026-02-26; CalVer YY.M) —
+  columnar, vectorized execution, MergeTree, materialized views that aggregate on INSERT (VLDB 2024 paper Schulze et
+  al.). **DuckDB 1.x** (1.5.2, Apr 2026; v2.0 expected Fall 2026) — in-process/embedded "SQLite of analytics", reads
+  Parquet/CSV/JSON incl. `s3://` with predicate pushdown, ~10× faster than pandas; DuckLake 1.0. **TimescaleDB** — PG
+  extension; company **rebranded to TigerData 2025-06-17** (extension stays "TimescaleDB"); hypertables + continuous
+  aggregates + columnar compression (~90–95%) + retention/tiered-storage; **dual-licensed Apache-2.0 core + Timescale
+  License (TSL)** for compression/CAGGs/retention — free to self-host, **may NOT be resold as DBaaS**. **InfluxDB 3
+  Core + Enterprise GA 2025-04-15** — full Rust rewrite on the **FDAP stack** (Flight + DataFusion + Arrow + Parquet),
+  columnar, unlimited cardinality. **Lakehouse:** Parquet = columnar file format; open table formats add ACID/schema-
+  evolution/time-travel — **Iceberg** (converging industry standard — vendor-neutral, partition evolution; Databricks
+  bought Tabular >$1B mid-2024; AWS S3 Tables; Snowflake Polaris; BigQuery), **Delta Lake** (largest installed base,
+  Databricks/UniForm), **Hudi** (streaming/CDC). **Managed PG:** RDS (near-vanilla, most portable) vs Aurora (AWS-only,
+  distributed storage, ~3× claimed) vs Cloud SQL/**AlloyDB** (columnar HTAP, GCP-only) vs Azure Flexible Server (+
+  Elastic Clusters/Citus). **CloudNativePG** — CNCF **Sandbox since 2025-01-21**, community-governed/vendor-neutral,
+  HA via streaming replication, supports PG18; peers Crunchy PGO / Zalando / StackGres / KubeDB; **operator pattern =
+  CRD + reconciliation-loop controller**. **IaC:** Terraform → **BSL 1.1 (2023)**, IBM acquisition **closed Feb 2025**,
+  each version reverts to MPL after 4 yrs; **OpenTofu** (Linux Foundation fork) reached **1.9 early 2026**; Ansible
+  (Red Hat) = config mgmt. **Observability:** `pg_stat_statements` (cumulative per-query, `shared_preload_libraries`),
+  `pg_stat_activity`, `pg_stat_io` (since PG16); postgres_exporter (:9187) → Prometheus → Grafana; OpenTelemetry /
+  Grafana Alloy (2026 collector). PG latest stable **18.4**, 19 Beta 1.
+  **Wiring:** `concepts.ts` imports m31/m32 as default exports (stubs replaced, CHANGED(S16) note); `registry.tsx`
+  **+3 figures** (`columnar-scan`, `hypertable`, `shared-responsibility`; total **16 sims + 35 figures**); glossary
+  **+18 terms** (columnar storage, vectorized execution, ClickHouse, DuckDB, hypertable, continuous aggregate,
+  TimescaleDB, lakehouse, Apache Iceberg, Parquet, managed database (DBaaS), shared responsibility model, Kubernetes
+  operator, CloudNativePG, infrastructure as code (IaC), Terraform, OpenTofu, pg_stat_statements, observability) →
+  **165**.
+  **Bug caught & fixed before commit:** the M31 "query Parquet without a warehouse" callout embedded inline SQL
+  `FROM 's3://.../*.parquet'` inside a **single-quoted** EN/UA string — the inner `'` terminated the JS string
+  (TS1005 ×4). Fixed by escaping the inner quotes (`\'…\'`) in both languages.
+  **Verification (repo, linux-arm64; `@rolldown/binding-linux-arm64-gnu` + `@esbuild/linux-arm64` +
+  `lightningcss-linux-arm64-gnu` already present in `node_modules`):** `tsc -b --noEmit` ✓ (clean) · ESLint ✓ (clean)
+  · `check:data` ✓ (**8 sections, 36 modules [32 authored, 4 stubs], 3301 Localized EN+UA pairs**, **16 sims + 35
+  figures**, 165 glossary terms, all registry keys resolve, cross-links valid) · `test:btree` ✓ (346 checks) ·
+  **render+content smoke** ✓ (`scripts/_smoke-s16.tsx`, `react-dom/server` of the 3 new figures — ColumnarScan
+  Row/Column store + `sum(amount)` + "reads only amount"; Hypertable `hypertable: metrics` + continuous aggregate +
+  ~90% + retention; SharedResponsibility Self-hosted + Managed DBaaS + Hardware + "the line moves up" — plus M31/M32
+  shape: 4 topics, 7 sources, figure blocks, signature:false) · `vite build` ✓ (built into fresh `dist-s16/`; index
+  **1,350.74 KB / 426.05 KB gzip** + react-vendor 189.65 KB / 59.64 KB gzip + 16 sim + 35 figure on-demand chunks
+  incl. the 3 new figure chunks ColumnarScan/Hypertable/SharedResponsibility ~1–2 KB gzip each; +28 KB gzip from
+  S15's 398 KB for two dense bilingual modules + 3 figures + 18 glossary terms).
+  **Sandbox gotchas (expected, §12):** linux helper binaries already present from prior sessions → all tooling ran;
+  built into fresh `dist-s16/` (unlink blocked; `dist-*/` gitignored). Smoke file `scripts/_smoke-s16.tsx` is
+  gitignored (`scripts/_smoke-*.ts`) — **user can `rm scripts/_smoke-s16.tsx`** (and any stale `_smoke-s15.tsx`).
+  **No stale `.git/index.lock`** this session (avoided in-sandbox `git status`). No new CSS (figures are pure SVG).
+  **Next (S17):** Section VIII Mastery — M33 Security & data protection (authN/authZ, RBAC/RLS, encryption at rest/in
+  transit, SQL injection, least privilege); M34 Performance engineering (profiling, slow queries, connection pooling,
+  N+1, caching, capacity). **Pending user:** repo is live (§11) — S16 appears live once committed & **merged to
+  `main`**; locally `npm install` (darwin-arm64) + `npm run verify`; optional cleanup `rm -rf dist-s16
+  scripts/_smoke-s16.tsx`.

@@ -77,6 +77,9 @@ export const figures: Record<string, ComponentType> = {
   'property-graph':      lazyNamed(() => import('../components/figures/PropertyGraph'),       'PropertyGraph'),     // S14
   'rag-pipeline':        lazyNamed(() => import('../components/figures/RagPipeline'),         'RagPipeline'),       // S15
   'distributed-sql-arch':lazyNamed(() => import('../components/figures/DistributedSqlArch'), 'DistributedSqlArch'), // S15
+  'columnar-scan':       lazyNamed(() => import('../components/figures/ColumnarScan'),        'ColumnarScan'),         // S16
+  'hypertable':          lazyNamed(() => import('../components/figures/Hypertable'),          'Hypertable'),           // S16
+  'shared-responsibility': lazyNamed(() => import('../components/figures/SharedResponsibility'), 'SharedResponsibility'), // S16
 };
 
 export const getSim    = (key: string): ComponentType | undefined => sims[key];
