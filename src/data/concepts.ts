@@ -40,6 +40,9 @@ import { m26 } from './modules/m26-key-value';
 // CHANGED (S14): M27 + M28 authored from stubs (figures-only: partition-row-model, property-graph). Section VI complete.
 import { m27 } from './modules/m27-wide-column';
 import { m28 } from './modules/m28-graph';
+// CHANGED (S15): M29 + M30 authored from stubs (★ Vector/ANN sim + Distributed SQL figures). Section VII begins.
+import m29 from './modules/m29-vector';
+import m30 from './modules/m30-distributed-sql';
 
 /*
  * concepts.ts — the SINGLE SOURCE OF TRUTH (CLAUDE.md §2, §4).
@@ -208,41 +211,9 @@ export const modules: Module[] = [
   m28, // graph databases: LPG vs RDF, index-free adjacency, Cypher/GQL, graph algorithms
 
   // ── Section VII · Modern & specialized engines ───────────────────────────
-  stub({
-    id: 'm29-vector',
-    num: 29,
-    section: 's7-modern',
-    order: 1,
-    level: 'senior',
-    signature: true,
-    title: { en: 'Vector databases & AI', uk: 'Vector databases та AI' },
-    tagline: {
-      en: 'Embeddings & similarity, ANN/HNSW vs exact kNN, pgvector vs dedicated, RAG.',
-      uk: 'Embeddings і similarity, ANN/HNSW проти exact kNN, pgvector проти спеціалізованих, RAG.',
-    },
-    readMins: 13,
-    mentalModel: {
-      en: 'Search by meaning, not by match — trade a little recall for a lot of speed.',
-      uk: 'Шукайте за змістом, а не за збігом — міняйте трохи recall на багато швидкості.',
-    },
-  }),
-  stub({
-    id: 'm30-distributed-sql',
-    num: 30,
-    section: 's7-modern',
-    order: 2,
-    level: 'staff',
-    title: { en: 'Distributed SQL / NewSQL', uk: 'Distributed SQL / NewSQL' },
-    tagline: {
-      en: 'Raft-replicated ranges, distributed txns; CockroachDB, TiDB, YugabyteDB, Spanner, Aurora DSQL.',
-      uk: 'Raft-репльовані ranges, розподілені txns; CockroachDB, TiDB, YugabyteDB, Spanner, Aurora DSQL.',
-    },
-    readMins: 12,
-    mentalModel: {
-      en: "Shards you don't have to think about (mostly) — 'Postgres won the API'.",
-      uk: 'Shards, про які (здебільшого) не треба думати — «Postgres виграв API».',
-    },
-  }),
+  // CHANGED (S15): M29 + M30 fully authored (imported above). Section VII begins.
+  m29, // vector databases & AI: embeddings, HNSW, pgvector, Qdrant/Milvus/Weaviate, RAG (★ vector-search sim)
+  m30, // distributed SQL / NewSQL: CockroachDB, TiDB HTAP, YugabyteDB, Spanner TrueTime, Aurora DSQL
   stub({
     id: 'm31-analytics',
     num: 31,

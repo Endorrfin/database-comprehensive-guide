@@ -1090,4 +1090,101 @@ export const glossary: GlossaryEntry[] = [
     },
     seeAlso: ['property graph', 'knowledge graph'],
   },
+  // ── S15 additions: vector / distributed SQL (M29, M30) ─────────────────
+  {
+    term: 'embedding',
+    def: {
+      en: 'A dense vector of floating-point numbers (typically 768–3072 dimensions) produced by a neural model that encodes the semantic meaning of text, image, or audio. Semantically similar objects have vectors that are geometrically close (measured by cosine, L2, or dot-product distance). Embeddings are the foundation of vector search and RAG.',
+      uk: 'Щільний вектор чисел з плаваючою комою (типово 768–3072 вимірів), виготовлений нейронною моделлю, що кодує семантичний зміст тексту, зображення або аудіо. Семантично схожі об\'єкти мають геометрично близькі вектори (вимірюється cosine, L2 або dot-product відстанню). Embeddings є основою vector search та RAG.',
+    },
+    seeAlso: ['vector database', 'HNSW', 'RAG'],
+  },
+  {
+    term: 'vector database',
+    def: {
+      en: 'A database optimised for storing and querying high-dimensional embedding vectors. Core operation: k-nearest-neighbour (kNN) search — find the k vectors most similar to a query vector. Implementations include pgvector (PostgreSQL extension), Qdrant, Milvus, Weaviate, and Pinecone. Powers semantic search, RAG, recommendation systems, and anomaly detection.',
+      uk: 'База даних, оптимізована для зберігання та запиту high-dimensional embedding vectors. Основна операція: k-nearest-neighbour (kNN) пошук — знайти k векторів, найбільш схожих на query vector. Реалізації включають pgvector (розширення PostgreSQL), Qdrant, Milvus, Weaviate та Pinecone. Забезпечує semantic search, RAG, рекомендаційні системи та виявлення аномалій.',
+    },
+    seeAlso: ['embedding', 'HNSW', 'pgvector', 'RAG'],
+  },
+  {
+    term: 'HNSW',
+    def: {
+      en: 'Hierarchical Navigable Small World — the dominant ANN index algorithm (Malkov & Yashunin 2018, arXiv:1603.09320). Builds a multi-layer proximity graph at index time. Query time: navigate greedily from an entry point, following edges toward the query vector, in O(log n). Key parameters: M (edges per node), ef_construction (build beam width), ef/ef_search (query beam width — trade recall for speed at query time without rebuilding).',
+      uk: 'Hierarchical Navigable Small World — домінуючий алгоритм ANN індексу (Malkov & Yashunin 2018, arXiv:1603.09320). Будує багаторівневий граф суміжності під час індексації. Час запиту: жадібна навігація від точки входу, слідуючи ребрами до query vector, за O(log n). Ключові параметри: M (ребра на вузол), ef_construction (ширина beam при побудові), ef/ef_search (ширина beam при запиті — компроміс recall/швидкість без перебудови).',
+    },
+    seeAlso: ['vector database', 'ANN', 'pgvector'],
+  },
+  {
+    term: 'ANN (Approximate Nearest Neighbour)',
+    def: {
+      en: 'A class of algorithms that return the k approximate nearest vectors to a query, trading a small recall reduction for orders-of-magnitude speedup over exact kNN. HNSW is the dominant ANN algorithm. Others include IVFFlat (inverted file index + flat scan within clusters) and ScaNN. Tuning the recall/speed trade-off is done at query time without rebuilding the index.',
+      uk: 'Клас алгоритмів, що повертають k приблизних найближчих векторів до запиту, жертвуючи невеликим зниженням recall заради значного прискорення порівняно з exact kNN. HNSW — домінуючий ANN алгоритм. Інші включають IVFFlat (інвертований файловий індекс + плоске сканування всередині кластерів) та ScaNN. Налаштування компромісу recall/швидкість виконується під час запиту без перебудови індексу.',
+    },
+    seeAlso: ['HNSW', 'vector database'],
+  },
+  {
+    term: 'RAG (Retrieval-Augmented Generation)',
+    def: {
+      en: 'A pattern for grounding LLM responses in external knowledge: (1) embed the user query, (2) ANN-search the vector store to retrieve top-k relevant chunks, (3) inject those chunks into the LLM prompt, (4) the LLM generates an answer using retrieved chunks as evidence. RAG keeps LLM knowledge fresh and reduces hallucination by providing current, domain-specific context. (Lewis et al., NeurIPS 2020.)',
+      uk: 'Паттерн для обґрунтування відповідей LLM зовнішніми знаннями: (1) embed user query, (2) ANN-пошук у vector store для отримання top-k релевантних chunks, (3) вставка цих chunks у prompt LLM, (4) LLM генерує відповідь, використовуючи отримані chunks як докази. RAG підтримує знання LLM актуальними та зменшує галюцинації, надаючи поточний доменний контекст. (Lewis et al., NeurIPS 2020.)',
+    },
+    seeAlso: ['embedding', 'vector database', 'HNSW'],
+  },
+  {
+    term: 'pgvector',
+    def: {
+      en: 'A PostgreSQL extension (v0.8.2, Feb 2026) that adds a `vector(n)` column type plus three index types: exact scan (no index), IVFFlat, and HNSW. Enables k-nearest-neighbour search, cosine/L2/dot-product distance operators (`<=>`, `<->`, `<#>`), and joining vector search results with relational data in a single SQL query. The dominant choice for RAG at ≤100M vectors on an existing Postgres stack.',
+      uk: 'Розширення PostgreSQL (v0.8.2, лют. 2026), що додає тип стовпця `vector(n)` та три типи індексів: точне сканування (без індексу), IVFFlat та HNSW. Дозволяє k-nearest-neighbour пошук, оператори cosine/L2/dot-product відстані (`<=>`, `<->`, `<#>`) та join результатів vector search з реляційними даними в одному SQL-запиті. Домінуючий вибір для RAG при ≤100M векторів на наявному Postgres стеку.',
+    },
+    seeAlso: ['vector database', 'HNSW', 'RAG'],
+  },
+  {
+    term: 'IVFFlat',
+    def: {
+      en: 'Inverted File + Flat (exhaustive) scan within clusters — an ANN index in pgvector. At build time, k-means partitions all vectors into `lists` Voronoi cells. At query time, the `probes` nearest cell centroids are selected and their vectors exhaustively scanned. Requires all data to exist before build (no online insert). Generally superseded by HNSW for new installs.',
+      uk: 'Inverted File + Flat (вичерпне) сканування всередині кластерів — ANN індекс у pgvector. Під час побудови k-means розбиває всі вектори на `lists` комірок Вороного. Під час запиту обираються `probes` найближчих центроїдів комірок та їх вектори вичерпно скануються. Вимагає наявності всіх даних перед побудовою (без online insert). Загалом замінений HNSW для нових інсталяцій.',
+    },
+    seeAlso: ['HNSW', 'pgvector', 'ANN (Approximate Nearest Neighbour)'],
+  },
+  {
+    term: 'NewSQL',
+    def: {
+      en: 'A category of database systems (term coined 2011 by 451 Research) that provide SQL semantics, ACID transactions, and horizontal write scalability simultaneously. Achieved via shared-nothing architectures with Raft-replicated ranges. Examples: CockroachDB, TiDB, YugabyteDB, Google Spanner, Aurora DSQL. Often expose the Postgres wire protocol.',
+      uk: 'Категорія систем баз даних (термін введений у 2011 р. компанією 451 Research), що одночасно забезпечують SQL-семантику, ACID-транзакції та горизонтальне масштабування записів. Досягається через shared-nothing архітектури з Raft-реплікованими ranges. Приклади: CockroachDB, TiDB, YugabyteDB, Google Spanner, Aurora DSQL. Часто відкривають Postgres wire protocol.',
+    },
+    seeAlso: ['HTAP', 'TrueTime'],
+  },
+  {
+    term: 'HTAP',
+    def: {
+      en: 'Hybrid Transactional/Analytical Processing — a database design that serves both OLTP (row-store, high-frequency short writes) and OLAP (columnar scan, large aggregations) workloads in a single cluster without ETL. TiDB achieves this via TiKV (row/Raft for OLTP) and TiFlash (columnar, Raft Learner replica for OLAP), letting the optimizer route queries to the appropriate storage.',
+      uk: 'Hybrid Transactional/Analytical Processing — дизайн бази даних, що обслуговує як OLTP (row-store, часті короткі записи), так і OLAP (columnar scan, великі агрегації) навантаження в єдиному кластері без ETL. TiDB досягає цього через TiKV (row/Raft для OLTP) та TiFlash (columnar, Raft Learner replica для OLAP), дозволяючи optimizer маршрутизувати запити до відповідного сховища.',
+    },
+    seeAlso: ['NewSQL', 'columnar storage'],
+  },
+  {
+    term: 'TrueTime',
+    def: {
+      en: 'Google Spanner\'s globally synchronised clock API, backed by GPS receivers and atomic clocks in every Google data centre. Returns a bounded uncertainty interval `[earliest, latest]` for the current wall-clock time. Spanner waits out this uncertainty before committing, guaranteeing that the commit timestamp is strictly later than any prior event\'s timestamp — enabling external consistency (linearisability) without distributed locks.',
+      uk: 'Глобально синхронізований API годинника Google Spanner, підкріплений GPS-приймачами та атомними годинниками у кожному датацентрі Google. Повертає обмежений інтервал невизначеності `[earliest, latest]` для поточного wall-clock часу. Spanner очікує цю невизначеність перед commit, гарантуючи, що commit timestamp строго пізніший за timestamp будь-якої попередньої події — забезпечуючи external consistency (лінеаризованість) без distributed locks.',
+    },
+    seeAlso: ['NewSQL', 'linearizability'],
+  },
+  {
+    term: 'Spanner Omni',
+    def: {
+      en: 'Google\'s on-premises deployment option for Cloud Spanner. As of June 2026, Spanner Omni is in **Preview** (not GA) and not covered by Google Cloud SLAs. Cloud Spanner (Google Cloud-managed) is GA. Teams needing Spanner-class consistency for self-hosted deployments should evaluate CockroachDB or YugabyteDB.',
+      uk: 'On-premises варіант розгортання Cloud Spanner від Google. Станом на червень 2026 р., Spanner Omni знаходиться у **Preview** (не GA) і не покривається SLA Google Cloud. Cloud Spanner (керований Google Cloud) є GA. Команди, яким потрібна Spanner-класна консистентність для self-hosted розгортань, повинні оцінити CockroachDB або YugabyteDB.',
+    },
+    seeAlso: ['TrueTime', 'NewSQL'],
+  },
+  {
+    term: 'Aurora DSQL',
+    def: {
+      en: 'AWS Aurora Distributed SQL — GA since May 2025. PostgreSQL 16-compatible, serverless active-active multi-region database with 99.999% multi-region availability SLA. Log-structured (no heap files). Uses optimistic concurrency control (OCC) — conflicts abort rather than wait. Zero-ops: no capacity planning, scales to zero.',
+      uk: 'AWS Aurora Distributed SQL — GA з травня 2025 р. PostgreSQL 16-сумісна, serverless active-active multi-region база даних з SLA доступності 99.999% у кількох регіонах. Log-structured (без heap files). Використовує optimistic concurrency control (OCC) — конфлікти скасовуються замість очікування. Zero-ops: без планування потужностей, масштабується до нуля.',
+    },
+    seeAlso: ['NewSQL', 'optimistic concurrency control'],
+  },
 ];
