@@ -1292,3 +1292,85 @@ Footer: **"Vasyl Krupka · Senior Fullstack Engineer"** + 🇺🇦. Dark is prim
   YugabyteDB, Spanner, Aurora DSQL, "Postgres won the API"). **Pending user:** repo is live (§11) — S14 appears
   live once committed & **merged to `main`**; locally `npm install` (darwin-arm64) + `npm run verify`;
   optional cleanup `rm -rf dist-s14 scripts/_smoke-s14.mts`.
+
+- **2026-06-26 · S15 Modern engines (vector / distributed SQL)** *(branch `s15-vector-distributed-sql`)* —
+  Authored the first two Section-VII modules **fully EN+UA** to the M13 depth bar, **beginning Section VII**
+  and lifting authored modules from 28 → **30**. Shipped the **★ Vector/ANN search sim** (the last of the
+  8 §6 signature sims); M30 is **figures-only** per the locked plan. **M29 · Vector databases & AI**
+  `[senior]` *(signature)* (5 topics: embeddings & distance metrics · ANN and HNSW · pgvector · dedicated
+  vector DBs · RAG; new **rag-pipeline** SVG figure [4-step RAG flow: Query → Embed → ANN Search → LLM +
+  chunks → Answer; top labels: query vector `[0.21, -0.88, …]` + `top-k docs`; bottom dashed bar: "chunks
+  injected into prompt"], the ★ **Vector/ANN search sim**, a distance-metrics table [cosine/L2/dot-product +
+  when to use], a pgvector index types table [HNSW vs IVFFlat + tuning params], a 4-engine table
+  [Qdrant/Milvus/Weaviate/Pinecone × strengths/when], a pgvector DDL + query code block, 4 callouts
+  [normalise-for-cosine / ef-tunes-at-query-time / hybrid-search / eval-mandatory], 5 keyPoints, 3 pitfalls
+  [IVFFlat lists must be set at build / blindly trusting recall / premature migration], 3 interview Q&A
+  [senior/senior/staff], 6 web-verified sources).
+  **M30 · Distributed SQL / NewSQL** `[staff]` *(figures-only)* (5 topics: why distributed SQL · CockroachDB
+  & YugabyteDB · TiDB HTAP · Spanner TrueTime + Aurora DSQL · choosing distributed SQL; new **distributed-sql-arch**
+  SVG figure [3-column comparison: CockroachDB · TiDB HTAP · Aurora DSQL; bottom banner: "Postgres won the
+  API — all expose the Postgres wire protocol"; colour-coded by concept palette], a manual-sharding vs NewSQL
+  **compare**, a 5-engine decision table, a cross-region write latency `warn` callout, a TiFlash opt-in `tip`,
+  a **`warn` callout: Spanner Omni is Preview not GA** [corrects CLAUDE.md §12 "on-prem GA 2025"], a "start
+  with Postgres" `senior` callout, 5 keyPoints, 3 pitfalls [Postgres-wire ≠ 100% compat / cross-region latency /
+  Spanner Omni Preview], 3 interview Q&A [staff/staff/staff], 6 web-verified sources).
+  **★ Vector/ANN search sim** (`sims/VectorSim.tsx`, key `vector-search`): **12 fixed points in 3 clusters**
+  (tech/sports/food) + a query Q in the food region; **Mode toggle: Exact kNN ↔ HNSW**; for HNSW an **ef toggle
+  (ef=4 ↔ ef=8)**. Exact kNN always visits all 12, recalls 3/3 (true top-3: C1/C2/C4). HNSW ef=4 navigates a
+  pre-computed greedy path (A1→A2→B2→B4→C3→C1 — 6 nodes), recalls 1/3 (misses C2, false positive C3). HNSW
+  ef=8 extends the beam (adds C2/C4 — 8 nodes), recalls 3/3. Stats strip: Scanned X/12, Recall Y/3, Speed
+  (relative); contextual notes explain the result (ef trade-off, false positive, cross-cluster bridge). Pure SVG
+  canvas (viewBox 420×272); cluster points, HNSW edges, active-path highlights, star query marker, hit/miss rings.
+  Toggle-driven, inherently reduced-motion-safe, ARIA radiogroups + live region. New `.vec-*` CSS appended to
+  `components.css`; both assets registered in `registry.tsx` (lazy chunks).
+  **Web-verified this session** (sources in module `sources[]`): **pgvector v0.8.2** (Feb 26 2026, CVE-2026-3172
+  fix) — HNSW recommended over IVFFlat for new installs; operators `<=>` cosine/`<->` L2/`<#>` dot-product;
+  `hnsw.ef_search` is a query-time GUC (no index rebuild); `ivfflat.lists` must be set at build; **Malkov &
+  Yashunin 2018** HNSW arXiv:1603.09320 (multi-layer proximity graph; O(log n) query; M edges/node,
+  ef_construction build beam); **Lewis et al. NeurIPS 2020** RAG paper (retrieval-augmented generation);
+  **Qdrant v1.18.2** (Jun 12 2026, Rust, Apache 2.0, HNSW+quantization, hybrid dense+sparse);
+  **Milvus 3.0-beta** (May 9 2026, CNCF, Python-first, billions-scale, HNSW/IVF/DiskANN); **Weaviate v1.37.2**
+  (Apr 2026, Go, Apache 2.0, hybrid vector+keyword BM25); **Pinecone** (serverless-default 2026, managed).
+  **CockroachDB v26.2** (CalVer; range-based Raft; Postgres wire); **TiDB 8.5 GA** (Dec 2024; TiKV row/Raft +
+  TiFlash columnar Raft Learner; HTAP real-time analytics over live OLTP; `ALTER TABLE … SET TIFLASH REPLICA`);
+  **YugabyteDB v2025.2.5.0** (Jun 12 2026; YSQL PG-compat + YCQL Cassandra; DocDB/RocksDB); **Spanner OSDI
+  2012** (TrueTime: GPS + atomic clock → bounded uncertainty interval → external consistency without distributed
+  locks); **Spanner Omni (on-prem) = Preview as of Jun 2026 (NOT GA)** — CLAUDE.md §12 "on-prem GA 2025" is
+  incorrect; corrected here and in the M30 warn callout; **Aurora DSQL GA May 2025** (PG 16-compatible;
+  serverless active-active; OCC; 99.999% multi-region SLA); all five expose the Postgres wire protocol
+  ("Postgres won the API").
+  **Fact correction (CLAUDE.md §12):** `Spanner (TrueTime; on-prem GA 2025)` → **Spanner Omni is Preview, not
+  GA, as of June 2026**. The §12 blurb is updated here for future sessions; the M30 warn callout teaches this
+  explicitly. Web-search result: the Spanner Omni page (`cloud.google.com/spanner/docs/omni`) still shows
+  "Preview" status.
+  **Wiring:** `concepts.ts` imports m29/m30 as default exports (CHANGED(S15)); `registry.tsx` **+1 sim**
+  (`vector-search`) **+2 figures** (`rag-pipeline`, `distributed-sql-arch`; total 16 sims + **32 figures**);
+  glossary **+12 terms** (embedding, vector database, HNSW, ANN, RAG, pgvector, IVFFlat, NewSQL, HTAP,
+  TrueTime, Spanner Omni, Aurora DSQL) → **146**.
+  **Bugs caught & fixed before commit:** (1) `RagPipeline.tsx` — `const mx = (x1+x2)/2` computed but never
+  used → `noUnusedLocals` TS6133; removed the line. (2) `m29-vector.ts` and `m30-distributed-sql.ts` — both
+  missing the required `num: number` field from the `Module` type → TS2741; added `num: 29` and `num: 30`.
+  (3) `m30-distributed-sql.ts` — `seeAlso` referenced `'m22-partitioning'` (non-existent); the module id is
+  `'m22-sharding'` → `check:data` caught it; fixed. (4) Render smoke: `LangProvider` is at
+  `src/i18n/LangProvider.tsx` (not `LangContext`); fixed import path. (5) Smoke must run from within the repo
+  tree (node_modules resolution) — moved from `/tmp` to `scripts/_smoke-s15.tsx`.
+  **Verification (repo, linux-arm64; linux binaries `@esbuild/linux-arm64@0.28.1` +
+  `@rolldown/binding-linux-arm64-gnu@1.1.2` installed `--no-save`):** `tsc -b --noEmit` ✓ (clean) · ESLint ✓
+  (clean) · `check:data` ✓ (**8 sections, 36 modules [30 authored, 6 stubs], 3083 Localized EN+UA pairs**,
+  **16 sims + 32 figures**, 146 glossary terms, all registry keys resolve, cross-links valid) · `test:btree` ✓
+  (346 checks) · **render smoke** ✓ (`scripts/_smoke-s15.tsx` — 9 assertions: VectorSim renders with
+  vec-sim/Exact kNN/HNSW/Scanned/query; RagPipeline renders with ANN Search/Embedding model/top-k docs/Answer;
+  DistributedSqlArch renders with CockroachDB/TiDB/Aurora DSQL/Postgres won the API; M29 5 topics + vector-search
+  sim block + rag-pipeline figure block; M30 5 topics + distributed-sql-arch figure block) · `vite build` ✓
+  (**dist-s15**, index 1,306 KB / **398 KB gzip** + react-vendor 190 KB / 60 KB gzip + 16 sim + 32 figure lazy
+  chunks; +18 KB gzip from 380 KB for two dense bilingual modules + ★ sim + 2 figures; VectorSim and
+  DistributedSqlArch split into separate on-demand chunks).
+  **Sandbox gotchas (expected, §12):** linux helpers installed `--no-save`; built into fresh `dist-s15/`
+  (unlink blocked; `dist-*/` gitignored). Smoke file `scripts/_smoke-s15.tsx` is gitignored (`scripts/_smoke-*.ts`)
+  — **user can `rm scripts/_smoke-s15.tsx`** (and any stale `_smoke-s14.mts`). **No stale `.git/index.lock`**
+  this session.
+  **Next (S16):** Modern engines cont. — M31 Analytics, columnar & time-series (ClickHouse, DuckDB, TimescaleDB,
+  InfluxDB 3, the lakehouse); M32 Cloud-native & the modern DBA (managed DBs, Docker/K8s operators, IaC,
+  observability, autoscaling). **Pending user:** repo is live (§11) — S15 appears live once committed &
+  **merged to `main`**; locally `npm install` (darwin-arm64) + `npm run verify`; optional cleanup
+  `rm -rf dist-s15 scripts/_smoke-s15.tsx`.

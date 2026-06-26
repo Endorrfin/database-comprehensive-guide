@@ -40,6 +40,7 @@ export const sims: Record<string, ComponentType> = {
   replication:             lazyNamed(() => import('../components/sims/ReplicationSim'),     'ReplicationSim'),    // S11
   sharding:                lazyNamed(() => import('../components/sims/ShardingSim'),        'ShardingSim'),       // S11
   'cap-consistency':       lazyNamed(() => import('../components/sims/CapSim'),             'CapSim'),            // S12
+  'vector-search':         lazyNamed(() => import('../components/sims/VectorSim'),           'VectorSim'),         // S15
 };
 
 // ── Figures ───────────────────────────────────────────────────────────────────
@@ -74,6 +75,8 @@ export const figures: Record<string, ComponentType> = {
   'cache-aside-flow':    lazyNamed(() => import('../components/figures/CacheAsideFlow'),      'CacheAsideFlow'),    // S13
   'partition-row-model': lazyNamed(() => import('../components/figures/PartitionRowModel'),   'PartitionRowModel'), // S14
   'property-graph':      lazyNamed(() => import('../components/figures/PropertyGraph'),       'PropertyGraph'),     // S14
+  'rag-pipeline':        lazyNamed(() => import('../components/figures/RagPipeline'),         'RagPipeline'),       // S15
+  'distributed-sql-arch':lazyNamed(() => import('../components/figures/DistributedSqlArch'), 'DistributedSqlArch'), // S15
 };
 
 export const getSim    = (key: string): ComponentType | undefined => sims[key];

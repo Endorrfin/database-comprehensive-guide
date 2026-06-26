@@ -3369,3 +3369,71 @@
   color: var(--tx3);
   align-self: center;
 }
+
+/* ── VectorSim (S15, M29) ─────────────────────────────────────────────────── */
+/* CHANGED (S15): vector / ANN search sim styles */
+.vec-sim {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+.vec-bar {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.vec-ef-seg {
+  margin-left: 0.25rem;
+}
+.vec-canvas-wrap {
+  width: 100%;
+  background: var(--s2);
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  padding: 0.5rem 0;
+}
+.vec-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.vec-stats {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  font-size: 0.85rem;
+  background: var(--s2);
+  border-radius: 6px;
+  padding: 0.5rem 0.9rem;
+  border: 1px solid var(--line);
+}
+.vec-stat {
+  display: flex;
+  gap: 0.35rem;
+  align-items: baseline;
+}
+.vec-stat-label {
+  color: var(--tx3);
+  font-size: 0.78rem;
+}
+.vec-divider {
+  color: var(--line2);
+}
+.vec-hit { color: var(--c-commit); }
+.vec-miss { color: var(--c-danger); }
+.vec-note {
+  font-size: 0.82rem;
+  color: var(--tx2);
+  line-height: 1.55;
+  background: var(--s2);
+  border-radius: 6px;
+  padding: 0.5rem 0.8rem;
+  border-left: 3px solid var(--line2);
+}
+.vec-note--warn { border-left-color: var(--c-danger); }
+.vec-note--ok   { border-left-color: var(--c-commit); }
+
+/* ── DistributedSqlArch figure needs no extra CSS (pure SVG) ─────────────── */
