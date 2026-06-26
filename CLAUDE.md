@@ -1225,3 +1225,70 @@ Footer: **"Vasyl Krupka · Senior Fullstack Engineer"** + 🇺🇦. Dark is prim
   traversal, Cypher, when relationships ARE the data). **Pending user:** repo is live (§11) — S13
   appears live once committed & **merged to `main`**; locally `npm install` (darwin-arm64) +
   `npm run verify`; optional cleanup `rm -rf dist-s13`.
+
+- **2026-06-26 · S14 NoSQL families (wide-column / graph)** *(branch `s14-nosql-wide-column-graph`)* —
+  Authored the two remaining Section-VI modules **fully EN+UA** to the M13 depth bar, **completing Section
+  VI** (M25–M28 all authored) and lifting authored modules from 26 → **28**. Both are **figures-only** per
+  the locked plan (§6 — neither is among the 8 signature sims). **M27 · Wide-column stores** `[senior]`
+  (5 topics: the wide-column model · the partition/clustering model · tunable consistency · LSM storage
+  heritage · ScyllaDB & the engine landscape; new **partition-row-model** SVG figure [two partitions for
+  `sensor_data` — `dev-001` in Cassandra-blue, `dev-002` in dist-cyan — with column families and a
+  "primary key = partition key + clustering key" annotation]; a wide-column-vs-relational **compare**, a
+  CQL-vs-SQL **compare**, a tunable-consistency table [ONE/QUORUM/ALL/LOCAL_QUORUM/LOCAL_ONE/EACH_QUORUM/ANY
+  + durability × latency], a compaction-strategies table [STCS/LCS/TWCS/UCS × writes/reads/space + when], a
+  Cassandra↔ScyllaDB **compare**, a CREATE TABLE + INSERT + tunable-consistency CQL block; 4 callouts
+  [design-for-queries / strong-consistency-costs-availability / tombstone-hazard / Cassandra-5-UCS]; 5
+  keyPoints, 3 pitfalls, 3 interview Q&A [middle/senior/staff], 6 web-verified sources).
+  **M28 · Graph databases** `[senior]` (5 topics: the graph model & index-free adjacency · property graph vs
+  RDF · Cypher & GQL · graph algorithms · when to reach for a graph DB; new **property-graph** SVG figure
+  [4 nodes: Alice `:Person`, Bob `:Person`, Inception `:Movie`, Kyiv `:City`; 4 relationships: KNOWS (since:2020),
+  ACTED_IN ×2 (with `role` property), LIVES_IN; arrow markers + legend "first-class entities"]; a
+  graph-vs-relational **compare** [4-hop path query O(log n)^4 vs O(1)^4]; a property-graph-vs-RDF **compare**;
+  a Cypher/GQL history table [Cypher 2010 / Neo4j 1.4 2011 / openCypher Oct 2015 / ISO GQL Apr 2024]; a
+  graph-algorithms **table** [Shortest Path / PageRank / Betweenness Centrality / Community Detection (Louvain) /
+  Triangle Count]; a when-to-use **compare** [graph vs relational vs document]; a Cypher DDL + traversal +
+  `CALL gds.*` code block; 4 callouts [index-free-adjacency-vs-index-join / Neo4j-Community-is-GPLv3-not-AGPLv3
+  / GQL-is-now-ISO-standard / Apache-AGE-for-Postgres]; 5 keyPoints, 3 pitfalls, 3 interview Q&A
+  [middle/senior/staff], 6 web-verified sources).
+  **Web-verified this session** (sources in module `sources[]`): **Cassandra 5.0.7** (latest stable, 2026-03-23;
+  Cassandra 5.0.0 released 2024-09-25 — adds **Unified Compaction Strategy (UCS) as the new recommended
+  default**, replacing STCS; vector search via JVector, storage-attached indexes); **CQL3 since Cassandra 1.2**
+  (2013); **W + R > RF formula** for strong consistency (QUORUM + QUORUM > RF=3); `LOCAL_QUORUM` for multi-DC
+  without cross-DC latency; **tombstone hazard** (marked deleted, purgeable only at compaction; too many →
+  ReadTimeoutException); **ScyllaDB shard-per-core** (C++ / Seastar framework; each vCPU owns its memtable /
+  SSTable / cache / network queue; no lock contention; 10× Cassandra throughput on same hardware); peer-to-peer
+  ring (no single master; vnodes default 256/node; gossip + Phi Accrual Failure Detector). **Cypher** created
+  2010, first in **Neo4j 1.4 (2011)**; **openCypher** open spec October 2015 (openCypher.org); **ISO/IEC GQL**
+  39075:2024 published **April 12, 2024** (first standardized graph query language); **Neo4j 2026.05.0** (CalVer
+  GA) / **5.26.x LTS**; Neo4j Community = **GPLv3** (NOT AGPLv3 — a widely-repeated misconception; corrected
+  in the `senior` callout); **Apache AGE v1.7.0** for PG18 (2026-01-21; top-level Apache project May 2022) adds
+  Cypher to PostgreSQL via an extension; **index-free adjacency** = O(1) per hop (pointer chasing) vs index
+  lookup per join (O(log n)); at 4–5 hops the gap is orders of magnitude; **Labeled Property Graph (LPG)** vs
+  **RDF** (triples/SPARQL/no-edge-properties-without-reification); graph algorithms via Neo4j GDS library
+  (Shortest Path BFS/Dijkstra, PageRank, Betweenness Centrality, Louvain Community Detection, Triangle Count).
+  **Bug caught & fixed before commit:** M27 table `head[0]` was `{ en: '', uk: '' }` (intended as a row-label
+  column with blank header) — `check:data` rejects empty Localized pairs; replaced with
+  `{ en: 'Attribute', uk: 'Атрибут' }`.
+  **Wiring:** `concepts.ts` imports m27/m28 (stubs replaced, CHANGED(S14) note); `registry.tsx` **+2 figures**
+  (`partition-row-model`, `property-graph`; total 15 sims + **30 figures**); glossary **+12 terms** (wide-column
+  store, partition key (Cassandra), clustering key, CQL (Cassandra Query Language), tunable consistency, graph
+  database, property graph, index-free adjacency, Cypher, GQL, knowledge graph, RDF (Resource Description
+  Framework)) → **134**.
+  **Verification (repo, linux-arm64; linux binaries `@esbuild/linux-arm64@0.28.1` +
+  `@rolldown/binding-linux-arm64-gnu@1.1.2` installed `--no-save`):** `tsc -b --noEmit` ✓ · ESLint ✓ (clean)
+  · `check:data` ✓ (**8 sections, 36 modules [28 authored, 8 stubs], 2910 Localized EN+UA pairs**, **15 sims +
+  30 figures**, 134 glossary terms, all registry keys resolve, cross-links valid) · `test:btree` ✓ (346 checks)
+  · **render smoke** ✓ (`tsx --tsconfig tsconfig.app.json` renderToStaticMarkup of both new figures —
+  PartitionRowModel shows `sensor_data`/`device_id`/`timestamp`/`partition 1`/`partition 2`;
+  PropertyGraph shows `Alice`/`Bob`/`Inception`/`KNOWS`/`ACTED_IN`/`first-class entities`) · `vite build` ✓
+  (**dist-s14**, index 1,206 KB / **380 KB gzip** + react-vendor 190 KB / 60 KB gzip + 15 sim + 30 figure
+  lazy chunks; +23 KB gzip from 357 KB for two dense bilingual modules + 2 figures). **Section VI complete.**
+  **Sandbox gotchas (expected, §12):** linux helpers installed `--no-save`; built into fresh `dist-s14/`
+  (unlink blocked; `dist-*/` gitignored). Smoke file `scripts/_smoke-s14.mts` is gitignored (`scripts/_smoke-*.ts`)
+  — **user can `rm scripts/_smoke-s14.mts`** (and any stale `_smoke-s13.tsx`). **No stale `.git/index.lock`
+  this session** (avoided `git status` in-sandbox).
+  **Next (S15):** Modern engines — M29 Vector databases & AI (embeddings, ANN/HNSW, pgvector vs Qdrant/Pinecone/
+  Milvus/Weaviate, RAG + **★ Vector/ANN search sim**); M30 Distributed SQL / NewSQL (CockroachDB, TiDB,
+  YugabyteDB, Spanner, Aurora DSQL, "Postgres won the API"). **Pending user:** repo is live (§11) — S14 appears
+  live once committed & **merged to `main`**; locally `npm install` (darwin-arm64) + `npm run verify`;
+  optional cleanup `rm -rf dist-s14 scripts/_smoke-s14.mts`.

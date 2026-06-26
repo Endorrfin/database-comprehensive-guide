@@ -992,4 +992,102 @@ export const glossary: GlossaryEntry[] = [
     },
     seeAlso: ['key-value store', 'Valkey'],
   },
+
+  // ── S14 · M27 wide-column + M28 graph terms ────────────────────────────────
+  {
+    term: 'wide-column store',
+    def: {
+      en: 'A NoSQL family (Cassandra, ScyllaDB, HBase) that stores data in tables with flexible per-row columns, grouped into column families. Not a relational table — queries must match the partition key, and the data model is designed per query, not per entity. Physically built on LSM-trees for high write throughput.',
+      uk: "NoSQL родина (Cassandra, ScyllaDB, HBase), що зберігає дані в таблицях з гнучкими per-row колонками, згрупованими в column families. Не реляційна таблиця — запити мусять відповідати partition key, і модель даних проектується per query, а не per entity. Фізично побудована на LSM-trees для high write throughput.",
+    },
+    seeAlso: ['partition key (Cassandra)', 'clustering key', 'LSM-tree', 'tunable consistency'],
+  },
+  {
+    term: 'partition key (Cassandra)',
+    def: {
+      en: "The column (or composite of columns) in Cassandra's PRIMARY KEY that determines which node stores a row, via consistent hashing on the token ring. All rows with the same partition key are co-located on the same node(s) and sorted together by the clustering key. Getting the partition key wrong is the single most common Cassandra performance mistake.",
+      uk: "Колонка (або набір колонок) в PRIMARY KEY Cassandra, що визначає, який вузол зберігає рядок, через consistent hashing на token ring. Усі рядки з однаковим partition key зберігаються разом на тих самих вузлах і відсортовані за clustering key. Неправильний вибір partition key — найпоширеніша помилка продуктивності Cassandra.",
+    },
+    seeAlso: ['clustering key', 'wide-column store', 'consistent hashing'],
+  },
+  {
+    term: 'clustering key',
+    def: {
+      en: "The second part of Cassandra's compound PRIMARY KEY: it determines the sort order of rows within a partition. Defines the only ordering you can efficiently range-scan without ALLOW FILTERING. Choosing the clustering key to match your most critical ORDER BY is central to Cassandra data modelling.",
+      uk: "Друга частина складеного PRIMARY KEY Cassandra: визначає порядок сортування рядків всередині partition. Визначає єдиний порядок, по якому можна ефективно range-scan-ити без ALLOW FILTERING. Вибір clustering key відповідно до найважливішого ORDER BY є центральним в моделюванні даних Cassandra.",
+    },
+    seeAlso: ['partition key (Cassandra)', 'wide-column store'],
+  },
+  {
+    term: 'CQL (Cassandra Query Language)',
+    def: {
+      en: 'The SQL-like query language for Apache Cassandra (CQL3, released with Cassandra 1.2 in 2013). Syntax looks like SQL but the execution model is radically different: queries must include a full partition key predicate; JOINs, subqueries, and arbitrary WHERE clauses across partitions do not exist. Data modelling is query-first.',
+      uk: "SQL-подібна мова запитів для Apache Cassandra (CQL3, випущена з Cassandra 1.2 у 2013 р.). Синтаксис схожий на SQL, але модель виконання радикально відрізняється: запити мусять включати повний partition key предикат; JOIN-ів, підзапитів і довільних WHERE-клаузул через партиції не існує. Моделювання даних — query-first.",
+    },
+    seeAlso: ['wide-column store', 'partition key (Cassandra)'],
+  },
+  {
+    term: 'tunable consistency',
+    def: {
+      en: "Cassandra's per-operation consistency model: you choose a consistency level (ONE, QUORUM, ALL, LOCAL_QUORUM…) for each read and write independently. Strong consistency is achieved when W + R > RF (replication factor). Trading down to ONE improves latency; trading up to ALL maximises freshness but reduces availability.",
+      uk: "Per-operation модель consistency Cassandra: ви обираєте consistency level (ONE, QUORUM, ALL, LOCAL_QUORUM…) для кожного читання та запису незалежно. Сильна consistency досягається, коли W + R > RF (replication factor). Зниження до ONE покращує latency; підвищення до ALL максимізує свіжість, але зменшує availability.",
+    },
+    seeAlso: ['wide-column store', 'quorum', 'eventual consistency'],
+  },
+  {
+    term: 'graph database',
+    def: {
+      en: 'A database optimised for storing and querying highly connected data as nodes, relationships, and properties. The defining performance advantage over relational is index-free adjacency: each node physically stores pointers to its neighbours, making multi-hop traversal O(k × degree) rather than O(k × log n) per hop in a relational JOIN.',
+      uk: "База даних, оптимізована для зберігання та запиту сильно пов'язаних даних як nodes, relationships і properties. Визначальна перевага продуктивності над реляційними — index-free adjacency: кожен node фізично зберігає вказівники на своїх сусідів, роблячи multi-hop traversal O(k × degree) замість O(k × log n) на hop у реляційному JOIN.",
+    },
+    seeAlso: ['index-free adjacency', 'property graph', 'Cypher'],
+  },
+  {
+    term: 'property graph',
+    def: {
+      en: "The dominant graph data model (used by Neo4j, Amazon Neptune, ArangoDB): nodes carry labels (:Person, :Movie) and a property map; relationships have a single type (KNOWS, ACTED_IN), a direction, and their own property map. Relationships are first-class entities — unlike RDF predicates which cannot carry properties natively.",
+      uk: "Домінуюча модель graph-даних (використовується Neo4j, Amazon Neptune, ArangoDB): nodes несуть labels (:Person, :Movie) і property map; relationships мають один тип (KNOWS, ACTED_IN), напрямок та власний property map. Relationships — першокласні сутності — на відміну від RDF predicates, які не можуть нести properties нативно.",
+    },
+    seeAlso: ['graph database', 'index-free adjacency', 'Cypher'],
+  },
+  {
+    term: 'index-free adjacency',
+    def: {
+      en: 'The storage technique in a native graph database where each node record physically stores a pointer to its linked list of relationships. Following a hop is a single memory dereference — O(1) per hop, independent of graph size. At 4–5 hops this is orders of magnitude faster than the equivalent JOINs in a relational database.',
+      uk: "Техніка зберігання в native graph database, де запис кожного node фізично зберігає вказівник на зв'язаний список relationships. Слідування за hop — одна операція звернення до пам'яті — O(1) на hop, незалежно від розміру графу. При 4–5 hops це на порядки швидше ніж еквівалентні JOINs у реляційній базі.",
+    },
+    seeAlso: ['graph database', 'property graph'],
+  },
+  {
+    term: 'Cypher',
+    def: {
+      en: 'A declarative graph query language created at Neo4j in 2010 (first public release Neo4j 1.4, 2011). Uses ASCII-art pattern syntax — (n:Person)-[:KNOWS]->(m:Person) — to describe subgraph shapes to match. Core clauses: MATCH, WHERE, RETURN, CREATE, MERGE, SET, DELETE, WITH. openCypher (Oct 2015) opened the spec; it became the basis for GQL ISO/IEC 39075:2024.',
+      uk: "Декларативна мова graph-запитів, створена в Neo4j у 2010 р. (перший публічний реліз Neo4j 1.4, 2011 р.). Використовує ASCII-art синтаксис патернів — (n:Person)-[:KNOWS]->(m:Person) — для опису форм підграфів. Основні клаузули: MATCH, WHERE, RETURN, CREATE, MERGE, SET, DELETE, WITH. openCypher (жовт. 2015) відкрив специфікацію; стала основою для GQL ISO/IEC 39075:2024.",
+    },
+    seeAlso: ['property graph', 'graph database', 'GQL'],
+  },
+  {
+    term: 'GQL',
+    def: {
+      en: 'ISO/IEC 39075:2024 — the first ISO standard graph query language, published April 12, 2024. Its lineage is Cypher (Neo4j, 2011) → openCypher (2015) → GQL. It also subsumes SQL/PGQ (SQL Part 16: Property Graph Queries), bringing graph queries into the SQL standard family.',
+      uk: 'ISO/IEC 39075:2024 — перший ISO стандарт мови graph-запитів, опублікований 12 квітня 2024 р. Лінія спадщини: Cypher (Neo4j, 2011) → openCypher (2015) → GQL. Також включає SQL/PGQ (SQL Part 16: Property Graph Queries), привносячи graph-запити до сімейства SQL стандартів.',
+    },
+    seeAlso: ['Cypher', 'property graph'],
+  },
+  {
+    term: 'knowledge graph',
+    def: {
+      en: 'A graph database used to represent entities and the typed relationships between them as machine-readable knowledge. Used for semantic search, question answering, LLM RAG context enrichment (GraphRAG), and data integration. Knowledge graphs often use RDF + SPARQL for interoperability, or a property graph (Neo4j/LPG) for operational use.',
+      uk: "Graph database, що використовується для представлення сутностей і типізованих relationships між ними як машиночитаних знань. Використовується для semantic search, question answering, LLM RAG context enrichment (GraphRAG) та інтеграції даних. Knowledge graphs часто використовують RDF + SPARQL для взаємодії або property graph (Neo4j/LPG) для операційного застосування.",
+    },
+    seeAlso: ['graph database', 'property graph'],
+  },
+  {
+    term: 'RDF (Resource Description Framework)',
+    def: {
+      en: 'A W3C graph data model where every fact is expressed as a subject–predicate–object triple (all URI-identified). Predicates are not objects, so edge properties require verbose reification. Queried with SPARQL. First-class support for OWL/RDFS ontology and inference. Best for linked open data, semantic web, and knowledge representation rather than operational graphs.',
+      uk: "Модель graph-даних W3C, де кожен факт виражається як subject–predicate–object triple (всі ідентифіковані URI). Предикати не є об'єктами, тому edge properties потребують докладного reification. Запити через SPARQL. Першокласна підтримка OWL/RDFS ontology та inference. Найкраще для linked open data, semantic web та представлення знань, а не operational graphs.",
+    },
+    seeAlso: ['property graph', 'knowledge graph'],
+  },
 ];
