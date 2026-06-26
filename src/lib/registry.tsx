@@ -72,6 +72,8 @@ export const figures: Record<string, ComponentType> = {
   'backup-pitr':         lazyNamed(() => import('../components/figures/BackupPitr'),          'BackupPitr'),        // S12
   'embed-vs-reference':  lazyNamed(() => import('../components/figures/EmbedVsReference'),    'EmbedVsReference'),  // S13
   'cache-aside-flow':    lazyNamed(() => import('../components/figures/CacheAsideFlow'),      'CacheAsideFlow'),    // S13
+  'partition-row-model': lazyNamed(() => import('../components/figures/PartitionRowModel'),   'PartitionRowModel'), // S14
+  'property-graph':      lazyNamed(() => import('../components/figures/PropertyGraph'),       'PropertyGraph'),     // S14
 };
 
 export const getSim    = (key: string): ComponentType | undefined => sims[key];

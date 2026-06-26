@@ -37,6 +37,9 @@ import { m24 } from './modules/m24-ha-backups-dr';
 // CHANGED (S13): M25 + M26 authored from stubs (figures-only: embed-vs-reference, cache-aside-flow). Section VI begins.
 import { m25 } from './modules/m25-document';
 import { m26 } from './modules/m26-key-value';
+// CHANGED (S14): M27 + M28 authored from stubs (figures-only: partition-row-model, property-graph). Section VI complete.
+import { m27 } from './modules/m27-wide-column';
+import { m28 } from './modules/m28-graph';
 
 /*
  * concepts.ts — the SINGLE SOURCE OF TRUTH (CLAUDE.md §2, §4).
@@ -200,40 +203,9 @@ export const modules: Module[] = [
   // CHANGED (S13): M25 + M26 fully authored (imported above). Section VI begins (M25, M26).
   m25, // document databases: MongoDB model, embed/ref, aggregation, WiredTiger
   m26, // key-value & caching: Redis/Valkey structures, caching patterns, licensing story
-  stub({
-    id: 'm27-wide-column',
-    num: 27,
-    section: 's6-nosql',
-    order: 3,
-    level: 'senior',
-    title: { en: 'Wide-column stores', uk: 'Wide-column сховища' },
-    tagline: {
-      en: 'Cassandra/ScyllaDB, partition + clustering keys, tunable consistency, LSM heritage.',
-      uk: 'Cassandra/ScyllaDB, partition + clustering keys, tunable consistency, спадок LSM.',
-    },
-    readMins: 12,
-    mentalModel: {
-      en: 'Model the query, not the data — the partition key is the whole game.',
-      uk: 'Моделюйте запит, а не дані — partition key вирішує все.',
-    },
-  }),
-  stub({
-    id: 'm28-graph',
-    num: 28,
-    section: 's6-nosql',
-    order: 4,
-    level: 'senior',
-    title: { en: 'Graph databases', uk: 'Graph databases' },
-    tagline: {
-      en: 'Property graph vs RDF, traversal & Cypher, index-free adjacency.',
-      uk: 'Property graph проти RDF, traversal і Cypher, index-free adjacency.',
-    },
-    readMins: 11,
-    mentalModel: {
-      en: 'When the relationships ARE the data, make edges first-class.',
-      uk: 'Коли звʼязки і Є даними, робіть edges повноцінними обʼєктами.',
-    },
-  }),
+  // CHANGED (S14): M27 + M28 fully authored (imported above). Section VI complete.
+  m27, // wide-column: Cassandra/ScyllaDB, partition/clustering model, tunable consistency, LSM heritage
+  m28, // graph databases: LPG vs RDF, index-free adjacency, Cypher/GQL, graph algorithms
 
   // ── Section VII · Modern & specialized engines ───────────────────────────
   stub({
