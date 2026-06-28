@@ -309,7 +309,7 @@ reused). Sections carry an `accent` (the section colour); modules carry `level`,
 - 33.3 Hashing & secrets — passwords (bcrypt/argon2), never plaintext
 - 33.4 SQL injection — how it works, parameterized queries, least privilege
 - 33.5 A practical hardening checklist
-- Visuals: `[diagram]` trust boundaries · `[table]` threat → mitigation · `[code]` parameterized vs concatenated query · `[callout security]` least privilege · `[mental-model]` "treat every input as hostile"
+- Visuals: `[sim ★]` **SQL-injection demo** (concatenated vs parameterized × attack input) · `[diagram]` trust boundaries · `[diagram]` RLS policy (one table, two tenants) · `[table]` threat → mitigation · `[code]` parameterized vs concatenated query · `[callout security]` least privilege · `[mental-model]` "treat every input as hostile" — *authored S17*
 
 **M34 · Performance engineering**  `[senior]`
 - 34.1 A method — measure → find the bottleneck → fix → verify
@@ -317,7 +317,7 @@ reused). Sections carry an `accent` (the section colour); modules carry `level`,
 - 34.3 Connection pooling — why pools (PgBouncer), pool sizing, the connection cost
 - 34.4 Caching layers & read replicas — where to offload; cache coherence
 - 34.5 Capacity & limits — when to scale up, out, or change the model
-- Visuals: `[diagram]` find-the-bottleneck loop · `[table]` symptom → likely cause → fix · `[callout warn]` N+1 · `[compare]` scale-up vs scale-out · `[mental-model]` "the database is usually I/O-bound"
+- Visuals: `[sim ★]` **N+1 demo** (lazy N+1 vs eager JOIN × N) · `[diagram]` find-the-bottleneck loop · `[diagram]` connection pool (clients → pooler → backends) · `[table]` symptom → likely cause → fix · `[callout warn]` N+1 · `[compare]` scale-up vs scale-out · `[mental-model]` "the database is usually I/O-bound" — *authored S17*
 
 **M35 · Choosing the right database**  `[senior]`  ★
 - 35.1 The decision framework — workload, access patterns, consistency, scale, ops

@@ -1447,3 +1447,80 @@ Footer: **"Vasyl Krupka · Senior Fullstack Engineer"** + 🇺🇦. Dark is prim
   N+1, caching, capacity). **Pending user:** repo is live (§11) — S16 appears live once committed & **merged to
   `main`**; locally `npm install` (darwin-arm64) + `npm run verify`; optional cleanup `rm -rf dist-s16
   scripts/_smoke-s16.tsx`.
+
+- **2026-06-26 · S17 Mastery (security / performance)** *(branch `s17-security-performance`)* — Authored the first two
+  Section-VIII modules **fully EN+UA** to the M13 depth bar, lifting authored modules from 32 → **34** (Section VIII now
+  2 of 4: M33, M34; M35–M36 land in S18). **Scope decision (user choice this session via AskUserQuestion = "Both
+  interactives"):** S17 carries **no** §6 signature sim (all 8 are built), so the freed budget went to **two light
+  interactives** — one per module. Both M33 and M34 are flipped **`signature: false → true`** (the codebase flag marks
+  any module with a notable interactive — the same convention used for families-map/er/normalization/2pc; the §6 "8 hero
+  sims" target is unchanged in spirit — these are the **10th and 11th** interactives). **M33 · Security & data
+  protection** `[senior]` *(light signature)* (5 topics: authN/authZ + RBAC + least privilege · row-level security ·
+  encryption at rest/in transit · password hashing & secrets · SQL injection + hardening checklist; the ★ **SQL-injection
+  sim** + new **trust-boundaries** SVG figure [defense-in-depth concentric boundaries: untrusted input → TLS → authN →
+  authZ/RLS → data-at-rest core] + new **rls-policy** SVG figure [one shared `orders` table, two tenant sessions see
+  disjoint rows through one policy], a pg_hba auth-methods table, an encryption-layers table, an OWASP password-hashing
+  table, an 8-row hardening-checklist table, a least-privilege role-DDL block + an RLS-policy DDL block + a
+  concatenated-vs-parameterized JS block, 4 callouts [security · warn · security · security], 5 keyPoints, 3 pitfalls,
+  3 interview Q&A [senior/senior/staff], 8 web-verified sources). **M34 · Performance engineering** `[senior]` *(light
+  signature)* (5 topics: the measure→bottleneck→fix→verify method · slow queries/EXPLAIN/N+1 · connection pooling ·
+  caching layers & read replicas · capacity/scale-up-vs-out; the ★ **N+1 sim** + new **bottleneck-loop** SVG figure
+  [the optimization cycle, I/O-bound centre] + new **connection-pool** SVG figure [thousands of clients → PgBouncer →
+  small warm backend pool], a symptom→cause→fix table, a PgBouncer pool-modes table, a where-to-offload-reads table,
+  a pgbouncer.ini code block + an N+1-vs-eager JS block, a scale-up-vs-scale-out compare, 5 callouts, 5 keyPoints,
+  3 pitfalls, 3 interview Q&A [senior/senior/staff], 7 sources).
+  **★ SQL-injection sim** (`sims/SqlInjectionSim.tsx`, key `sql-injection`): two toggles — **Concatenated ↔
+  Parameterized** × **attacker input** (Normal · Auth bypass `' OR '1'='1' --` · Destructive `'; DROP TABLE users; --`).
+  Concat splices the input into the SQL (injected span highlighted red) → auth-bypass returns every row / DROP destroys
+  the table; parameterized binds it as `$1` data (green) → 0 rows, attack neutralized. Live verdict banner (safe/danger),
+  toggle-driven, inherently reduced-motion-safe, ARIA tablists + live region. **★ N+1 sim** (`sims/NPlusOneSim.tsx`,
+  key `n-plus-one`): toggle **Lazy (N+1) ↔ Eager (JOIN)** × N (3 · 25 · 100); lazy shows 1 parent query + ×N child
+  queries (N+1 round-trips); eager shows one JOIN; a stats strip (queries / round-trips / ≈ latency) and a two-bar
+  Lazy-vs-Eager comparison make the collapse vivid (100 authors → 101 queries vs 1). Toggle-driven, reduced-motion-safe,
+  ARIA. New `.sqli-*` + `.nplus1-*` CSS blocks appended to `components.css`; both sims + 4 figures registered; glossary
+  **+18 terms** (row-level security (RLS), RBAC, least privilege, SCRAM-SHA-256, SQL injection, parameterized query,
+  pgcrypto, encryption at rest, encryption in transit, Argon2id, bcrypt; N+1 query problem, connection pooling,
+  PgBouncer, transaction pooling, read replica, vertical scaling (scale up), horizontal scaling (scale out)) → **183**.
+  **Web-verified this session** (sources in module `sources[]`, primary = PG 18 docs): **RLS** (5.9 / CREATE POLICY) —
+  ENABLE ROW LEVEL SECURITY + USING/WITH CHECK; owner & superuser bypass unless **FORCE ROW LEVEL SECURITY**;
+  `pg_read_all_data` does NOT bypass RLS; policies default PERMISSIVE. **AuthN** — `scram-sha-256` default since **PG14**,
+  **md5 deprecated** (PG18 warns on a md5 password); predefined roles since PG14. **Encryption** — **no built-in TDE in
+  community Postgres** (§18.8 Encryption Options) → filesystem (LUKS/BitLocker) + **pgcrypto** column-level (not
+  transparent, app manages keys); in transit = TLS, client **sslmode=verify-full** defeats MITM. **App password
+  hashing** (OWASP Password Storage Cheat Sheet) — **Argon2id** first choice (≥19 MiB/t=2/p=1; ~64 MiB interactive),
+  bcrypt (work factor ≥12, 72-byte limit), scrypt, PBKDF2 for FIPS; never a fast hash. **SQL injection** — parameterized
+  queries are the fix, not escaping; **CVE-2025-1094** (Feb 2025) bypassed libpq escaping APIs via invalid encoding →
+  psql injection → RCE, fixed 17.3/16.7/15.11/14.16/13.19. **Performance** — `EXPLAIN (ANALYZE)` includes **BUFFERS by
+  default in PG18**; `auto_explain` logs slow plans; **N+1** = lazy ORM relation → 1+N round-trips, fix = eager JOIN /
+  batched IN. **Connection cost** — each connection is a backend process (~5–10 MB, ~ms to fork) vs ~0.1–0.3 ms for a PK
+  SELECT; default `max_connections`=100. **PgBouncer 1.25.2** (May 2026): pool modes session/transaction(default for web
+  apps; prepared statements since 1.21)/statement; `default_pool_size` 20; alternatives pgcat (Rust), Supavisor (Elixir).
+  **Pool sizing** — HikariCP `(cores × 2) + spindles`; smaller pools usually faster. **Read replicas** — offload reads,
+  route read-your-writes to primary, mind replication lag. PG stable **18.4** (May 14 2026), 19 Beta 1.
+  **Verification (repo, linux-arm64; linux binaries present):** `tsc -b --noEmit` ✓ (clean, first pass) · ESLint ✓
+  (clean, first pass) · `check:data` ✓ (**8 sections, 36 modules [34 authored, 2 stubs], 3537 Localized EN+UA pairs**,
+  **18 sims + 39 figures**, 183 glossary terms, all registry keys resolve, cross-links valid) · `test:btree` ✓ (346
+  checks) · **render+content smoke** ✓ (`scripts/_smoke-s17.tsx` — 6/6: SqlInjectionSim Concatenated/Parameterized/
+  Auth-bypass/SELECT * FROM users; NPlusOneSim Lazy/Eager/SELECT * FROM authors/round-trips; TrustBoundaries Defense-in-
+  depth/Authentication/TLS/Your-data; RlsPolicy CREATE POLICY/orders(stored)/Session A sees/tenant; BottleneckLoop
+  Measure/Find-bottleneck/Fix/Verify/I-O-bound; ConnectionPool PgBouncer/PostgreSQL/backend-process/clients) ·
+  `vite build` ✓ (**dist-s17**, index **1,455.37 KB / 459.00 KB gzip** + react-vendor 189.65 KB / 59.64 KB gzip + **18
+  sim + 39 figure** lazy chunks, incl. the 6 new SqlInjectionSim/NPlusOneSim/TrustBoundaries/RlsPolicy/BottleneckLoop/
+  ConnectionPool chunks ~1–5 KB gzip each).
+  **Bundle watch:** index gzip **426 → 459 KB (+33)** for two dense bilingual modules + 2 sims + 4 figures + 18 glossary
+  terms; Vite still warns the raw index chunk >900 KB. The §13 **meta.ts data-split** remains the documented next lever
+  (would drop the index chunk substantially by moving authored content out of the Sidebar/TopBar eager import).
+  **Clean first pass — no TS/lint/data errors in the authored code.** Only the smoke *harness* needed two tweaks (not
+  app bugs): add `import * as React` (tsx used the classic JSX runtime) and relax one assertion that matched on `'`
+  characters React HTML-escapes (`&#x27;`). Quote convention held: UA/EN strings containing apostrophes were authored
+  with double quotes, avoiding the S13-class TS1005 parse error.
+  **Sandbox gotchas (expected, §12):** linux helper binaries (`@esbuild/linux-arm64`, `@rolldown/binding-linux-arm64-gnu`,
+  `lightningcss-linux-arm64-gnu`) already present → all tooling ran; built into fresh `dist-s17/` (unlink blocked;
+  `dist-*/` gitignored). Smoke file `scripts/_smoke-s17.tsx` is gitignored (`scripts/_smoke-*.tsx`) — **user can `rm
+  scripts/_smoke-s17.tsx`** (and any stale `_smoke-s16.tsx`). **No stale `.git/index.lock`** this session (avoided
+  in-sandbox `git status`).
+  **Next (S18):** Mastery + polish — M35 Choosing the right database (+ **★ Database Picker**, data in `decide.ts`);
+  M36 Mental-models gallery + glossary + cheat-sheet; then global search, flashcards, mobile/a11y/perf, bilingual QA.
+  **Section VIII completes in S18.** **Pending user:** repo is live (§11) — S17 appears live once committed & **merged
+  to `main`**; locally `npm install` (darwin-arm64) + `npm run verify`; optional cleanup `rm -rf dist-s17
+  scripts/_smoke-s17.tsx`.

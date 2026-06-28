@@ -41,6 +41,8 @@ export const sims: Record<string, ComponentType> = {
   sharding:                lazyNamed(() => import('../components/sims/ShardingSim'),        'ShardingSim'),       // S11
   'cap-consistency':       lazyNamed(() => import('../components/sims/CapSim'),             'CapSim'),            // S12
   'vector-search':         lazyNamed(() => import('../components/sims/VectorSim'),           'VectorSim'),         // S15
+  'sql-injection':         lazyNamed(() => import('../components/sims/SqlInjectionSim'),     'SqlInjectionSim'),   // S17
+  'n-plus-one':            lazyNamed(() => import('../components/sims/NPlusOneSim'),         'NPlusOneSim'),       // S17
 };
 
 // ── Figures ───────────────────────────────────────────────────────────────────
@@ -80,6 +82,10 @@ export const figures: Record<string, ComponentType> = {
   'columnar-scan':       lazyNamed(() => import('../components/figures/ColumnarScan'),        'ColumnarScan'),         // S16
   'hypertable':          lazyNamed(() => import('../components/figures/Hypertable'),          'Hypertable'),           // S16
   'shared-responsibility': lazyNamed(() => import('../components/figures/SharedResponsibility'), 'SharedResponsibility'), // S16
+  'trust-boundaries':    lazyNamed(() => import('../components/figures/TrustBoundaries'),     'TrustBoundaries'),   // S17
+  'rls-policy':          lazyNamed(() => import('../components/figures/RlsPolicy'),           'RlsPolicy'),         // S17
+  'bottleneck-loop':     lazyNamed(() => import('../components/figures/BottleneckLoop'),      'BottleneckLoop'),    // S17
+  'connection-pool':     lazyNamed(() => import('../components/figures/ConnectionPool'),      'ConnectionPool'),    // S17
 };
 
 export const getSim    = (key: string): ComponentType | undefined => sims[key];
