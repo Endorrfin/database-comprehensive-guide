@@ -1341,4 +1341,152 @@ export const glossary: GlossaryEntry[] = [
     },
     seeAlso: ['pg_stat_statements'],
   },
+
+  // ── S17 · Security (M33) ───────────────────────────────────────────────
+  {
+    term: 'row-level security (RLS)',
+    def: {
+      en: "A PostgreSQL feature (since 9.5) that filters which rows each role may see or change, via CREATE POLICY (USING for visible rows, WITH CHECK for writable rows) after ENABLE ROW LEVEL SECURITY. Ideal for multi-tenancy — but table owners and superusers bypass it unless you add FORCE ROW LEVEL SECURITY.",
+      uk: "Можливість PostgreSQL (з 9.5), що фільтрує, які рядки кожна role може бачити чи змінювати, через CREATE POLICY (USING для видимих рядків, WITH CHECK для записуваних) після ENABLE ROW LEVEL SECURITY. Ідеально для multi-tenancy — але власники таблиць і superusers обходять її, доки ви не додасте FORCE ROW LEVEL SECURITY.",
+    },
+    seeAlso: ['least privilege', 'RBAC (role-based access control)'],
+  },
+  {
+    term: 'RBAC (role-based access control)',
+    def: {
+      en: "Granting privileges to group roles and then granting membership, so permissions follow roles rather than individuals. In PostgreSQL a role can LOGIN (a user) or group others; GRANT/REVOKE on objects build the model, and PG14 added predefined roles (pg_read_all_data, pg_monitor).",
+      uk: "Надання привілеїв груповим roles і потім надання членства, тож дозволи слідують за roles, а не за окремими людьми. У PostgreSQL role може LOGIN (користувач) чи групувати інших; GRANT/REVOKE на обʼєктах будують модель, а PG14 додав predefined roles (pg_read_all_data, pg_monitor).",
+    },
+    seeAlso: ['least privilege', 'row-level security (RLS)'],
+  },
+  {
+    term: 'least privilege',
+    def: {
+      en: "The principle of granting each role exactly the privileges it needs and no more. The application should connect as a limited role — never a superuser or the table owner — so that a leaked credential or a SQL injection has a capped blast radius.",
+      uk: "Принцип надання кожній role рівно тих привілеїв, що їй потрібні, і не більше. Застосунок має підключатися як обмежена role — ніколи superuser чи власник таблиці — щоб злитий credential чи SQL injection мали обмежений радіус ураження.",
+    },
+    seeAlso: ['RBAC (role-based access control)', 'SQL injection'],
+  },
+  {
+    term: 'SCRAM-SHA-256',
+    def: {
+      en: "The modern salted challenge-response password authentication method in PostgreSQL, the default password_encryption for new clusters since PG14. It never sends the password over the wire. The older md5 method is deprecated (PG18 warns on use).",
+      uk: "Сучасний salted challenge-response метод автентифікації паролем у PostgreSQL, дефолтний password_encryption для нових кластерів з PG14. Він ніколи не надсилає пароль по мережі. Старіший метод md5 застарів (PG18 попереджає при використанні).",
+    },
+    seeAlso: ['encryption in transit'],
+  },
+  {
+    term: 'SQL injection',
+    def: {
+      en: "A vulnerability where untrusted input concatenated into a SQL string is parsed as code, letting an attacker bypass auth or destroy data. The reliable fix is parameterized queries, not escaping — CVE-2025-1094 showed even libpq escaping could be bypassed.",
+      uk: "Вразливість, де недовірений вхід, сконкатенований у SQL-рядок, парситься як код, дозволяючи зловмиснику обійти auth чи знищити дані. Надійне виправлення — parameterized queries, а не escaping — CVE-2025-1094 показав, що навіть escaping libpq можна обійти.",
+    },
+    seeAlso: ['parameterized query', 'least privilege'],
+  },
+  {
+    term: 'parameterized query',
+    def: {
+      en: "A query sent with placeholders ($1, $2) and the values supplied separately, so user input is always treated as data and can never alter the statement structure. Also called a prepared statement; the one reliable defense against SQL injection.",
+      uk: "Запит, надісланий із плейсхолдерами ($1, $2) і значеннями, поданими окремо, тож вхід користувача завжди трактується як дані й ніколи не може змінити структуру statement. Також зветься prepared statement; єдиний надійний захист від SQL injection.",
+    },
+    seeAlso: ['SQL injection'],
+  },
+  {
+    term: 'pgcrypto',
+    def: {
+      en: "A PostgreSQL extension for column-level encryption and hashing (e.g. pgp_sym_encrypt). It is not transparent: the application must encrypt and decrypt explicitly and manage the keys. Used for a handful of sensitive fields; filesystem encryption covers whole-disk at-rest protection.",
+      uk: "Extension PostgreSQL для шифрування й hashing на рівні колонки (напр. pgp_sym_encrypt). Він не transparent: застосунок мусить шифрувати й розшифровувати явно та керувати ключами. Використовується для жменьки чутливих полів; шифрування файлової системи покриває whole-disk захист at-rest.",
+    },
+    seeAlso: ['encryption at rest'],
+  },
+  {
+    term: 'encryption at rest',
+    def: {
+      en: "Protecting stored data so a stolen disk or backup is useless. Community PostgreSQL has no built-in transparent data encryption (TDE): use filesystem encryption (LUKS/BitLocker), pgcrypto for specific columns, or a cloud/enterprise TDE. Key management is the hard part.",
+      uk: "Захист збережених даних, щоб вкрадений диск чи backup був марним. Community PostgreSQL не має вбудованого transparent data encryption (TDE): використовуйте шифрування файлової системи (LUKS/BitLocker), pgcrypto для конкретних колонок чи cloud/enterprise TDE. Key management — найскладніше.",
+    },
+    seeAlso: ['encryption in transit', 'pgcrypto'],
+  },
+  {
+    term: 'encryption in transit',
+    def: {
+      en: "Protecting data on the network with TLS between client and server. Set the client to sslmode=verify-full to check both that the link is encrypted and that the server certificate is the expected one — which is what actually defeats a man-in-the-middle attack.",
+      uk: "Захист даних у мережі через TLS між клієнтом і сервером. Встановіть клієнту sslmode=verify-full, щоб перевіряти і що зʼєднання зашифроване, і що сертифікат сервера очікуваний, — це й перемагає атаку man-in-the-middle.",
+    },
+    seeAlso: ['encryption at rest'],
+  },
+  {
+    term: 'Argon2id',
+    def: {
+      en: "The OWASP first-choice password hashing algorithm — slow and memory-hard, so a stolen table resists GPU brute force. A salted, one-way hash for storing application user passwords; alternatives are bcrypt and scrypt. Never use a fast hash (MD5/SHA-256) for passwords.",
+      uk: "Перший вибір OWASP для hashing паролів — повільний і memory-hard, тож вкрадена таблиця опирається GPU brute force. Salted, односторонній hash для зберігання паролів користувачів застосунку; альтернативи — bcrypt і scrypt. Ніколи не використовуйте швидкий hash (MD5/SHA-256) для паролів.",
+    },
+    seeAlso: ['bcrypt'],
+  },
+  {
+    term: 'bcrypt',
+    def: {
+      en: "A mature, widely available slow password hashing algorithm with a tunable work factor (≥12 in 2026) and a 72-byte input limit. A solid alternative to Argon2id for storing user passwords; like all password hashes it carries a per-hash salt.",
+      uk: "Зрілий, широко доступний повільний алгоритм hashing паролів із налаштовуваним work factor (≥12 у 2026) і лімітом входу 72 байти. Надійна альтернатива Argon2id для зберігання паролів користувачів; як усі hash паролів, несе per-hash salt.",
+    },
+    seeAlso: ['Argon2id'],
+  },
+
+  // ── S17 · Performance (M34) ────────────────────────────────────────────
+  {
+    term: 'N+1 query problem',
+    def: {
+      en: "An application anti-pattern where loading a list of N items lazily fires one query for the list plus one per item — N+1 round-trips. Each query is fast, so it hides in per-query metrics; the fix is eager loading with a JOIN or a single batched IN query.",
+      uk: "Анти-патерн застосунку, де завантаження списку з N елементів лінько запускає один запит за списком плюс один на кожен елемент — N+1 round-trips. Кожен запит швидкий, тож він ховається в per-query метриках; виправлення — eager loading через JOIN чи один batched IN-запит.",
+    },
+    seeAlso: ['EXPLAIN'],
+  },
+  {
+    term: 'connection pooling',
+    def: {
+      en: "Placing a pool of reusable database connections between the application and PostgreSQL, because each PG connection is a backend process (~5-10 MB, slow to create). A pooler multiplexes thousands of clients onto a small warm pool; smaller pools are usually faster.",
+      uk: "Розміщення пулу повторно використовуваних підключень до бази між застосунком і PostgreSQL, бо кожне підключення PG — backend-процес (~5-10 MB, повільне у створенні). Pooler мультиплексує тисячі клієнтів на малий теплий пул; менші пули зазвичай швидші.",
+    },
+    seeAlso: ['PgBouncer', 'transaction pooling'],
+  },
+  {
+    term: 'PgBouncer',
+    def: {
+      en: "The standard lightweight connection pooler for PostgreSQL. Three pool modes: session (safe default), transaction (highest reuse, the usual choice for web apps), and statement. Modern alternatives include pgcat (Rust) and Supavisor (Elixir).",
+      uk: "Стандартний легкий connection pooler для PostgreSQL. Три режими пулу: session (безпечний дефолт), transaction (найвище повторне використання, звичайний вибір для вебзастосунків) і statement. Сучасні альтернативи — pgcat (Rust) і Supavisor (Elixir).",
+    },
+    seeAlso: ['connection pooling', 'transaction pooling'],
+  },
+  {
+    term: 'transaction pooling',
+    def: {
+      en: "A PgBouncer pool mode that returns the server connection to the pool after each transaction, giving the highest connection reuse — the usual choice for web apps. The trade-off: session-scoped state (temp tables, SET, session advisory locks) does not survive across transactions.",
+      uk: "Режим пулу PgBouncer, що повертає серверне підключення в пул після кожної транзакції, даючи найвище повторне використання — звичайний вибір для вебзастосунків. Компроміс: session-scoped стан (temp tables, SET, session advisory locks) не переживає між транзакціями.",
+    },
+    seeAlso: ['PgBouncer', 'connection pooling'],
+  },
+  {
+    term: 'read replica',
+    def: {
+      en: "A standby copy kept current by streaming replication that serves read-only queries, offloading the primary for horizontal read scaling. The caveat is replication lag: route writes and read-your-writes to the primary, since a replica may be milliseconds to seconds behind.",
+      uk: "Standby-копія, що тримається актуальною через streaming replication і обслуговує read-only запити, розвантажуючи primary для горизонтального масштабування читань. Застереження — replication lag: маршрутизуйте записи й read-your-writes на primary, бо replica може відставати на мілісекунди-до-секунд.",
+    },
+    seeAlso: ['horizontal scaling (scale out)'],
+  },
+  {
+    term: 'vertical scaling (scale up)',
+    def: {
+      en: "Adding capacity by using a bigger machine — more RAM, CPU, faster disk. Simple and transparent to the application, so it is almost always the right first hardware move; the limits are a finite ceiling and cost that climbs faster than capacity.",
+      uk: "Додавання capacity через більшу машину — більше RAM, CPU, швидший диск. Просто й прозоро для застосунку, тож це майже завжди правильний перший апаратний крок; межі — скінченна стеля й вартість, що зростає швидше за capacity.",
+    },
+    seeAlso: ['horizontal scaling (scale out)'],
+  },
+  {
+    term: 'horizontal scaling (scale out)',
+    def: {
+      en: "Adding capacity by spreading load across machines — read replicas for reads, partitioning for one large table, then sharding or distributed SQL for write throughput beyond a single primary. Near-linear but operationally complex; reach for it after tuning, pooling, and scaling up.",
+      uk: "Додавання capacity через розподіл навантаження між машинами — read replicas для читань, partitioning для однієї великої таблиці, потім sharding чи distributed SQL для write-throughput понад один primary. Майже лінійно, але операційно складно; беріть це після тюнінгу, pooling і scale up.",
+    },
+    seeAlso: ['vertical scaling (scale up)', 'read replica'],
+  },
 ];

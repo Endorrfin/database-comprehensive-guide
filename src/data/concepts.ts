@@ -46,6 +46,9 @@ import m30 from './modules/m30-distributed-sql';
 // CHANGED (S16): M31 + M32 authored from stubs (figures-only: columnar-scan, hypertable, shared-responsibility).
 import m31 from './modules/m31-analytics';
 import m32 from './modules/m32-cloud-native';
+// CHANGED (S17): M33 + M34 authored from stubs (SQL-injection sim + N+1 sim). Section VIII begins.
+import m33 from './modules/m33-security';
+import m34 from './modules/m34-performance';
 
 /*
  * concepts.ts — the SINGLE SOURCE OF TRUTH (CLAUDE.md §2, §4).
@@ -222,40 +225,9 @@ export const modules: Module[] = [
   m32, // cloud-native & the modern DBA: managed DBs, K8s operators, IaC, observability
 
   // ── Section VIII · Mastery ───────────────────────────────────────────────
-  stub({
-    id: 'm33-security',
-    num: 33,
-    section: 's8-mastery',
-    order: 1,
-    level: 'senior',
-    title: { en: 'Security & data protection', uk: 'Безпека та захист даних' },
-    tagline: {
-      en: 'AuthN/Z, RBAC/RLS, encryption at rest/in transit, hashing, SQL injection, least privilege.',
-      uk: 'AuthN/Z, RBAC/RLS, шифрування at rest/in transit, hashing, SQL injection, least privilege.',
-    },
-    readMins: 13,
-    mentalModel: {
-      en: 'Treat every input as hostile and grant the least privilege that works.',
-      uk: 'Вважайте кожен вхід ворожим і давайте найменші привілеї, що працюють.',
-    },
-  }),
-  stub({
-    id: 'm34-performance',
-    num: 34,
-    section: 's8-mastery',
-    order: 2,
-    level: 'senior',
-    title: { en: 'Performance engineering', uk: 'Інженерія продуктивності' },
-    tagline: {
-      en: 'Measure→bottleneck→fix→verify, slow queries, pooling, N+1, caching, capacity.',
-      uk: 'Measure→bottleneck→fix→verify, повільні запити, pooling, N+1, кешування, capacity.',
-    },
-    readMins: 13,
-    mentalModel: {
-      en: 'Measure first — the database is usually I/O-bound, and the bottleneck is rarely where you guessed.',
-      uk: 'Спершу вимірюйте — база зазвичай I/O-bound, і вузьке місце рідко там, де ви думали.',
-    },
-  }),
+  // CHANGED (S17): M33 + M34 fully authored (imported above). Section VIII begins.
+  m33, // ★ security: authN/Z, RBAC/RLS, encryption, hashing, SQL-injection sim
+  m34, // ★ performance: method, slow queries/N+1 sim, pooling, caching/replicas, capacity
   stub({
     id: 'm35-choosing',
     num: 35,
