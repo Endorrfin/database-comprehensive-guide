@@ -160,6 +160,11 @@ hr {
   background: rgba(91, 155, 213, 0.32);
   color: #fff;
 }
+/* S22: readable selection on the light theme (white-on-pale is too low-contrast). */
+:root[data-theme='light'] ::selection {
+  background: rgba(44, 111, 176, 0.22);
+  color: #10202e;
+}
 
 /* ---- App shell layout ---- */
 .app {
@@ -303,4 +308,108 @@ hr {
 }
 .gap-m {
   gap: 1rem;
+}
+
+/* ── Print (S22) — clean black-on-white reading copy; groundwork for the PDF booklet ──────────
+   Force ink-on-white tokens (regardless of the active light/dark theme), hide all chrome, expand
+   the interview <details>, and print source URLs. */
+@media print {
+  :root,
+  :root[data-theme='dark'],
+  :root[data-theme='light'] {
+    --bg: #fff;
+    --surface: #fff;
+    --s2: #f4f5f7;
+    --s3: #ebedf0;
+    --line: #cfd5dc;
+    --line2: #b8c0ca;
+    --tx: #000;
+    --tx2: #222;
+    --tx3: #444;
+    --accent: #1a4f86;
+    --accent-deep: #1a4f86;
+    --accent-bright: #123c66;
+    --accent-soft: #eef3f8;
+    --c-query: #1a4f86;
+    --c-storage: #5a3fb0;
+    --c-commit: #1f7a2e;
+    --c-dist: #0b6e96;
+    --c-analytics: #8f5500;
+    --c-danger: #b32626;
+    --shadow-1: none;
+    --shadow-2: none;
+    --shadow-glow: none;
+    color-scheme: light;
+  }
+
+  html,
+  body {
+    background: #fff;
+    color: #000;
+  }
+
+  /* Hide all chrome */
+  .topbar,
+  .sidebar,
+  .progress,
+  .footer,
+  .skip-link,
+  .nav-toggle,
+  .hamburger,
+  .drawer-backdrop,
+  .drawer-panel,
+  .search-results {
+    display: none !important;
+  }
+
+  .app-body {
+    display: block !important;
+  }
+  .content {
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  * {
+    box-shadow: none !important;
+  }
+  a {
+    color: #000 !important;
+    text-decoration: underline;
+  }
+
+  /* Expand the interview Q&A and any collapsed details for the printed copy */
+  details > *:not(summary) {
+    display: block !important;
+  }
+  details.qa {
+    border: 1px solid var(--line);
+    padding: 0.4rem 0.6rem;
+  }
+
+  /* Print the destination after each source link */
+  .sources a[href]::after {
+    content: ' (' attr(href) ')';
+    font-size: 0.82em;
+    color: #333;
+    word-break: break-all;
+  }
+
+  /* Keep related blocks from splitting across pages */
+  .callout,
+  .figure,
+  .code,
+  .compare,
+  .qa,
+  table,
+  tr,
+  .sim {
+    break-inside: avoid;
+  }
+  h1,
+  h2,
+  h3 {
+    break-after: avoid;
+  }
 }

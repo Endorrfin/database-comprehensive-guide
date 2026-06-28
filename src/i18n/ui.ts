@@ -28,6 +28,9 @@ export const ui = {
   ukrainian: { en: 'Українська', uk: 'Українська' },
 
   theme: { en: 'Theme', uk: 'Тема' },
+  themeSystem: { en: 'System', uk: 'Системна' },
+  themeDark: { en: 'Dark', uk: 'Темна' },
+  themeLight: { en: 'Light', uk: 'Світла' },
 
   landscapeMap: { en: 'Landscape Map', uk: 'Карта ландшафту' },
   startHere: { en: 'Start here', uk: 'Почати тут' },
@@ -67,6 +70,46 @@ export const ui = {
   reset: { en: 'Reset', uk: 'Скинути' },
   next: { en: 'Next', uk: 'Далі' },
   back: { en: 'Back', uk: 'Назад' },
+
+  // CHANGED (S21): study tools — search result kinds, Flashcards & Quiz.
+  searchKindModule: { en: 'Module', uk: 'Модуль' },
+  searchKindTopic: { en: 'Topic', uk: 'Тема' },
+  searchKindGlossary: { en: 'Term', uk: 'Термін' },
+
+  flashcards: { en: 'Flashcards', uk: 'Flashcards' },
+  flashcardsLede: {
+    en: 'Recall it before you flip — then grade yourself. Cards you miss come back this round.',
+    uk: 'Пригадайте перед тим, як перевернути — тоді оцініть себе. Картки, які пропустили, повернуться цього кола.',
+  },
+  deckLabel: { en: 'Deck', uk: 'Колода' },
+  deckGlossaryTerms: { en: 'Glossary terms', uk: 'Терміни глосарію' },
+  flip: { en: 'Flip', uk: 'Перевернути' },
+  shuffle: { en: 'Shuffle', uk: 'Перемішати' },
+  restart: { en: 'Restart', uk: 'Спочатку' },
+  knewIt: { en: 'Knew it', uk: 'Знав' },
+  reviewAgain: { en: 'Review again', uk: 'Повторити' },
+  flipHint: { en: 'Space or click to flip · ← → to move', uk: 'Пробіл або клік — перевернути · ← → — рух' },
+  cardLabel: { en: 'Card', uk: 'Картка' },
+  knownCount: { en: 'known', uk: 'вивчено' },
+  deckDone: { en: 'Deck complete', uk: 'Колоду пройдено' },
+  deckDoneLede: {
+    en: 'You graded every card. Shuffle for another pass, or switch decks.',
+    uk: 'Ви оцінили кожну картку. Перемішайте для нового проходу або змініть колоду.',
+  },
+
+  quiz: { en: 'Quiz', uk: 'Quiz' },
+  quizLede: {
+    en: 'One question at a time across the whole guide. Pick an answer to see why it is right.',
+    uk: 'По одному питанню з усього посібника. Оберіть відповідь, щоб побачити, чому вона правильна.',
+  },
+  quizScore: { en: 'Score', uk: 'Рахунок' },
+  quizCorrect: { en: 'Correct', uk: 'Правильно' },
+  quizIncorrect: { en: 'Not quite', uk: 'Не зовсім' },
+  quizOpenModule: { en: 'Open the module', uk: 'Відкрити модуль' },
+  quizNext: { en: 'Next question', uk: 'Наступне питання' },
+  quizDone: { en: 'Quiz complete', uk: 'Тест завершено' },
+  quizYourScore: { en: 'You scored', uk: 'Ваш результат' },
+  quizNew: { en: 'New quiz', uk: 'Новий тест' },
 
   footerRole: { en: 'Senior Fullstack Engineer', uk: 'Senior Fullstack Engineer' },
   footerCountry: { en: 'Ukraine', uk: 'Україна' }, // CHANGED (S2): footer brand line

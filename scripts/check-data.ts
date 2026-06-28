@@ -6,6 +6,7 @@
 import { modules, sections, getModule, getSection } from '../src/data/concepts';
 import { figures, sims } from '../src/lib/registry';
 import { glossary } from '../src/data/glossary';
+import { glossaryTermIndex } from '../src/data/glossaryTerms.generated'; // S21: term-only search index
 import { mentalModelCards } from '../src/data/mentalModels';
 import { modulesMeta, sectionsMeta } from '../src/data/meta';
 import type { Block, Localized } from '../src/data/types';
@@ -158,6 +159,19 @@ glossary.forEach((g) => {
   if (!g.term.trim()) errors.push('glossary: empty term');
   checkLoc(g.def, `glossary ${g.term}.def`);
 });
+
+// Glossary term-index parity (S21 search-ranking): glossaryTerms.generated.ts must mirror the
+// glossary terms exactly, or the eager search silently misses/duplicates terms — fail the build.
+if (glossaryTermIndex.length !== glossary.length) {
+  errors.push(
+    `glossary index: ${glossaryTermIndex.length} terms vs glossary ${glossary.length} — run \`npm run gen:meta\``,
+  );
+} else {
+  glossary.forEach((g, i) => {
+    if (glossaryTermIndex[i] !== g.term)
+      errors.push(`glossary index: stale term at ${i} ('${glossaryTermIndex[i]}' ≠ '${g.term}') — run \`npm run gen:meta\``);
+  });
+}
 mentalModelCards.forEach((c) => {
   if (!getModule(c.moduleId)) errors.push(`mentalModel card '${c.moduleId}' has no module`);
   checkLoc(c.line, `mentalModel ${c.moduleId}.line`);

@@ -2,9 +2,31 @@ import { useCallback, useEffect, useState } from 'react';
 // CHANGED (S19): nav reads lightweight meta (not concepts) so module content stays out of the index chunk.
 import { modulesBySectionMeta as modulesBySection, sectionsMeta as sections } from '../../data/meta';
 import { useLang } from '../../i18n/lang';
+import { ui } from '../../i18n/ui';
 import { useAppState } from '../../lib/appState';
-import { hrefModule, useRoute } from '../../lib/hashRouter';
+import {
+  hrefDecide,
+  hrefFlashcards,
+  hrefGlossary,
+  hrefMap,
+  hrefMentalModels,
+  hrefModule,
+  hrefQuiz,
+  useRoute,
+} from '../../lib/hashRouter';
+import type { Route } from '../../lib/hashRouter';
 import { cx } from '../../lib/utils';
+
+// CHANGED (S22): the page links also live in the sidebar so the mobile drawer (which replaces the
+// hidden top-links < 900px) can reach Overview / Mental Models / Flashcards / Quiz / Glossary / Picker.
+const PAGE_LINKS: { name: Route['name']; href: string; label: (typeof ui)[keyof typeof ui] }[] = [
+  { name: 'map', href: hrefMap(), label: ui.landscapeMap },
+  { name: 'mentalModels', href: hrefMentalModels(), label: ui.mentalModels },
+  { name: 'flashcards', href: hrefFlashcards(), label: ui.flashcards },
+  { name: 'quiz', href: hrefQuiz(), label: ui.quiz },
+  { name: 'glossary', href: hrefGlossary(), label: ui.glossary },
+  { name: 'decide', href: hrefDecide(), label: ui.decide },
+];
 
 const OPEN_KEY = 'dbguide.sidebar';
 
@@ -48,6 +70,20 @@ export function Sidebar() {
       />
       <aside className={cx('sidebar', sidebarOpen && 'open')} aria-label="Modules">
         <nav className="side-nav">
+          <ul className="side-pages">
+            {PAGE_LINKS.map((p) => (
+              <li key={p.name}>
+                <a
+                  className={cx('side-page', route.name === p.name && 'active')}
+                  href={p.href}
+                  onClick={closeSidebar}
+                  aria-current={route.name === p.name ? 'page' : undefined}
+                >
+                  {t(p.label)}
+                </a>
+              </li>
+            ))}
+          </ul>
           {sections.map((s) => {
             const mods = modulesBySection(s.id);
             const open = isOpen(s.id);

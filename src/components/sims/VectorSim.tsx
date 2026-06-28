@@ -293,7 +293,7 @@ export function VectorSim() {
           <polygon
             points={starPoints(Q.x, Q.y, 8, 4, 5)}
             fill="var(--c-danger)"
-            stroke="white"
+            stroke="var(--surface)"
             strokeWidth="0.8"
             opacity="0.95"
           />

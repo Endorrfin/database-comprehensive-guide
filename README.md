@@ -21,8 +21,15 @@ wave, taught with prose **plus** diagrams, tables, mental models and hero simula
   B-Tree ↔ B+Tree, and run a **range scan** over the linked leaves.
 - **Bilingual** at the data layer — every string is `{ en, uk }`; technical terms stay English in
   both languages. Toggle in the top bar.
-- **Landscape Map** landing, collapsible sidebar, global search, a level filter
-  (beginner → staff), a mental-models gallery, and a bilingual glossary.
+- **Landscape Map** landing, collapsible sidebar, a level filter (beginner → staff), a
+  mental-models gallery, and a bilingual glossary.
+- **Study tools** — **ranked global search** (whole-word > prefix > substring, with keyboard nav and
+  term deep-links into the glossary), **Flashcards** (`#/flashcards` — mental-model & glossary decks,
+  flip, shuffle, knew-it/review-again with saved progress), and a **Quiz** (`#/quiz` — mixed
+  model→module, workload→family and term→definition questions with scoring).
+- **Light / dark / system theme** — a 3-way toggle in the top bar; defaults to your OS preference
+  (dark is the brand fallback), persists your choice, and follows OS changes live. Plus a **print
+  stylesheet** (clean black-on-white, expanded Q&A, source URLs) and a mobile pass down to ~360px.
 
 ## Tech
 
@@ -44,8 +51,10 @@ Quality gates (also enforced in CI before every deploy):
 ```bash
 npm run typecheck  # tsc -b --noEmit
 npm run lint       # eslint
-npm run check:data # bilingual completeness, unique ids, registry + cross-link integrity
-npm run verify     # all of the above + build
+npm run check:data # bilingual completeness, unique ids, registry + cross-link + meta/glossary-index parity
+npm run check:ua   # Ukrainian translation QA (no untranslated/identical/placeholder strings)
+npm run gen:meta   # regenerate the nav/search indexes after editing module metadata or glossary terms
+npm run verify     # typecheck + lint + check:data + check:ua + test:btree + build
 ```
 
 ## Project layout
