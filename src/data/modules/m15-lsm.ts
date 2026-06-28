@@ -72,7 +72,7 @@ export const m15: Module = {
         {
           kind: 'callout',
           tone: 'senior',
-          title: { en: 'Sequential beats random by orders of magnitude', uk: 'Послідовне б’є випадкове на порядки' },
+          title: { en: 'Sequential beats random by orders of magnitude', uk: 'Послідовне бʼє випадкове на порядки' },
           md: {
             en: "The whole bet rests on the access-cost hierarchy from M12: sequential writes are dramatically faster than random ones, on spinning disks (no seeks) and on SSDs alike (fewer, larger erase-block writes, less write amplification at the flash layer). An LSM converts a random-write workload into a sequential-write one and lets a background process pay the sorting cost off the critical path. That is the entire trick — everything else is bookkeeping to make reads tolerable.",
             uk: "Уся ставка спирається на ієрархію вартості доступу з M12: послідовні записи драматично швидші за випадкові — і на дисках, що крутяться (без seeks), і на SSD (менше, більші записи erase-block, менша write amplification на рівні flash). LSM перетворює навантаження випадкового запису на послідовне й дозволяє фоновому процесу платити вартість сортування поза критичним шляхом. Це весь фокус — решта це бухгалтерія, щоб зробити читання стерпними.",

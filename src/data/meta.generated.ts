@@ -1589,7 +1589,7 @@ export const modulesMeta: ModuleMeta[] = [
     },
     "mentalModel": {
       "en": "When the relationships between things are as important as the things themselves — use a graph.",
-      "uk": "Коли зв'язки між речами так само важливі, як і самі речі — використовуй graph."
+      "uk": "Коли звʼязки між речами так само важливі, як і самі речі — використовуй graph."
     },
     "readMins": 14,
     "topics": [

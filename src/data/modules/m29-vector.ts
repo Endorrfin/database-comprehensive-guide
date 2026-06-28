@@ -35,7 +35,7 @@ const m29: Module = {
           kind: 'prose',
           md: {
             en: 'An **embedding** is a dense vector of floating-point numbers — typically 768–3072 dimensions — produced by a neural model (BERT, OpenAI text-embedding-3, Gemini, Mistral). Semantically similar objects land near each other in this high-dimensional space. Nearest-neighbour search then becomes the query: *"return the k documents whose vector is closest to the query vector."*',
-            uk: 'An **embedding** — це щільний вектор з чисел з плаваючою комою (типово 768–3072 вимірів), який виробляє нейронна модель (BERT, OpenAI text-embedding-3, Gemini, Mistral). Семантично схожі об\'єкти знаходяться поруч у цьому багатовимірному просторі. Пошук найближчих сусідів стає запитом: *"повернути k документів, чий вектор найближчий до вектора запиту."*',
+            uk: 'An **embedding** — це щільний вектор з чисел з плаваючою комою (типово 768–3072 вимірів), який виробляє нейронна модель (BERT, OpenAI text-embedding-3, Gemini, Mistral). Семантично схожі обʼєкти знаходяться поруч у цьому багатовимірному просторі. Пошук найближчих сусідів стає запитом: *"повернути k документів, чий вектор найближчий до вектора запиту."*',
           },
         },
         {
@@ -85,7 +85,7 @@ const m29: Module = {
           kind: 'prose',
           md: {
             en: '**Exact kNN** computes the distance from the query to every stored vector — O(n·d) per query, where n is dataset size and d is dimension. Guaranteed recall = 100%, but at tens of millions of vectors this is prohibitively slow.\n\n**Approximate Nearest Neighbour (ANN)** indices trade a small recall reduction for orders-of-magnitude speedup. The dominant algorithm today is **HNSW** (Hierarchical Navigable Small World graphs — Malkov & Yashunin 2018). HNSW builds a multi-layer proximity graph at index time; at query time it navigates from a random entry point, greedily following edges toward the query, and returns the k closest nodes found.\n\nKey HNSW parameters:\n- **M** — max edges per node per layer (typical 16–32). Higher M = denser graph, better recall, more memory.\n- **ef_construction** — beam width during *index build* (typical 64–200). Higher = better recall, slower build.\n- **ef** (or `ef_search`) — beam width during *query* (typical 40–100). Higher = better recall, slower query. Tune this at query time without rebuilding.',
-            uk: '**Exact kNN** обчислює відстань від запиту до кожного збереженого вектора — O(n·d) на запит, де n — розмір датасету, d — вимірність. Гарантований recall = 100%, але при десятках мільйонів векторів це неприйнятно повільно.\n\n**Approximate Nearest Neighbour (ANN)** indices жертвують невеликим recall заради значного прискорення. Домінуючий алгоритм сьогодні — **HNSW** (Hierarchical Navigable Small World graphs — Malkov & Yashunin 2018). HNSW будує багаторівневий граф суміжності; під час запиту навігація від випадкової точки входу жадібно слідує ребрами до запиту та повертає k найближчих знайдених вузлів.\n\nКлючові параметри HNSW:\n- **M** — макс. ребер на вузол на рівень (типово 16–32). Вищий M = густіший граф, кращий recall, більше пам\'яті.\n- **ef_construction** — ширина beam під час *побудови індексу* (типово 64–200). Вищий = кращий recall, повільніша побудова.\n- **ef** (`ef_search`) — ширина beam під час *запиту* (типово 40–100). Вищий = кращий recall, повільніший запит. Налаштовується в runtime без перебудови.',
+            uk: '**Exact kNN** обчислює відстань від запиту до кожного збереженого вектора — O(n·d) на запит, де n — розмір датасету, d — вимірність. Гарантований recall = 100%, але при десятках мільйонів векторів це неприйнятно повільно.\n\n**Approximate Nearest Neighbour (ANN)** indices жертвують невеликим recall заради значного прискорення. Домінуючий алгоритм сьогодні — **HNSW** (Hierarchical Navigable Small World graphs — Malkov & Yashunin 2018). HNSW будує багаторівневий граф суміжності; під час запиту навігація від випадкової точки входу жадібно слідує ребрами до запиту та повертає k найближчих знайдених вузлів.\n\nКлючові параметри HNSW:\n- **M** — макс. ребер на вузол на рівень (типово 16–32). Вищий M = густіший граф, кращий recall, більше памʼяті.\n- **ef_construction** — ширина beam під час *побудови індексу* (типово 64–200). Вищий = кращий recall, повільніша побудова.\n- **ef** (`ef_search`) — ширина beam під час *запиту* (типово 40–100). Вищий = кращий recall, повільніший запит. Налаштовується в runtime без перебудови.',
           },
         },
         {
@@ -113,7 +113,7 @@ const m29: Module = {
           kind: 'prose',
           md: {
             en: '**pgvector** (v0.8.2, Feb 2026) adds a `vector(n)` column type and three index types to PostgreSQL. It is the dominant choice for RAG at the scale most applications actually reach (tens of millions of vectors) because it eliminates a dedicated infrastructure component and lets you join vector search results with relational data in a single SQL query.',
-            uk: '**pgvector** (v0.8.2, лют. 2026) додає тип стовпця `vector(n)` та три типи індексів до PostgreSQL. Це домінуючий вибір для RAG при масштабах, яких реально досягають більшість застосунків (десятки мільйонів векторів), оскільки він усуває виділений інфраструктурний компонент та дозволяє об\'єднувати результати vector search з реляційними даними в одному SQL-запиті.',
+            uk: '**pgvector** (v0.8.2, лют. 2026) додає тип стовпця `vector(n)` та три типи індексів до PostgreSQL. Це домінуючий вибір для RAG при масштабах, яких реально досягають більшість застосунків (десятки мільйонів векторів), оскільки він усуває виділений інфраструктурний компонент та дозволяє обʼєднувати результати vector search з реляційними даними в одному SQL-запиті.',
           },
         },
         {
@@ -149,7 +149,7 @@ ORDER BY embedding <=> '[...]'
 LIMIT 10;`,
           note: {
             en: '`<=>` = cosine distance (0 = identical, 2 = opposite). `<->` = L2, `<#>` = negative dot product.',
-            uk: '`<=>` = cosine distance (0 = ідентичні, 2 = протилежні). `<->` = L2, `<#>` = від\'ємний dot product.',
+            uk: '`<=>` = cosine distance (0 = ідентичні, 2 = протилежні). `<->` = L2, `<#>` = відʼємний dot product.',
           },
         },
         {
@@ -178,7 +178,7 @@ LIMIT 10;`,
               { en: 'HNSW', uk: 'HNSW' },
               { en: 'Slower (graph)', uk: 'Повільніше (граф)' },
               { en: 'O(log n)', uk: 'O(log n)' },
-              { en: 'Recommended: live inserts, better recall, higher memory', uk: 'Рекомендований: live inserts, кращий recall, більше пам\'яті' },
+              { en: 'Recommended: live inserts, better recall, higher memory', uk: 'Рекомендований: live inserts, кращий recall, більше памʼяті' },
             ],
           ],
         },
@@ -263,7 +263,7 @@ LIMIT 10;`,
           kind: 'prose',
           md: {
             en: '**RAG** (Lewis et al., NeurIPS 2020) is the primary use-case driving the vector database wave. The pattern: embed the user\'s query → ANN-search the vector store → inject the top-k retrieved chunks into the LLM\'s context window → the LLM answers using those chunks as grounding evidence. The LLM\'s parametric memory provides reasoning; the vector DB provides up-to-date, domain-specific, retrievable knowledge.',
-            uk: '**RAG** (Lewis et al., NeurIPS 2020) — основний use-case, що рухає хвилю vector databases. Паттерн: embed запит користувача → ANN-пошук у vector store → вставка top-k отриманих chunks у context window LLM → LLM відповідає, використовуючи ці chunks як обґрунтування. Параметрична пам\'ять LLM надає міркування; vector DB надає актуальні, доменні, відновлювані знання.',
+            uk: '**RAG** (Lewis et al., NeurIPS 2020) — основний use-case, що рухає хвилю vector databases. Паттерн: embed запит користувача → ANN-пошук у vector store → вставка top-k отриманих chunks у context window LLM → LLM відповідає, використовуючи ці chunks як обґрунтування. Параметрична памʼять LLM надає міркування; vector DB надає актуальні, доменні, відновлювані знання.',
           },
         },
         {
@@ -280,7 +280,7 @@ LIMIT 10;`,
           title: { en: 'RAG is not magic — garbage in, garbage out', uk: 'RAG — не магія: сміття на вході = сміття на виході' },
           md: {
             en: 'The quality of retrieved chunks determines answer quality. Problems: wrong embedding model for your domain; chunks too large (noise) or too small (missing context); stale embeddings after document updates; hallucination when retrieval fails (no chunk matches). Evaluation (recall@k, MRR, RAGAS) is mandatory — not optional.',
-            uk: 'Якість отриманих chunks визначає якість відповіді. Проблеми: неправильна embedding model для вашого домену; chunks занадто великі (шум) або занадто малі (відсутній контекст); застарілі embeddings після оновлення документів; галюцинації при невдалому retrieval (жоден chunk не відповідає). Оцінювання (recall@k, MRR, RAGAS) є обов\'язковим, а не опціональним.',
+            uk: 'Якість отриманих chunks визначає якість відповіді. Проблеми: неправильна embedding model для вашого домену; chunks занадто великі (шум) або занадто малі (відсутній контекст); застарілі embeddings після оновлення документів; галюцинації при невдалому retrieval (жоден chunk не відповідає). Оцінювання (recall@k, MRR, RAGAS) є обовʼязковим, а не опціональним.',
           },
         },
       ],
@@ -290,7 +290,7 @@ LIMIT 10;`,
   keyPoints: [
     {
       en: 'Embeddings map objects to high-dimensional vectors; similarity search finds the closest vectors.',
-      uk: 'Embeddings відображають об\'єкти у багатовимірні вектори; similarity search знаходить найближчі вектори.',
+      uk: 'Embeddings відображають обʼєкти у багатовимірні вектори; similarity search знаходить найближчі вектори.',
     },
     {
       en: 'HNSW builds a multi-layer proximity graph; query navigation is O(log n) with adjustable recall via `ef`.',
@@ -306,7 +306,7 @@ LIMIT 10;`,
     },
     {
       en: 'RAG = embed query → ANN search → inject top-k chunks into LLM context. Eval (recall@k, RAGAS) is non-negotiable.',
-      uk: 'RAG = embed query → ANN search → вставка top-k chunks у контекст LLM. Оцінювання (recall@k, RAGAS) є обов\'язковим.',
+      uk: 'RAG = embed query → ANN search → вставка top-k chunks у контекст LLM. Оцінювання (recall@k, RAGAS) є обовʼязковим.',
     },
   ],
 
@@ -348,7 +348,7 @@ LIMIT 10;`,
       q: { en: 'Explain the RAG pattern and its failure modes.', uk: 'Поясніть паттерн RAG та його режими збоїв.' },
       a: {
         en: 'RAG: embed query → ANN-search vector store → inject top-k chunks into LLM prompt → LLM generates answer grounded in retrieved chunks. Failure modes: (1) retrieval failure — the right chunk is not in the top-k because of embedding model mismatch, chunk size problems, or low `ef`; (2) stale embeddings after document updates — must re-embed on change; (3) context stuffing — too many chunks exceed the context window or dilute the relevant signal; (4) LLM hallucination when no relevant chunk is found — the model fills the gap with parametric memory. Mitigation: eval with recall@k and RAGAS on representative queries.',
-        uk: 'RAG: embed query → ANN-пошук у vector store → вставка top-k chunks у prompt LLM → LLM генерує відповідь, засновану на отриманих chunks. Режими збоїв: (1) невдалий retrieval — правильний chunk не потрапив у top-k через невідповідність embedding model, проблеми розміру chunk або низький `ef`; (2) застарілі embeddings після оновлення документів — потрібно повторно embed при зміні; (3) перевантаження контексту — занадто багато chunks перевищують context window або розбавляють релевантний сигнал; (4) галюцинації LLM при відсутності релевантного chunk. Пом\'якшення: оцінювання з recall@k та RAGAS на репрезентативних запитах.',
+        uk: 'RAG: embed query → ANN-пошук у vector store → вставка top-k chunks у prompt LLM → LLM генерує відповідь, засновану на отриманих chunks. Режими збоїв: (1) невдалий retrieval — правильний chunk не потрапив у top-k через невідповідність embedding model, проблеми розміру chunk або низький `ef`; (2) застарілі embeddings після оновлення документів — потрібно повторно embed при зміні; (3) перевантаження контексту — занадто багато chunks перевищують context window або розбавляють релевантний сигнал; (4) галюцинації LLM при відсутності релевантного chunk. Помʼякшення: оцінювання з recall@k та RAGAS на репрезентативних запитах.',
       },
     },
     {
@@ -356,7 +356,7 @@ LIMIT 10;`,
       q: { en: 'When would you choose Qdrant or Milvus over pgvector?', uk: 'Коли ви б обрали Qdrant або Milvus замість pgvector?' },
       a: {
         en: 'pgvector wins for: datasets under ~100M vectors, teams already on Postgres, need for transactional joins, and operational simplicity. Move to a dedicated vector DB when: (1) scale exceeds hundreds of millions to billions of vectors where HNSW build memory or query latency becomes the bottleneck; (2) need GPU-accelerated index build (Qdrant v1.18+ with GPU indexing); (3) need multimodal (image+text+audio) combined collections; (4) need managed serverless billing (Pinecone); (5) need advanced hybrid sparse-dense natively. The operational cost of a second data store is real — only pay it when you have concrete evidence pgvector is the bottleneck.',
-        uk: 'pgvector виграє для: датасетів менше ~100M векторів, команд вже на Postgres, потреби в транзакційних join та операційній простоті. Переходьте до спеціалізованої vector DB, коли: (1) масштаб перевищує сотні мільйонів — мільярди векторів, де пам\'ять побудови HNSW або затримка запиту стає вузьким місцем; (2) потрібна GPU-прискорена побудова індексу (Qdrant v1.18+ з GPU indexing); (3) потрібні мультимодальні (зображення+текст+аудіо) комбіновані колекції; (4) потрібне managed serverless billing (Pinecone); (5) потрібен advanced hybrid sparse-dense нативно. Операційна вартість другого data store є реальною — оплачуйте її лише коли є конкретні докази, що pgvector є вузьким місцем.',
+        uk: 'pgvector виграє для: датасетів менше ~100M векторів, команд вже на Postgres, потреби в транзакційних join та операційній простоті. Переходьте до спеціалізованої vector DB, коли: (1) масштаб перевищує сотні мільйонів — мільярди векторів, де памʼять побудови HNSW або затримка запиту стає вузьким місцем; (2) потрібна GPU-прискорена побудова індексу (Qdrant v1.18+ з GPU indexing); (3) потрібні мультимодальні (зображення+текст+аудіо) комбіновані колекції; (4) потрібне managed serverless billing (Pinecone); (5) потрібен advanced hybrid sparse-dense нативно. Операційна вартість другого data store є реальною — оплачуйте її лише коли є конкретні докази, що pgvector є вузьким місцем.',
       },
     },
   ],

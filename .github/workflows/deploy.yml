@@ -40,6 +40,9 @@ jobs:
       - name: Data-integrity check
         run: npm run check:data
 
+      - name: Ukrainian QA check
+        run: npm run check:ua
+
       - name: B-Tree engine tests
         run: npm run test:btree
 

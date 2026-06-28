@@ -26,6 +26,13 @@ export function getSectionMeta(id: string): Section | undefined {
 export function modulesBySectionMeta(sectionId: string): ModuleMeta[] {
   return modulesMeta.filter((m) => m.section === sectionId).sort((a, b) => a.order - b.order);
 }
+/** Previous / next module in global order (by `num`) — for the module page prev/next nav. */
+export function adjacentModulesMeta(id: string): { prev?: ModuleMeta; next?: ModuleMeta } {
+  const ordered = [...modulesMeta].sort((a, b) => a.num - b.num);
+  const i = ordered.findIndex((m) => m.id === id);
+  if (i === -1) return {};
+  return { prev: ordered[i - 1], next: ordered[i + 1] };
+}
 
 export const LEVELS: Level[] = ['beginner', 'middle', 'senior', 'staff'];
 

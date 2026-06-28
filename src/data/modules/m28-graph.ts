@@ -79,7 +79,7 @@ export const m28: Module = {
   readMins: 14,
   mentalModel: {
     en: 'When the relationships between things are as important as the things themselves — use a graph.',
-    uk: "Коли зв'язки між речами так само важливі, як і самі речі — використовуй graph.",
+    uk: "Коли звʼязки між речами так само важливі, як і самі речі — використовуй graph.",
   },
   topics: [
     // ── Topic 1: The property graph model ─────────────────────────────
@@ -94,7 +94,7 @@ export const m28: Module = {
           kind: 'prose',
           md: {
             en: "A **graph database** stores data as a network of **nodes** (entities) connected by **relationships** (edges). The dominant model is the **Labeled Property Graph (LPG)**, used by Neo4j (latest stable: **2026.05.0**, CalVer; LTS: **5.26.x** through June 2028), Amazon Neptune, and others.\n\nThe three building blocks of an LPG:\n\n1. **Nodes** carry one or more **labels** (`:Person`, `:Movie`) that categorize the entity, and a set of **properties** — arbitrary key-value pairs (`name: 'Alice'`, `age: 31`).\n2. **Relationships** always have a **direction** (Alice *knows* Bob, not the other way around) and exactly one **type** (`KNOWS`, `ACTED_IN`, `LIVES_IN`). Crucially, relationships are **first-class entities**: they can hold their own properties (`since: 2020`, `role: 'Ariadne'`). This is what fundamentally separates the property graph from a join table in a relational database — in a join table, the relationship row has no intrinsic identity and must carry its context as foreign-key columns.\n3. **Properties** (on both nodes and relationships) are typed key-value pairs — strings, numbers, booleans, date/time, spatial, arrays.",
-            uk: "**Graph database** зберігає дані як мережу **nodes** (сутностей), з'єднаних **relationships** (ребрами). Домінантна модель — **Labeled Property Graph (LPG)**, що використовується Neo4j (найновіша стабільна: **2026.05.0**, CalVer; LTS: **5.26.x** до червня 2028), Amazon Neptune та іншими.\n\nТри будівельні блоки LPG:\n\n1. **Nodes** мають один або кілька **labels** (`:Person`, `:Movie`), що категоризують сутність, і набір **properties** — довільних пар ключ-значення (`name: 'Alice'`, `age: 31`).\n2. **Relationships** завжди мають **напрямок** (Alice *знає* Bob, не навпаки) і рівно один **тип** (`KNOWS`, `ACTED_IN`, `LIVES_IN`). Ключово: relationships є **першокласними сутностями** — вони можуть мати власні properties (`since: 2020`, `role: 'Ariadne'`). Це те, що принципово відрізняє property graph від join table в реляційній базі — у join table рядок relationship не має внутрішньої ідентичності і повинен нести свій контекст як стовпчики foreign key.\n3. **Properties** (на обох nodes і relationships) — типізовані пари ключ-значення: рядки, числа, булеві, дата/час, просторові, масиви.",
+            uk: "**Graph database** зберігає дані як мережу **nodes** (сутностей), зʼєднаних **relationships** (ребрами). Домінантна модель — **Labeled Property Graph (LPG)**, що використовується Neo4j (найновіша стабільна: **2026.05.0**, CalVer; LTS: **5.26.x** до червня 2028), Amazon Neptune та іншими.\n\nТри будівельні блоки LPG:\n\n1. **Nodes** мають один або кілька **labels** (`:Person`, `:Movie`), що категоризують сутність, і набір **properties** — довільних пар ключ-значення (`name: 'Alice'`, `age: 31`).\n2. **Relationships** завжди мають **напрямок** (Alice *знає* Bob, не навпаки) і рівно один **тип** (`KNOWS`, `ACTED_IN`, `LIVES_IN`). Ключово: relationships є **першокласними сутностями** — вони можуть мати власні properties (`since: 2020`, `role: 'Ariadne'`). Це те, що принципово відрізняє property graph від join table в реляційній базі — у join table рядок relationship не має внутрішньої ідентичності і повинен нести свій контекст як стовпчики foreign key.\n3. **Properties** (на обох nodes і relationships) — типізовані пари ключ-значення: рядки, числа, булеві, дата/час, просторові, масиви.",
           },
         },
         {
@@ -118,7 +118,7 @@ export const m28: Module = {
             [
               { en: 'Properties on edges?', uk: 'Properties на ребрах?' },
               { en: 'Yes — relationships are first-class with a property map', uk: 'Yes — relationships є першокласними з property map' },
-              { en: 'No — predicates are not objects; edge properties require reification', uk: 'Ні — предикати не є об\'єктами; edge properties потребують reification' },
+              { en: 'No — predicates are not objects; edge properties require reification', uk: 'Ні — предикати не є обʼєктами; edge properties потребують reification' },
             ],
             [
               { en: 'Query language', uk: 'Query language' },
@@ -152,7 +152,7 @@ export const m28: Module = {
           kind: 'prose',
           md: {
             en: "The defining performance characteristic of a **native graph database** is **index-free adjacency**: each node record physically stores a direct pointer to its list of relationships. Following a relationship is a single memory dereference — **O(1) per hop**, regardless of how many total nodes are in the graph.\n\nContrast this with a relational database modeling the same network:\n- Friends are stored as rows in a `friendships` table with two foreign-key columns.\n- Each hop requires an **index lookup** — O(log n) — on the foreign key.\n- A 4-hop traversal (friends-of-friends-of-friends-of-friends) requires 4 nested index scans whose intermediate result sets can grow exponentially with average degree.\n\nAt shallow depth (1–2 hops) the performance difference is small. At depth 4–5, a native graph executes the same traversal **orders of magnitude faster** because it follows pointers rather than repeating index lookups.\n\nNon-native graph layers (e.g. a graph query API built on top of a relational or document store) lose this property: nodes and edges are still rows in tables, so each hop still costs O(log n).",
-            uk: "Визначальна характеристика продуктивності **native graph database** — **index-free adjacency**: кожен запис node фізично зберігає прямий вказівник на свій список relationships. Слідування за relationship — це одна операція доступу до пам'яті — **O(1) на hop**, незалежно від того, скільки всього nodes у графі.\n\nПорівняйте це з реляційною базою даних, що моделює ту саму мережу:\n- Друзі зберігаються як рядки в таблиці `friendships` з двома стовпчиками foreign key.\n- Кожен hop потребує **index lookup** — O(log n) — на foreign key.\n- 4-hop traversal (друзі-друзів-друзів-друзів) потребує 4 вкладених index scans, чиї проміжні result sets можуть зростати експоненційно із середнім ступенем.\n\nПри малій глибині (1–2 hops) різниця у продуктивності невелика. При глибині 4–5, native graph виконує той самий traversal **на порядки швидше**, оскільки слідує за вказівниками, а не повторює index lookups.\n\nНе-native graph шари (наприклад, graph query API, побудований поверх реляційного або document сховища) втрачають цю властивість: nodes і edges все ще є рядками в таблицях, тому кожен hop все ще коштує O(log n).",
+            uk: "Визначальна характеристика продуктивності **native graph database** — **index-free adjacency**: кожен запис node фізично зберігає прямий вказівник на свій список relationships. Слідування за relationship — це одна операція доступу до памʼяті — **O(1) на hop**, незалежно від того, скільки всього nodes у графі.\n\nПорівняйте це з реляційною базою даних, що моделює ту саму мережу:\n- Друзі зберігаються як рядки в таблиці `friendships` з двома стовпчиками foreign key.\n- Кожен hop потребує **index lookup** — O(log n) — на foreign key.\n- 4-hop traversal (друзі-друзів-друзів-друзів) потребує 4 вкладених index scans, чиї проміжні result sets можуть зростати експоненційно із середнім ступенем.\n\nПри малій глибині (1–2 hops) різниця у продуктивності невелика. При глибині 4–5, native graph виконує той самий traversal **на порядки швидше**, оскільки слідує за вказівниками, а не повторює index lookups.\n\nНе-native graph шари (наприклад, graph query API, побудований поверх реляційного або document сховища) втрачають цю властивість: nodes і edges все ще є рядками в таблицях, тому кожен hop все ще коштує O(log n).",
           },
         },
         {
@@ -258,7 +258,7 @@ export const m28: Module = {
             ],
             [
               { en: 'Community Detection (Louvain)', uk: 'Community Detection (Louvain)' },
-              { en: 'Clusters of densely connected nodes (maximise modularity)', uk: 'Кластери щільно з\'єднаних nodes (максимізація modularity)' },
+              { en: 'Clusters of densely connected nodes (maximise modularity)', uk: 'Кластери щільно зʼєднаних nodes (максимізація modularity)' },
               { en: 'Fraud ring detection, customer segmentation, protein interaction networks', uk: 'Виявлення fraud ring, сегментація клієнтів, мережі взаємодії білків' },
             ],
             [
@@ -268,7 +268,7 @@ export const m28: Module = {
             ],
             [
               { en: 'Triangle Count / Clustering Coefficient', uk: 'Triangle Count / Clustering Coefficient' },
-              { en: 'How tightly-knit a node\'s neighbourhood is', uk: "Наскільки тісно пов'язане оточення node" },
+              { en: 'How tightly-knit a node\'s neighbourhood is', uk: "Наскільки тісно повʼязане оточення node" },
               { en: 'Social cohesion analysis, spam/bot detection, trust scoring', uk: 'Аналіз соціальної згуртованості, виявлення spam/bot, оцінка довіри' },
             ],
           ],
@@ -279,7 +279,7 @@ export const m28: Module = {
           title: { en: 'When relationships ARE the data', uk: "Коли relationships — це і є дані" },
           md: {
             en: 'The heuristic for choosing a graph database: **if your most important questions are about the connections between things, not the things themselves, use a graph.** Fraud detection (circular payment flows, shared identities), social networks (friends-of-friends, community detection), recommendation engines (users-who-bought-X also bought Y), knowledge graphs (entities + typed relationships for semantic search and RAG context), and network topology (if server A fails, which services are affected?) are all relationship-first problems where relational JOINs become untenably deep.',
-            uk: "Евристика для вибору graph database: **якщо ваші найважливіші питання стосуються з'єднань між речами, а не самих речей — використовуйте граф.** Fraud detection (кругові платіжні потоки, спільні ідентичності), соціальні мережі (friends-of-friends, community detection), recommendation engines (users-who-bought-X also bought Y), knowledge graphs (сутності + типізовані relationships для semantic search і RAG context) та мережева топологія (якщо сервер A відмовляє, які сервіси постраждають?) — всі це relationship-first проблеми, де реляційні JOINs стають нестерпно глибокими.",
+            uk: "Евристика для вибору graph database: **якщо ваші найважливіші питання стосуються зʼєднань між речами, а не самих речей — використовуйте граф.** Fraud detection (кругові платіжні потоки, спільні ідентичності), соціальні мережі (friends-of-friends, community detection), recommendation engines (users-who-bought-X also bought Y), knowledge graphs (сутності + типізовані relationships для semantic search і RAG context) та мережева топологія (якщо сервер A відмовляє, які сервіси постраждають?) — всі це relationship-first проблеми, де реляційні JOINs стають нестерпно глибокими.",
           },
         },
       ],
@@ -310,7 +310,7 @@ export const m28: Module = {
             ],
             [
               { en: 'Social networks & recommendations', uk: 'Соціальні мережі і рекомендації' },
-              { en: 'Friends-of-friends, mutual connections, and collaborative filtering are 2–4 hop traversals', uk: 'Friends-of-friends, взаємні з\'єднання та collaborative filtering — це 2–4 hop traversals' },
+              { en: 'Friends-of-friends, mutual connections, and collaborative filtering are 2–4 hop traversals', uk: 'Friends-of-friends, взаємні зʼєднання та collaborative filtering — це 2–4 hop traversals' },
             ],
             [
               { en: 'Knowledge graphs & AI/RAG', uk: 'Knowledge graphs і AI/RAG' },
@@ -396,7 +396,7 @@ export const m28: Module = {
     },
     {
       en: 'Use a graph when the connections between things are as important as the things themselves: fraud, social, recommendations, knowledge graphs, network topology.',
-      uk: "Використовуйте граф, коли з'єднання між речами так само важливі, як і самі речі: fraud, соціальні, рекомендації, knowledge graphs, мережева топологія.",
+      uk: "Використовуйте граф, коли зʼєднання між речами так само важливі, як і самі речі: fraud, соціальні, рекомендації, knowledge graphs, мережева топологія.",
     },
   ],
 
@@ -412,14 +412,14 @@ export const m28: Module = {
       title: { en: 'Supernode problem (extremely high-degree nodes)', uk: 'Проблема supernode (вузли з надзвичайно високим ступенем)' },
       body: {
         en: 'A node with millions of relationships (e.g. a celebrity in a social graph, a root category in a product hierarchy) becomes a traversal bottleneck — following its full relationship list costs O(millions). Mitigate with relationship-type filters, degree-based sampling, or partitioning the supernode across multiple proxy nodes.',
-        uk: "Вузол з мільйонами relationships (наприклад, знаменитість у соціальному графі, коренева категорія у ієрархії продуктів) стає вузьким місцем traversal — слідування за повним списком relationships коштує O(мільйони). Пом'якшуйте з фільтрами типу relationship, вибіркою на основі ступеня або розбиттям supernode на кілька proxy nodes.",
+        uk: "Вузол з мільйонами relationships (наприклад, знаменитість у соціальному графі, коренева категорія у ієрархії продуктів) стає вузьким місцем traversal — слідування за повним списком relationships коштує O(мільйони). Помʼякшуйте з фільтрами типу relationship, вибіркою на основі ступеня або розбиттям supernode на кілька proxy nodes.",
       },
     },
     {
       title: { en: 'Confusing LPG and RDF', uk: 'Плутанина між LPG і RDF' },
       body: {
         en: 'The "graph database" umbrella covers two very different models: labeled property graphs (Cypher/GQL) and RDF triple stores (SPARQL). They do not interoperate. Choose LPG for operational use cases (fraud, social, recommendations); RDF for knowledge representation, semantic web, and ontology reasoning.',
-        uk: "Під \"graph database\" об'єднані дві дуже різні моделі: labeled property graphs (Cypher/GQL) і RDF triple stores (SPARQL). Вони не взаємодіють. Вибирайте LPG для операційних випадків (fraud, соціальні, рекомендації); RDF для представлення знань, semantic web та ontology reasoning.",
+        uk: "Під \"graph database\" обʼєднані дві дуже різні моделі: labeled property graphs (Cypher/GQL) і RDF triple stores (SPARQL). Вони не взаємодіють. Вибирайте LPG для операційних випадків (fraud, соціальні, рекомендації); RDF для представлення знань, semantic web та ontology reasoning.",
       },
     },
   ],
@@ -433,7 +433,7 @@ export const m28: Module = {
       },
       a: {
         en: 'Index-free adjacency: each node physically stores a pointer to its relationship list, so following a relationship is a single memory dereference — O(1) per hop. In a relational DB, each hop requires an index lookup (O(log n)) on a foreign-key column. At 4–5 hops the relational intermediate result sets can be orders of magnitude larger. Native graph traversal cost is O(k × average_degree), which grows linearly with depth; relational self-JOINs grow exponentially.',
-        uk: "Index-free adjacency: кожен node фізично зберігає вказівник на свій список relationships, тому слідування за relationship — це одна операція звернення до пам'яті — O(1) на hop. У реляційній БД кожен hop потребує index lookup (O(log n)) на стовпчику foreign key. При 4–5 hops реляційні проміжні result sets можуть бути на порядки більшими. Вартість native graph traversal — O(k × average_degree), що зростає лінійно із глибиною; реляційні self-JOINs зростають експоненційно.",
+        uk: "Index-free adjacency: кожен node фізично зберігає вказівник на свій список relationships, тому слідування за relationship — це одна операція звернення до памʼяті — O(1) на hop. У реляційній БД кожен hop потребує index lookup (O(log n)) на стовпчику foreign key. При 4–5 hops реляційні проміжні result sets можуть бути на порядки більшими. Вартість native graph traversal — O(k × average_degree), що зростає лінійно із глибиною; реляційні self-JOINs зростають експоненційно.",
       },
     },
     {
@@ -444,7 +444,7 @@ export const m28: Module = {
       },
       a: {
         en: 'In an LPG, relationships are first-class entities with their own property maps — you can store `since: 2020` or `role: "Ariadne"` directly on a relationship. In RDF, predicates (edges) are URI-identified values, not objects, so they cannot carry properties natively. To attach a property to an RDF edge you must use reification (a verbose pattern that wraps the triple in additional triples), which breaks the simple subject–predicate–object model. LPG is richer for operational graphs; RDF is richer for ontology and inference.',
-        uk: "У LPG relationships є першокласними сутностями з власними property maps — ви можете зберігати `since: 2020` або `role: \"Ariadne\"` безпосередньо на relationship. В RDF предикати (ребра) — це ідентифіковані URI значення, а не об'єкти, тому вони не можуть нести properties нативно. Щоб приєднати property до RDF ребра, потрібно використовувати reification (докладний патерн, що обгортає triple у додаткові triples), що порушує просту модель subject–predicate–object. LPG багатший для операційних графів; RDF багатший для ontology та inference.",
+        uk: "У LPG relationships є першокласними сутностями з власними property maps — ви можете зберігати `since: 2020` або `role: \"Ariadne\"` безпосередньо на relationship. В RDF предикати (ребра) — це ідентифіковані URI значення, а не обʼєкти, тому вони не можуть нести properties нативно. Щоб приєднати property до RDF ребра, потрібно використовувати reification (докладний патерн, що обгортає triple у додаткові triples), що порушує просту модель subject–predicate–object. LPG багатший для операційних графів; RDF багатший для ontology та inference.",
       },
     },
     {
@@ -455,7 +455,7 @@ export const m28: Module = {
       },
       a: {
         en: 'This is a cycle detection problem at variable depth — a relational DB would need 3–5 nested self-JOINs on the transfers table with exponentially growing intermediate result sets, often timing out. In a graph, each account is a node and each transfer is a directed `[:TRANSFERRED_TO]` relationship. A variable-length path query in Cypher can express this concisely: `MATCH (a:Account)-[:TRANSFERRED_TO*3..5]->(a)` — find all cycles of length 3 to 5 starting and ending at the same account. The graph engine traverses pointers without materialising intermediate tables. To operationalise: index `Account.id`; store transfer amount and timestamp as relationship properties for post-filter; run periodic batch analysis with the Louvain algorithm to surface tightly-connected transfer communities for human review.',
-        uk: "Це проблема виявлення циклів змінної глибини — реляційна БД потребувала б 3–5 вкладених self-JOINs у таблиці переказів з експоненційно зростаючими проміжними result sets, що часто призводить до timeout. У графі кожен акаунт є node, а кожен переказ — спрямованим `[:TRANSFERRED_TO]` relationship. Запит змінної довжини шляху в Cypher може виразити це лаконічно: `MATCH (a:Account)-[:TRANSFERRED_TO*3..5]->(a)` — знайти всі цикли довжиною від 3 до 5, що починаються і закінчуються на одному і тому ж акаунті. Graph engine проходить вказівники без матеріалізації проміжних таблиць. Для операціоналізації: індексуйте `Account.id`; зберігайте суму переказу і timestamp як relationship properties для пост-фільтрації; запускайте periodичний batch-аналіз з алгоритмом Louvain для виявлення тісно пов'язаних transfer communities для перевірки людиною.",
+        uk: "Це проблема виявлення циклів змінної глибини — реляційна БД потребувала б 3–5 вкладених self-JOINs у таблиці переказів з експоненційно зростаючими проміжними result sets, що часто призводить до timeout. У графі кожен акаунт є node, а кожен переказ — спрямованим `[:TRANSFERRED_TO]` relationship. Запит змінної довжини шляху в Cypher може виразити це лаконічно: `MATCH (a:Account)-[:TRANSFERRED_TO*3..5]->(a)` — знайти всі цикли довжиною від 3 до 5, що починаються і закінчуються на одному і тому ж акаунті. Graph engine проходить вказівники без матеріалізації проміжних таблиць. Для операціоналізації: індексуйте `Account.id`; зберігайте суму переказу і timestamp як relationship properties для пост-фільтрації; запускайте periodичний batch-аналіз з алгоритмом Louvain для виявлення тісно повʼязаних transfer communities для перевірки людиною.",
       },
     },
   ],

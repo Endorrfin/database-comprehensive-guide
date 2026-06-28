@@ -335,7 +335,7 @@ CLUSTER orders USING orders_created_at_idx;`,
       },
     },
     {
-      title: { en: 'Assuming an index always beats a scan', uk: 'Вважати, що index завжди б’є scan' },
+      title: { en: 'Assuming an index always beats a scan', uk: 'Вважати, що index завжди бʼє scan' },
       body: {
         en: 'An index scan trades fewer pages for random page reads; a sequential scan reads more pages but in prefetchable order. For a predicate that matches a large fraction of the table, the planner correctly prefers the seq scan. Reason in page reads weighted by sequential-vs-random, not in row counts.',
         uk: 'Index scan міняє менше pages на випадкові читання pages; sequential scan читає більше pages, але в порядку, придатному до prefetch. Для предиката, що зачіпає велику частку таблиці, планувальник правильно віддає перевагу seq scan. Міркуйте в читаннях pages, зважених за sequential-проти-random, а не в кількості рядків.',

@@ -210,7 +210,7 @@ export const m2: Module = {
       },
       a: {
         en: 'For most workloads Postgres\' extensions are enough and far simpler — one system, one operational story, one backup. Specialized engines win at the extremes: billions of vectors with strict recall/latency targets, petabyte columnar analytics, globally distributed write scale, or deep graph traversals where index-free adjacency beats repeated joins. The decision weighs scale and access-pattern fit against the operational simplicity of staying on one engine.',
-        uk: 'Для більшості навантажень extensions Postgres достатньо і значно простіше — одна система, одна операційна історія, один backup. Спеціалізовані движки перемагають на екстремумах: мільярди vectors зі строгими цілями recall/latency, петабайтна columnar-аналітика, глобально розподілений write scale чи глибокий обхід graph, де index-free adjacency б\'є повторні joins. Рішення зважує scale і відповідність access pattern проти операційної простоти життя на одному движку.',
+        uk: 'Для більшості навантажень extensions Postgres достатньо і значно простіше — одна система, одна операційна історія, один backup. Спеціалізовані движки перемагають на екстремумах: мільярди vectors зі строгими цілями recall/latency, петабайтна columnar-аналітика, глобально розподілений write scale чи глибокий обхід graph, де index-free adjacency бʼє повторні joins. Рішення зважує scale і відповідність access pattern проти операційної простоти життя на одному движку.',
       },
     },
   ],

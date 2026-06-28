@@ -55,7 +55,7 @@ export const ui = {
   markKnown: { en: 'Mark as known', uk: 'Позначити як вивчене' },
   known: { en: 'Known', uk: 'Вивчено' },
 
-  comingSoon: { en: 'Content coming in a later session', uk: 'Контент з’явиться в наступній сесії' },
+  comingSoon: { en: 'Content coming in a later session', uk: 'Контент зʼявиться в наступній сесії' },
   stubNote: {
     en: 'This module is part of the navigable skeleton. Its full content is authored in a later session per the roadmap.',
     uk: 'Цей модуль — частина навігаційного каркасу. Його повний зміст буде створено в наступній сесії згідно з планом.',
