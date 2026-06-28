@@ -405,12 +405,12 @@ Footer: **"Vasyl Krupka · Senior Fullstack Engineer"** + 🇺🇦. Dark is prim
 - **S19–S20 · Buffer** — extra "maximal" interactives, full UA pass, final QA; optional PDF/LinkedIn pack.
 
 ### Backlog / deferred enhancements (agreed with user 2026-06-23)
-- **★ FLOAT-vs-numeric drift stepper (M9)** — promote the static `float-trap` figure into a real interactive:
+- **★ FLOAT-vs-numeric drift stepper (M9) — ✅ DONE S19** (sim `float-drift`; M9 figure block → sim; module flipped to signature):** promote the static `float-trap` figure into a real interactive:
   step a running sum (add `0.1` / one cent N times) in `double precision` vs `numeric`, watch the float result
   drift off the exact decimal and the rounding error accumulate row by row. Follow BTreeSim conventions
   (deterministic, play/pause/step, `prefers-reduced-motion` fallback, ARIA live region); register under a new
   sim key and flip M9's `float-trap` block from `figure` → `sim`. Slot opportunistically (S8 storage, or S19–S20).
-- **★ Window-frame stepper (M10)** — promote the static `window-frame` figure into a real interactive: step a
+- **★ Window-frame stepper (M10) — ✅ DONE S19** (sim `window-frame-stepper`; M10 figure block → sim; module flipped to signature):** promote the static `window-frame` figure into a real interactive: step a
   window's frame across partitioned/ordered rows, contrast `ROWS` vs the default `RANGE … CURRENT ROW` (watch tied
   peers lump together), watch a running aggregate update per row, and toggle `PARTITION BY` to see the total reset
   at each boundary. Window functions are the single highest-insight SQL concept to animate; **flagged (not built)
@@ -424,7 +424,12 @@ Footer: **"Vasyl Krupka · Senior Fullstack Engineer"** + 🇺🇦. Dark is prim
   **`concepts.ts`** (Sidebar/TopBar import eagerly for nav/search). Next lever (backlog): **meta.ts
   data-split** — separate module metadata from content bodies + prebuilt search index (the `gen:meta`
   + `meta.ts` pattern from Claude guide S10c; would drop index from 328 → ~60 KB gzip). Slot S16–S17
-  or S19–S20 buffer.
+  or S19–S20 buffer. **✅ DONE S19:** `scripts/gen-meta.ts` → `src/data/meta.generated.ts` + hand-written
+  `src/data/meta.ts`; Sidebar/TopBar/Footer/search + the LandscapeMap landing rewired off `concepts.ts`;
+  concepts is now a deferred shared chunk (ModulePage / mental-models only). **Eager index chunk 487.83 →
+  21.99 KB gzip** (first-paint landing ≈ 96 KB gzip incl. react-vendor + CSS). check:data enforces meta↔concepts
+  parity; run `npm run gen:meta` after editing module metadata. **Remaining (optional, S20):** per-module
+  content code-split so a module view loads only its own body, not the whole 480 KB concepts chunk.
 
 ## 14. Status / progress log
 
@@ -1524,3 +1529,132 @@ Footer: **"Vasyl Krupka · Senior Fullstack Engineer"** + 🇺🇦. Dark is prim
   **Section VIII completes in S18.** **Pending user:** repo is live (§11) — S17 appears live once committed & **merged
   to `main`**; locally `npm install` (darwin-arm64) + `npm run verify`; optional cleanup `rm -rf dist-s17
   scripts/_smoke-s17.tsx`.
+
+- **2026-06-28 · S18 Mastery (choosing / cheat-sheet) — CURRICULUM COMPLETE** *(branch
+  `s18-database-picker-capstone`)* — Authored the two remaining Section-VIII modules **fully EN+UA** to the M13
+  depth bar, **completing Section VIII (M33–M36) and the entire 36-module curriculum** — authored modules
+  **34 → 36, zero stubs**. User decisions this session (AskUserQuestion): **max-depth** Database Picker
+  (questionnaire wizard, embedded in M35 **and** wired into the standalone `#/decide` page) + **full in-module
+  cheat-sheet** for M36. **M35 · Choosing the right database** `[senior]` *(★ signature)* (5 topics: the
+  framework requirements-first/default-and-deviate · the questions that matter · workload walkthroughs ·
+  polyglot persistence & its cost · anti-patterns; the ★ **Database Picker wizard** + new **decision-flow**
+  SVG figure, a decision-dimensions table, a workload→primary→add-on table, an anti-pattern→reality→fix table,
+  a single-store-vs-polyglot **compare**, 4 callouts [boring-is-a-feature/default-to-Postgres · one-workload-
+  one-question · Postgres+one-specialist · dual-write-warn], 5 keyPoints, 3 pitfalls, 3 interview Q&A
+  [senior/senior/staff], 6 web-verified sources). **M36 · Mental models gallery + glossary** `[middle]`
+  *(figures-only capstone)* (4 topics: how to use mental models + the gallery/glossary surfaces · cheat-sheet I
+  storage & indexing · cheat-sheet II transactions & concurrency · cheat-sheet III distribution & choosing; new
+  **guide-map** SVG figure [8-section journey], **7 recap tables** — access-cost/Big-O, index-by-query-shape,
+  normal forms, ACID, the **isolation × anomaly matrix** (PG-accurate: never dirty-reads, RR=SI also stops
+  phantoms, only SER stops write-skew), CAP/PACELC, family decision one-liners — 2 senior callouts + 1 tip,
+  5 keyPoints, 3 pitfalls, 3 interview Q&A [middle/senior/staff], 6 canonical sources).
+  **★ Database Picker wizard** (`sims/DbPicker.tsx`, key `db-picker`): a requirements-first questionnaire from
+  new **`src/data/decide.ts`** (5 questions × options that `leansTo` family ids; 9 `decideOptions` whose `id`s
+  match **families.ts** so the recommendation reuses each family's brand colour + deep-link `moduleId` and can
+  never drift). Step through Back/Next with a progress strip → tally the leans → ranked result: a winner card
+  (family · engines · why · "Open the module") with relational/PostgreSQL as the **baseline default that wins
+  ties**, up to two runners-up, and a **polyglot-persistence hint** when ≥2 families score strongly (Postgres as
+  system of record + the top specialist). Click-driven, inherently reduced-motion-safe, ARIA radiogroups + live
+  region. Also rendered on the **standalone `#/decide` route** (App.tsx) — replaced the S-era ComingSoon
+  placeholder. New `.dbp-*` CSS block appended to `components.css`.
+  **Web-verified this session** (sources in module `sources[]`): **PostgreSQL 18.4** latest stable (2026-06-04),
+  **19 Beta 1** (2026-06-04, GA ~Sept/Oct 2026); **DB-Engines H1 2026** — PostgreSQL the fastest-growing engine
+  (**+21.97**), top-4 by score (Oracle, MySQL, SQL Server, PostgreSQL) static >12 months; **Stack Overflow
+  2025/2026** — PostgreSQL the **most-used database among professional developers** (overtook MySQL) and **#1
+  most-wanted** → supports the "Postgres as the safe default" thesis; **polyglot persistence** coined by Martin
+  Fowler (NoSQL Distilled, Sadalage & Fowler 2012; "different problems are best solved with different storage
+  technologies"). M36's recap tables re-state facts verified in their home modules (PG 18 transaction-iso /
+  indexes / WAL docs, Kent 1983 five normal forms, Gilbert & Lynch 2002 CAP, Use-The-Index-Luke).
+  **Wiring:** `concepts.ts` imports m35/m36 (stubs replaced); **removed the now-unused `stub()` helper +
+  `StubInput` type** and refreshed the header comment (all 36 authored); `registry.tsx` **+1 sim** (`db-picker`)
+  **+2 figures** (`decision-flow`, `guide-map`); `App.tsx` `#/decide` → live `DbPicker` (dropped the ComingSoon
+  lazy import); glossary **+4 terms** (polyglot persistence, system of record, dual-write problem,
+  résumé-driven development) → **187**.
+  **Verification (repo, linux-arm64; linux helper binaries present):** `tsc -b --noEmit` ✓ · ESLint ✓ (**clean,
+  first pass**) · `check:data` ✓ (**8 sections, 36 modules [36 authored, 0 stubs], 3821 Localized EN+UA pairs**,
+  **19 sims + 41 figures**, 187 glossary terms, all registry keys resolve, cross-links valid) · `test:btree` ✓
+  (346 checks) · **render+content smoke** ✓ (`scripts/_smoke-s18.tsx` — DbPicker renders question 1/5 +
+  options + Next; DecisionFlow shows PostgreSQL/the default/Neo4j/Default-to-relational; GuideMap shows the
+  8-section map; decide.ts = 5 questions / 9 options with every `leansTo` resolving; M35 = 5 topics + db-picker
+  sim + decision-flow figure + signature; M36 = 4 topics + guide-map figure + the 4-col isolation matrix) ·
+  `vite build` ✓ (**dist-s18**, index **1,550.65 KB / 487.83 KB gzip** + react-vendor 189.65 KB / 59.64 KB gzip
+  + **19 sim + 41 figure** lazy chunks, incl. DbPicker 19.97 KB / 7.49 KB gzip + DecisionFlow/GuideMap figure
+  chunks).
+  **Clean first pass — no TS/lint/data errors in the authored code.** Quote convention held (double-quoted
+  EN/UA strings for any containing apostrophes → no S13-class TS1005); the smoke harness needed only the usual
+  `import * as React` for the classic-JSX tsx default.
+  **Bundle watch:** index gzip **459 → 487.83 KB (+29)** for two dense bilingual modules + `decide.ts` + 4
+  glossary terms; Vite still warns the raw index chunk >900 KB. With the code-split done (S12), the **`meta.ts`
+  data-split is now the single remaining bundle lever** (§13 backlog) — Sidebar/TopBar import all authored
+  `concepts.ts` content eagerly; splitting module metadata from bodies + a prebuilt search index would drop the
+  index chunk substantially. Slot in the S19–S20 buffer.
+  **Sandbox gotchas (expected, §12):** linux helper binaries (`@esbuild/linux-arm64`,
+  `@rolldown/binding-linux-arm64-gnu`, `lightningcss-linux-arm64-gnu`) already present → all tooling ran; built
+  into fresh `dist-s18/` (unlink blocked; `dist-*/` gitignored). Smoke file `scripts/_smoke-s18.tsx` is
+  gitignored (`scripts/_smoke-*.tsx`) — **user can `rm scripts/_smoke-s18.tsx`** (and any stale `_smoke-s15/s17`).
+  **No stale `.git/index.lock`** this session (avoided in-sandbox `git status`).
+  **🎉 Curriculum complete:** all **36 modules** authored across **8 sections**; all **8 §6 signature sims**
+  built (B-Tree, Query Planner, Isolation, MVCC, Replication, CAP, LSM, Vector/ANN) plus the opportunistic/light
+  interactives (families-map, ER, normalization, query-lifecycle, index-picker, 2PC, sharding, SQL-injection,
+  N+1, **Database Picker**) — **19 sims + 41 figures** total.
+  **Next (S19–S20 · buffer / polish):** the §13 backlog — **`meta.ts` data-split** (bundle); optional promotions
+  (★ FLOAT-drift stepper M9, ★ window-frame stepper M10); a **full UA QA pass**; global search / flashcards /
+  mobile / a11y / perf polish; optional PDF/LinkedIn pack. **Pending user:** repo is live (§11) — S18 appears
+  live once committed & **merged to `main`**; locally `npm install` (darwin-arm64) + `npm run verify`; optional
+  cleanup `rm -rf dist-s18 scripts/_smoke-s18.tsx`.
+
+- **2026-06-28 · S19 Buffer/polish (two deferred steppers + meta.ts data-split)** *(branch
+  `s19-steppers-meta-datasplit`)* — Cleared the three big §13 backlog items in one session: promoted the two
+  deferred figure→sim steppers and implemented the bundle data-split. No new module content; all 36 modules
+  stay authored.
+  **★ FLOAT-drift stepper (M9)** (`sims/FloatDriftSim.tsx`, key `float-drift`): add 0.1 (or 0.01) N times in
+  `double precision` vs `numeric`; the float lane is computed by literally summing in JS (also IEEE-754 double,
+  so `String(f)` matches PostgreSQL float8 shortest round-trip), the numeric lane is exact integer arithmetic
+  rendered as decimal; climax = ten additions of 0.1 give `0.9999999999999999`, not `1.0`. Play/pause/step +
+  reduced-motion fallback + ARIA live region. **★ window-frame stepper (M10)** (`sims/WindowFrameSim.tsx`, key
+  `window-frame-stepper`): step a window frame across ordered rows; toggles **RANGE (default) ↔ ROWS** (on tied
+  ORDER BY values RANGE lumps the tied peers → identical totals, ROWS counts only to the physical row — the
+  most-missed window fact) and **PARTITION BY on/off** (running total resets per partition); click-any-row +
+  play/pause/step + reduced-motion + ARIA. Both modules flipped **`signature: false → true`** and their
+  `figure` block flipped to a `sim` block (the static `float-trap` / `window-frame` figures stay registered but
+  are now unreferenced — harmless, reusable). New `.fdrift-*` + `.wf-*` CSS appended to `components.css`; both
+  sims registered → **21 sims** (was 19).
+  **meta.ts data-split (the §13 bundle lever — DONE):** the index chunk was heavy because the eager
+  TopBar/Sidebar/Footer/search import `concepts.ts`, which transitively pulls every module's full bilingual
+  content. Added `ModuleMeta` (types.ts) + **`scripts/gen-meta.ts`** → generates **`src/data/meta.generated.ts`**
+  (lightweight: id/num/section/order/level/signature/title/tagline/mentalModel/readMins + topic id/title only —
+  no prose bodies) + hand-written **`src/data/meta.ts`** (helpers: `sectionsMeta`, `modulesMeta`, `LEVELS`,
+  `COUNTS`, `getSectionMeta`, `getModuleMeta`, `modulesBySectionMeta`). Rewired **Sidebar, TopBar, Footer,
+  search.ts AND the LandscapeMap landing** to import the aliased meta instead of concepts (bodies unchanged).
+  Now the ONLY static importers of concepts are `ModulePage` and `mentalModels.ts` (both lazy) → Vite emits
+  concepts as a deferred shared chunk. Added `gen:meta` npm script; **check:data validates meta↔concepts parity**
+  (field/topic-by-field, fails with "run `npm run gen:meta`" if stale); eslint ignores `meta.generated.ts`.
+  **Workflow note for future sessions: after editing any module metadata (title/tagline/mentalModel/level/order/
+  signature/topic id+title) you MUST run `npm run gen:meta` and commit `meta.generated.ts`; check:data will fail
+  otherwise.**
+  **Bundle result (dist-s19b):** eager **index chunk 487.83 → 21.99 KB gzip**; the concepts content is now a
+  separate **`concepts-*.js` 480 KB gzip** chunk loaded only on a module view (ModulePage) or the mental-models
+  gallery — **confirmed via `dist/index.html` that concepts is NOT in the first-paint script/preload set**.
+  First-paint landing = index (21.99) + react-vendor (59.64) + CSS (12.57) + LandscapeMap (2.29) ≈ **96 KB
+  gzip**, down from ~560 KB. GlossaryPage stays its own 47 KB gzip lazy chunk.
+  **Verification (repo, linux-arm64; linux helper binaries present):** `npm run gen:meta` ✓ (36 modules, 8
+  sections) · `tsc -b --noEmit` ✓ · ESLint ✓ (clean — after ignoring the generated file; the only hiccup was an
+  "unused eslint-disable" warning on the generated file, fixed by adding it to eslint `ignores` and dropping the
+  directive from the generator) · `check:data` ✓ (**8 sections, 36 modules [36 authored], 3819 Localized pairs**
+  [−2: the two flipped figure captions removed], **21 sims + 41 figures**, 187 glossary terms, **meta nav/search
+  in sync**) · `test:btree` ✓ (346) · **render+content smoke** ✓ (`scripts/_smoke-s19.tsx` — FloatDriftSim
+  [double precision/numeric/add 0.1], WindowFrameSim [RANGE/ROWS/PARTITION BY region/running_total/West],
+  meta-backed `search('window')`→m10 + `search('index')`>0, meta parity [36 modules, m9/m10 signature true,
+  topics id+title only], and the m9/m10 figure→sim flips) · `vite build` ✓ (dist-s19 / dist-s19b).
+  **§13 backlog now CLEAR of big items:** ★ FLOAT-drift stepper (M9) **done**, ★ window-frame stepper (M10)
+  **done**, **meta.ts data-split done**. (Earlier: code-split done S12, 2PC stepper done S10.)
+  **Sandbox gotchas (expected, §12):** linux helper binaries present → all tooling ran; built into fresh
+  `dist-s19/` + `dist-s19b/` (unlink blocked; `dist-*/` gitignored). Smoke file `scripts/_smoke-s19.tsx` is
+  gitignored (`scripts/_smoke-*.tsx`) — **user can `rm scripts/_smoke-s19.tsx`**. **No stale `.git/index.lock`**
+  this session (avoided in-sandbox `git status`).
+  **Next (S20 · buffer / polish, optional):** a **full UA QA pass**; global-search ranking / flashcards / quiz
+  surfaces; mobile / a11y / perf polish; optional per-module content code-split (split the 480 KB concepts chunk
+  per module so a module view loads only its own body) and the optional PDF/LinkedIn pack. **Pending user:** repo
+  is live (§11) — S19 appears live once committed & **merged to `main`**; locally `npm install` (darwin-arm64) +
+  `npm run verify` (runs gen:meta-independent checks; if check:data flags meta, run `npm run gen:meta`); optional
+  cleanup `rm -rf dist-s19 dist-s19b scripts/_smoke-s19.tsx`.

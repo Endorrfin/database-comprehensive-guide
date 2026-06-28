@@ -1489,4 +1489,35 @@ export const glossary: GlossaryEntry[] = [
     },
     seeAlso: ['vertical scaling (scale up)', 'read replica'],
   },
+  {
+    term: 'polyglot persistence',
+    def: {
+      en: "Using different data stores for different jobs within one system, because different problems are best solved with different storage technologies (Martin Fowler). Powerful, but every store you add is a permanent operational cost and a cross-store consistency risk — reach for it when the workload demands it, not for a more sophisticated diagram.",
+      uk: "Використання різних сховищ для різних задач у межах однієї системи, бо різні проблеми найкраще розвʼязуються різними технологіями зберігання (Martin Fowler). Потужно, але кожне додане сховище — постійна операційна вартість і ризик consistency між сховищами — беріть це, коли workload вимагає, а не заради вишуканішої діаграми.",
+    },
+    seeAlso: ['system of record', 'dual-write problem'],
+  },
+  {
+    term: 'system of record',
+    def: {
+      en: "The single authoritative store for a given fact — the source of truth that other copies (caches, search indexes, read models) derive from. Designating one store (usually PostgreSQL) as the system of record is how a polyglot system avoids ambiguity about which copy is correct.",
+      uk: "Єдине авторитетне сховище для певного факту — джерело істини, з якого походять інші копії (кеші, search-indexes, read models). Призначення одного сховища (зазвичай PostgreSQL) системою запису — це те, як polyglot-система уникає неоднозначності, яка копія правильна.",
+    },
+    seeAlso: ['polyglot persistence', 'dual-write problem'],
+  },
+  {
+    term: 'dual-write problem',
+    def: {
+      en: "When an application writes the same fact to two stores in two separate steps (e.g. a database plus a cache or search index), a failure between the writes leaves them inconsistent. The fix is to write once to the system of record and propagate asynchronously and idempotently via the transactional outbox or change-data-capture — never two independent synchronous writes.",
+      uk: "Коли застосунок пише той самий факт у два сховища двома окремими кроками (напр., база плюс кеш чи search-index), збій між записами лишає їх неконсистентними. Фікс — писати раз у систему запису й поширювати асинхронно та ідемпотентно через transactional outbox чи change-data-capture — ніколи не два незалежні синхронні записи.",
+    },
+    seeAlso: ['transactional outbox', 'system of record', 'polyglot persistence'],
+  },
+  {
+    term: 'résumé-driven development',
+    def: {
+      en: "An anti-pattern in which a technology is chosen because it looks impressive on a CV rather than because it fits the workload — the database equivalent of inverting requirements-first decision-making. The antidote is to justify every choice starting from the workload, and to make any deviation from the relational default earn its place.",
+      uk: "Анти-патерн, у якому технологію обирають тому, що вона вражає в резюме, а не тому, що пасує workload — базоданнєвий еквівалент інверсії підходу «спершу вимоги». Протиотрута — виправдовувати кожен вибір, починаючи з workload, і змушувати будь-яке відхилення від реляційного default заслужити своє місце.",
+    },
+  },
 ];

@@ -14,7 +14,8 @@ const LandscapeMap    = lazy(() => import('./components/map/LandscapeMap').then(
 const ModulePage      = lazy(() => import('./components/module/ModulePage').then(m => ({ default: m.ModulePage })));
 const GlossaryPage    = lazy(() => import('./components/pages/GlossaryPage').then(m => ({ default: m.GlossaryPage })));
 const MentalModelsPage= lazy(() => import('./components/pages/MentalModelsPage').then(m => ({ default: m.MentalModelsPage })));
-const ComingSoon      = lazy(() => import('./components/pages/ComingSoon').then(m => ({ default: m.ComingSoon })));
+// CHANGED (S18): the #/decide route now renders the live Database Picker (M35) instead of ComingSoon.
+const DbPicker        = lazy(() => import('./components/sims/DbPicker').then(m => ({ default: m.DbPicker })));
 
 export function App() {
   const route = useRoute();
@@ -50,12 +51,13 @@ export function App() {
             {route.name === 'decide' && (
               <div className="content">
                 <h1>{t(ui.decide)}</h1>
-                <ComingSoon
-                  note={{
-                    en: 'The interactive Database Picker (M35) lands in a later session. For now, explore the families on the Landscape Map.',
-                    uk: 'Інтерактивний Database Picker (M35) зʼявиться в наступній сесії. Поки що дослідіть родини на Landscape Map.',
-                  }}
-                />
+                <p className="muted">
+                  {t({
+                    en: 'Requirements first, engine second. Answer a few questions about your workload and the picker ranks the best-fit database families — PostgreSQL is the default until a requirement forces something else. See module M35 for the full decision framework.',
+                    uk: 'Спершу вимоги, потім движок. Дайте відповідь на кілька питань про ваш workload — і picker проранжує найкращі родини баз даних. PostgreSQL — default, доки вимога не змусить узяти інше. Повний фреймворк рішення — у модулі M35.',
+                  })}
+                </p>
+                <DbPicker />
               </div>
             )}
           </Suspense>

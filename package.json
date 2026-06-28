@@ -13,6 +13,7 @@
     "preview": "vite preview",
     "typecheck": "tsc -b --noEmit",
     "lint": "eslint .",
+    "gen:meta": "tsx scripts/gen-meta.ts",
     "check:data": "tsx scripts/check-data.ts",
     "test:btree": "tsx scripts/test-btree.ts",
     "verify": "npm run typecheck && npm run lint && npm run check:data && npm run test:btree && npm run build"

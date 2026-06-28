@@ -18,6 +18,7 @@ export const m9: Module = {
   section: 's2-relational',
   order: 4,
   level: 'middle',
+  signature: true, // CHANGED (S19): promoted the float-trap figure → ★ float-drift stepper
   title: { en: 'Data types done right', uk: 'Типи даних правильно' },
   tagline: {
     en: 'Strings, the FLOAT-for-money disaster, dates/zones, JSONB, arrays, enums, UUID.',
@@ -77,12 +78,9 @@ export const m9: Module = {
           },
         },
         {
-          kind: 'figure',
-          fig: 'float-trap',
-          caption: {
-            en: 'In double precision, 0.1 + 0.2 is 0.30000000000000004; in numeric it is exactly 0.3. Money is numeric (or integer cents), never float.',
-            uk: 'У double precision 0.1 + 0.2 = 0.30000000000000004; у numeric — рівно 0.3. Гроші — це numeric (чи integer cents), ніколи не float.',
-          },
+          // CHANGED (S19): static float-trap figure promoted to the interactive float-drift stepper.
+          kind: 'sim',
+          sim: 'float-drift',
         },
         {
           kind: 'table',

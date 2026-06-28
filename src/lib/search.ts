@@ -1,5 +1,7 @@
 import type { Lang, Localized } from '../data/types';
-import { getSection, modules } from '../data/concepts';
+// CHANGED (S19): search indexes lightweight meta (title/tagline/mentalModel + topic titles) instead
+// of concepts.ts, so the eager TopBar search box does not pull all module content into the index chunk.
+import { getSectionMeta as getSection, modulesMeta as modules } from '../data/meta';
 
 export type SearchResult = {
   moduleId: string;

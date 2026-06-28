@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
-import { modulesBySection, sections } from '../../data/concepts';
+// CHANGED (S19): nav reads lightweight meta (not concepts) so module content stays out of the index chunk.
+import { modulesBySectionMeta as modulesBySection, sectionsMeta as sections } from '../../data/meta';
 import { useLang } from '../../i18n/lang';
 import { useAppState } from '../../lib/appState';
 import { hrefModule, useRoute } from '../../lib/hashRouter';

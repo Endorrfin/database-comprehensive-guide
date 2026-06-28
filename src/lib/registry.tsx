@@ -43,6 +43,9 @@ export const sims: Record<string, ComponentType> = {
   'vector-search':         lazyNamed(() => import('../components/sims/VectorSim'),           'VectorSim'),         // S15
   'sql-injection':         lazyNamed(() => import('../components/sims/SqlInjectionSim'),     'SqlInjectionSim'),   // S17
   'n-plus-one':            lazyNamed(() => import('../components/sims/NPlusOneSim'),         'NPlusOneSim'),       // S17
+  'db-picker':             lazyNamed(() => import('../components/sims/DbPicker'),            'DbPicker'),          // S18
+  'float-drift':           lazyNamed(() => import('../components/sims/FloatDriftSim'),       'FloatDriftSim'),     // S19 (promoted M9 float-trap figure)
+  'window-frame-stepper':  lazyNamed(() => import('../components/sims/WindowFrameSim'),      'WindowFrameSim'),    // S19 (promoted M10 window-frame figure)
 };
 
 // ── Figures ───────────────────────────────────────────────────────────────────
@@ -86,6 +89,8 @@ export const figures: Record<string, ComponentType> = {
   'rls-policy':          lazyNamed(() => import('../components/figures/RlsPolicy'),           'RlsPolicy'),         // S17
   'bottleneck-loop':     lazyNamed(() => import('../components/figures/BottleneckLoop'),      'BottleneckLoop'),    // S17
   'connection-pool':     lazyNamed(() => import('../components/figures/ConnectionPool'),      'ConnectionPool'),    // S17
+  'decision-flow':       lazyNamed(() => import('../components/figures/DecisionFlow'),         'DecisionFlow'),      // S18
+  'guide-map':           lazyNamed(() => import('../components/figures/GuideMap'),             'GuideMap'),          // S18
 };
 
 export const getSim    = (key: string): ComponentType | undefined => sims[key];

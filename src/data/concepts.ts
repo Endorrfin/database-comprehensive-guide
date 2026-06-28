@@ -49,12 +49,15 @@ import m32 from './modules/m32-cloud-native';
 // CHANGED (S17): M33 + M34 authored from stubs (SQL-injection sim + N+1 sim). Section VIII begins.
 import m33 from './modules/m33-security';
 import m34 from './modules/m34-performance';
+// CHANGED (S18): M35 + M36 authored from stubs (★ Database Picker wizard + cheat-sheet capstone).
+// Section VIII and the full 36-module curriculum are now complete.
+import m35 from './modules/m35-choosing';
+import m36 from './modules/m36-mental-models';
 
 /*
  * concepts.ts — the SINGLE SOURCE OF TRUTH (CLAUDE.md §2, §4).
- * 8 sections · 36 modules. M1–M14 are fully authored; the remaining modules are
- * navigable bilingual stubs (title + tagline + mental model authored now; topics,
- * key points, pitfalls and sources land in later sessions per the roadmap).
+ * 8 sections · 36 modules — ALL fully authored (S18 completed the curriculum).
+ * Each module lives in its own file under ./modules and is imported here.
  */
 
 export const sections: Section[] = [
@@ -140,23 +143,8 @@ export const sections: Section[] = [
   },
 ];
 
-type StubInput = Pick<
-  Module,
-  'id' | 'num' | 'section' | 'order' | 'level' | 'title' | 'tagline' | 'readMins' | 'mentalModel'
-> &
-  Partial<Pick<Module, 'signature' | 'seeAlso'>>;
-
-/** Build a navigable stub module (empty topics/keyPoints/pitfalls/sources — authored later). */
-function stub(s: StubInput): Module {
-  return {
-    topics: [],
-    keyPoints: [],
-    pitfalls: [],
-    seeAlso: s.seeAlso ?? [],
-    sources: [],
-    ...s,
-  };
-}
+// CHANGED (S18): the `stub()` helper + `StubInput` type were removed — all 36 modules are now
+// authored and imported, so the navigable-skeleton scaffolding is no longer needed.
 
 export const modules: Module[] = [
   // ── Section I · Foundations & the landscape ──────────────────────────────
@@ -228,41 +216,9 @@ export const modules: Module[] = [
   // CHANGED (S17): M33 + M34 fully authored (imported above). Section VIII begins.
   m33, // ★ security: authN/Z, RBAC/RLS, encryption, hashing, SQL-injection sim
   m34, // ★ performance: method, slow queries/N+1 sim, pooling, caching/replicas, capacity
-  stub({
-    id: 'm35-choosing',
-    num: 35,
-    section: 's8-mastery',
-    order: 3,
-    level: 'senior',
-    signature: true,
-    title: { en: 'Choosing the right database', uk: 'Вибір правильної бази даних' },
-    tagline: {
-      en: 'The decision framework, workload walkthroughs, polyglot persistence, anti-patterns.',
-      uk: 'Фреймворк рішення, розбори workload, polyglot persistence, анти-патерни.',
-    },
-    readMins: 12,
-    mentalModel: {
-      en: 'Requirements first, engine second — never résumé-driven.',
-      uk: 'Спершу вимоги, потім движок — ніколи не «résumé-driven».',
-    },
-  }),
-  stub({
-    id: 'm36-mental-models',
-    num: 36,
-    section: 's8-mastery',
-    order: 4,
-    level: 'middle',
-    title: { en: 'Mental models gallery + glossary', uk: 'Галерея ментальних моделей + глосарій' },
-    tagline: {
-      en: 'Every mental model to recall from memory, a bilingual glossary, a one-page reference.',
-      uk: 'Кожна ментальна модель для пригадування з памʼяті, двомовний глосарій, довідка на одну сторінку.',
-    },
-    readMins: 8,
-    mentalModel: {
-      en: 'If you can redraw the picture from memory, you understand it.',
-      uk: 'Якщо можете перемалювати картину з памʼяті — ви це розумієте.',
-    },
-  }),
+  // CHANGED (S18): M35 + M36 fully authored (imported above). Section VIII and the curriculum complete.
+  m35, // ★ Choosing the right database — Database Picker wizard (sim 'db-picker') + decision-flow figure
+  m36, // Mental models gallery + glossary — cheat-sheet capstone (guide-map figure)
 ];
 
 // ── Lookups ────────────────────────────────────────────────────────────────

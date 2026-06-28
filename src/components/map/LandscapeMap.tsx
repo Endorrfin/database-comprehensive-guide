@@ -1,5 +1,7 @@
 import { useState } from 'react';
-import { getModule, modulesBySection, sections } from '../../data/concepts';
+// CHANGED (S19): the landing reads lightweight meta (title/level/signature only), so the heavy
+// concepts.ts content chunk is deferred until a real module view — not pulled on first paint.
+import { getModuleMeta as getModule, modulesBySectionMeta as modulesBySection, sectionsMeta as sections } from '../../data/meta';
 // CHANGED (S2): families now come from the shared single source of truth (data/families.ts),
 // reused by both this landing and M2's embedded interactive map — they can never drift apart.
 import { families } from '../../data/families';

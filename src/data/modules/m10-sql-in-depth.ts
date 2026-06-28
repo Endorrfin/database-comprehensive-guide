@@ -27,6 +27,7 @@ export const m10: Module = {
   section: 's2-relational',
   order: 5,
   level: 'senior',
+  signature: true, // CHANGED (S19): promoted the window-frame figure → ★ window-frame stepper
   title: { en: 'SQL in depth', uk: 'SQL поглиблено' },
   tagline: {
     en: 'Joins and how they run, subqueries/CTEs, window functions, GROUPING/CUBE/ROLLUP, NULL logic.',
@@ -223,12 +224,9 @@ ORDER  BY depth, name;`,
           },
         },
         {
-          kind: 'figure',
-          fig: 'window-frame',
-          caption: {
-            en: 'PARTITION BY splits rows into independent groups; ORDER BY orders each group; the frame is the slice of the partition in scope for the current row (here a running total over all preceding rows through the current one).',
-            uk: 'PARTITION BY ділить рядки на незалежні групи; ORDER BY упорядковує кожну; frame — це зріз partition в області видимості для поточного рядка (тут running total над усіма попередніми рядками до поточного включно).',
-          },
+          // CHANGED (S19): static window-frame figure promoted to the interactive window-frame stepper.
+          kind: 'sim',
+          sim: 'window-frame-stepper',
         },
         {
           kind: 'table',

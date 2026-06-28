@@ -5,7 +5,8 @@ import reactRefresh from 'eslint-plugin-react-refresh';
 import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
-  { ignores: ['dist', 'node_modules', 'scripts/**/*.mjs'] },
+  // CHANGED (S19): meta.generated.ts is machine-generated (gen:meta) — do not lint it.
+  { ignores: ['dist', 'node_modules', 'scripts/**/*.mjs', 'src/data/meta.generated.ts'] },
   {
     files: ['**/*.{ts,tsx}'],
     extends: [js.configs.recommended, ...tseslint.configs.recommended],

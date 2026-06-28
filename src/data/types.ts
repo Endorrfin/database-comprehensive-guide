@@ -56,6 +56,20 @@ export type Block =
     }
   | { kind: 'compare'; a: Localized; b: Localized; rows: [Localized, Localized, Localized][] };
 
+/**
+ * Lightweight module metadata for navigation & search (no prose bodies). Generated into
+ * meta.generated.ts (via `npm run gen:meta`) and consumed by the eager TopBar/Sidebar/Footer/
+ * search so the full bilingual content in concepts.ts loads only in lazy route chunks
+ * (S19 bundle data-split).
+ */
+export type ModuleMeta = Pick<
+  Module,
+  'id' | 'num' | 'section' | 'order' | 'level' | 'title' | 'tagline' | 'mentalModel' | 'readMins'
+> & {
+  signature: boolean;
+  topics: { id: string; title: Localized }[];
+};
+
 /** A glossary entry — the term itself stays English; the gloss is bilingual. */
 export type GlossaryEntry = { term: string; def: Localized; seeAlso?: string[] };
 
