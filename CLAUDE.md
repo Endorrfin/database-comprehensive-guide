@@ -428,8 +428,11 @@ Footer: **"Vasyl Krupka · Senior Fullstack Engineer"** + 🇺🇦. Dark is prim
   `src/data/meta.ts`; Sidebar/TopBar/Footer/search + the LandscapeMap landing rewired off `concepts.ts`;
   concepts is now a deferred shared chunk (ModulePage / mental-models only). **Eager index chunk 487.83 →
   21.99 KB gzip** (first-paint landing ≈ 96 KB gzip incl. react-vendor + CSS). check:data enforces meta↔concepts
-  parity; run `npm run gen:meta` after editing module metadata. **Remaining (optional, S20):** per-module
-  content code-split so a module view loads only its own body, not the whole 480 KB concepts chunk.
+  parity; run `npm run gen:meta` after editing module metadata. **✅ ALSO DONE S20 — per-module content
+  code-split:** `src/data/moduleContent.ts` (36 `id → import('./modules/mXX')` loaders); ModulePage renders
+  header/TOC/nav from meta and lazy-loads only the current module's body; mentalModels rewired to meta →
+  **concepts.ts is no longer in the app bundle**; a module view loads its own ~8–22 KB gz chunk, not 480 KB.
+  Backlog bundle items are now fully cleared.
 
 ## 14. Status / progress log
 
@@ -1658,3 +1661,66 @@ Footer: **"Vasyl Krupka · Senior Fullstack Engineer"** + 🇺🇦. Dark is prim
   is live (§11) — S19 appears live once committed & **merged to `main`**; locally `npm install` (darwin-arm64) +
   `npm run verify` (runs gen:meta-independent checks; if check:data flags meta, run `npm run gen:meta`); optional
   cleanup `rm -rf dist-s19 dist-s19b scripts/_smoke-s19.tsx`.
+
+- **2026-06-28 · S20 Buffer/polish (per-module content code-split + UA QA pass)** *(branch
+  `s20-per-module-split-ua-qa`)* — Two buffer items: the final bundle lever (per-module content split) and a
+  systematic Ukrainian QA pass. No module content added; all 36 modules stay authored.
+  **Per-module content code-split (the last bundle lever — DONE):** after S19 the only app-side static
+  importers of `concepts.ts` were ModulePage + mentalModels, so opening any module pulled the whole **480 KB
+  concepts chunk**. New **`src/data/moduleContent.ts`** — a registry of 36 `id → () => import('./modules/mXX')`
+  loaders (named exports for m1–m28, default for m29–m36; tsc validates each accessor). **ModulePage refactored**
+  to render the header + TOC + prev/next **instantly from `meta`** and load only the current module's body via
+  `loadModuleContent(id)` (useState + useEffect, with a "Loading…" placeholder); seeAlso/section/adjacency all
+  read meta. **mentalModels.ts rewired to meta** (the gallery needs only metadata). Added `adjacentModulesMeta`
+  to meta.ts. Result: **`concepts.ts` is no longer in the app bundle at all** (only the build-time scripts import
+  it); a module view now loads **its own ~8–22 KB gz chunk** instead of 480 KB. Removed the ComingSoon import
+  from ModulePage (no stubs remain).
+  **UA QA pass:** added **`scripts/check-ua.ts`** (`npm run check:ua`, wired into `verify` AND the deploy CI) —
+  a low-noise guard flagging only high-confidence problems: untranslated UA prose (long, no Cyrillic, ≥3 English
+  stopwords, not code), EN===UA verbatim prose, and real placeholder markers (todo/fixme/tbd/xxx/lorem). SQL/code
+  strings and tech labels are detected and skipped (CODE_SIGNAL + ≥2 ALL-CAPS tokens), so legitimately-identical
+  tech table cells don't trip it. First run flagged 17 — **all false positives** (SQL cells, a verbatim PG error
+  string, and the ordinary English word "translate"), confirming the corpus is **fully translated**; tightened the
+  thresholds and dropped "translate" from the placeholder list → **0 flags**. **Objective fix applied corpus-wide:**
+  the Ukrainian in-word apostrophe was inconsistent — **U+02BC ʼ (250×, the established convention), ASCII ' (63×),
+  U+2019 ’ (5×), plus 26 escaped `\'`** — normalized all **94** stragglers (only apostrophes flanked by Cyrillic,
+  never string delimiters or English contractions) to **U+02BC**; now uniform (318 ʼ, 0 others). **Manual review:**
+  read M1 (the on-ramp) in full and fixed one genuine typo tooling can't catch — **«вручально» → «вручну»**
+  (manually); a corpus grep confirmed it was isolated and found no other common-typo patterns. M35/M36 were
+  authored fresh (S18) and M13 is the golden module.
+  **Bundle result (dist-s20b):** **no `concepts` chunk in the app bundle**; **36 per-module content chunks**
+  (~8–22 KB gz each, the biggest being m20-distributed-tx at 21.7 KB); eager index **21.86 KB gz**; first paint
+  (index + react-vendor 59.64 + CSS 12.57) ≈ **94 KB gz** with **no module content loaded until you open a module**
+  — confirmed via `dist/index.html`. Opening a module now costs ModulePage (~6 KB gz) + that one module's body
+  (~8–22 KB gz) + its lazy sim/figure chunks, vs the old 480 KB monolith.
+  **Verification (repo, linux-arm64):** `npm run gen:meta` ✓ · `tsc -b --noEmit` ✓ · ESLint ✓ (clean) ·
+  `check:data` ✓ (8 sections, 36 modules [36 authored], 3819 Localized pairs, **21 sims + 41 figures**, 187
+  glossary terms, meta in sync) · `check:ua` ✓ (3819 pairs scanned, **0 flagged**) · `test:btree` ✓ (346) ·
+  **content-loader smoke** ✓ (`scripts/_smoke-s20.tsx` — all 36 `moduleContent` loaders resolve across the
+  named/default export boundary; m13 [named] + m35 [default] + m28/m29 load with topics/sources) · `vite build` ✓.
+  **§13 backlog — now fully clear:** per-module content split **done** (the last bundle item); UA QA tooling +
+  apostrophe normalization + manual key-module read **done**. (Earlier: code-split S12, meta data-split + both
+  steppers S19, 2PC stepper S10.)
+  **Workflow note (carried from S19, still applies):** after editing module metadata run `npm run gen:meta`;
+  `check:data` enforces meta↔concepts parity. **New:** `check:ua` runs in `verify` + CI — keep it green when
+  adding Ukrainian content.
+  **Sandbox gotchas (expected, §12):** built into fresh `dist-s20/` + `dist-s20b/` (unlink blocked; `dist-*/`
+  gitignored). Smoke files `scripts/_smoke-s20.tsx` (+ the S19 one) are gitignored (`scripts/_smoke-*.tsx`) and
+  **do not persist between sandbox calls** — re-`rm` not needed; **user can `rm scripts/_smoke-s20.tsx`** if it
+  lingers locally. **No stale `.git/index.lock`** (avoided in-sandbox `git status`).
+  **Next (S20+ · optional polish, if desired):** global-search ranking / flashcards / quiz surfaces; mobile /
+  a11y / perf polish; light/print theme; optional PDF booklet + LinkedIn pack (§9 deferred deliverables). The
+  guide is content-complete (36 modules), fully interactive (21 sims + 41 figures), bilingual, and now lean
+  (first paint ≈ 94 KB gz). **Pending user:** repo is live (§11) — S20 appears live once committed & **merged to
+  `main`**; locally `npm install` (darwin-arm64) + `npm run verify`; optional cleanup `rm -rf dist-s20 dist-s20b
+  scripts/_smoke-s20.tsx`.
+  **S20 follow-up (user-reported editor error):** the `scripts/` files were in **no** tsconfig `include`
+  (`tsconfig.app.json` = `src`, `tsconfig.node.json` = `vite.config.ts` only), so `tsc -b` silently skipped them
+  and the editor's TS server resolved them without Node types → **TS2591 `Cannot find name 'process'`** (which a
+  stray `// @ts-ignore` had been masking, in turn tripping `@typescript-eslint/ban-ts-comment`). **Fix:**
+  `tsconfig.node.json` now `include`s `vite.config.ts` + `scripts/**/*.ts` (excludes `scripts/_smoke-*`), and
+  gained `lib: DOM/DOM.Iterable` + `jsx: react-jsx` (the QA scripts import app code — check-data → registry.tsx).
+  Net effect: **`tsc -b` now type-checks the build/QA scripts too** (real safety), `process` resolves in-editor,
+  and the `@ts-ignore` was removed (no suppression needed — `process.exit` is valid, as `check-data.ts` already
+  shows). Re-verified green: typecheck · lint · check:data · check:ua · test:btree · build. **Note for future
+  sessions: scripts are now part of the Node TS project — keep them type-clean.**

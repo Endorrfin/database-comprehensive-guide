@@ -777,7 +777,7 @@ export const glossary: GlossaryEntry[] = [
     term: 'co-location',
     def: {
       en: 'The sharding discipline of placing related rows on the same shard by using the same distribution column for all related tables. With co-location, joins and writes within one entity scope (e.g. one tenant) need zero cross-shard coordination and run as ordinary local operations.',
-      uk: "Дисципліна sharding розміщення пов'язаних рядків в одному shard за однаковим distribution column для всіх пов'язаних таблиць. З co-location join'и та записи в межах одного скоупу сутності (напр. одного tenant) не потребують cross-shard координації і виконуються як звичайні локальні операції.",
+      uk: "Дисципліна sharding розміщення повʼязаних рядків в одному shard за однаковим distribution column для всіх повʼязаних таблиць. З co-location join'и та записи в межах одного скоупу сутності (напр. одного tenant) не потребують cross-shard координації і виконуються як звичайні локальні операції.",
     },
     seeAlso: ['shard key', 'sharding', 'scatter-gather'],
   },
@@ -793,7 +793,7 @@ export const glossary: GlossaryEntry[] = [
     term: 'hot spot',
     def: {
       en: 'A shard, node, or page that receives a disproportionate share of reads or writes and becomes a bottleneck while peers are underutilized. In sharded systems, the most common cause is a monotonically increasing shard key under range routing — all new inserts hit the same shard. Mitigated by hash sharding, UUIDs, uuidv7(), or key salting.',
-      uk: "Shard, вузол або page, що отримує непропорційну частку читань або записів і стає вузьким місцем, поки peers недовантажені. У шардованих системах найпоширеніша причина — монотонно зростаючий shard key при range routing — всі нові вставки потрапляють в один shard. Пом'якшується hash sharding, UUIDs, uuidv7() або key salting.",
+      uk: "Shard, вузол або page, що отримує непропорційну частку читань або записів і стає вузьким місцем, поки peers недовантажені. У шардованих системах найпоширеніша причина — монотонно зростаючий shard key при range routing — всі нові вставки потрапляють в один shard. Помʼякшується hash sharding, UUIDs, uuidv7() або key salting.",
     },
     seeAlso: ['shard key', 'sharding', 'consistent hashing'],
   },
@@ -827,7 +827,7 @@ export const glossary: GlossaryEntry[] = [
     term: 'eventual consistency',
     def: {
       en: "A weak consistency model (Vogels 2009): if no new updates are made to an object, all replicas will eventually converge to the same value. Reads may return stale data in the meantime. Used by AP systems (Cassandra, DynamoDB in default mode) to maximize availability and reduce write latency.",
-      uk: "Слабка модель consistency (Vogels 2009): якщо до об'єкта не надходять нові оновлення, всі репліки зрештою сходяться до однакового значення. Читання тим часом можуть повертати застарілі дані. Використовується AP-системами (Cassandra, DynamoDB у дефолтному режимі) для максимізації availability та зменшення write latency.",
+      uk: "Слабка модель consistency (Vogels 2009): якщо до обʼєкта не надходять нові оновлення, всі репліки зрештою сходяться до однакового значення. Читання тим часом можуть повертати застарілі дані. Використовується AP-системами (Cassandra, DynamoDB у дефолтному режимі) для максимізації availability та зменшення write latency.",
     },
     seeAlso: ['CAP theorem', 'linearizability', 'replication lag'],
   },
@@ -883,7 +883,7 @@ export const glossary: GlossaryEntry[] = [
     term: 'pgBackRest',
     def: {
       en: 'Full-featured PostgreSQL backup tool (v2.58.0) offering block-level incremental backups, parallel backup/restore, native S3/GCS/Azure object storage, AES-256-CBC encryption, deduplication, and tight WAL archiving integration. The leading open-source physical backup solution for PostgreSQL (coalition-funded since May 2026 after a maintainer transition).',
-      uk: "Повнофункціональний інструмент backup PostgreSQL (v2.58.0) з block-level incremental backup-ами, паралельним backup/restore, нативним об'єктним сховищем S3/GCS/Azure, AES-256-CBC шифруванням, дедуплікацією та щільною WAL archiving integration. Провідне open-source фізичне backup-рішення для PostgreSQL (фінансується коаліцією з травня 2026 після зміни супроводжувача).",
+      uk: "Повнофункціональний інструмент backup PostgreSQL (v2.58.0) з block-level incremental backup-ами, паралельним backup/restore, нативним обʼєктним сховищем S3/GCS/Azure, AES-256-CBC шифруванням, дедуплікацією та щільною WAL archiving integration. Провідне open-source фізичне backup-рішення для PostgreSQL (фінансується коаліцією з травня 2026 після зміни супроводжувача).",
     },
     seeAlso: ['PITR (Point-in-Time Recovery)', 'WAL (Write-Ahead Log)'],
   },
@@ -1038,7 +1038,7 @@ export const glossary: GlossaryEntry[] = [
     term: 'graph database',
     def: {
       en: 'A database optimised for storing and querying highly connected data as nodes, relationships, and properties. The defining performance advantage over relational is index-free adjacency: each node physically stores pointers to its neighbours, making multi-hop traversal O(k × degree) rather than O(k × log n) per hop in a relational JOIN.',
-      uk: "База даних, оптимізована для зберігання та запиту сильно пов'язаних даних як nodes, relationships і properties. Визначальна перевага продуктивності над реляційними — index-free adjacency: кожен node фізично зберігає вказівники на своїх сусідів, роблячи multi-hop traversal O(k × degree) замість O(k × log n) на hop у реляційному JOIN.",
+      uk: "База даних, оптимізована для зберігання та запиту сильно повʼязаних даних як nodes, relationships і properties. Визначальна перевага продуктивності над реляційними — index-free adjacency: кожен node фізично зберігає вказівники на своїх сусідів, роблячи multi-hop traversal O(k × degree) замість O(k × log n) на hop у реляційному JOIN.",
     },
     seeAlso: ['index-free adjacency', 'property graph', 'Cypher'],
   },
@@ -1054,7 +1054,7 @@ export const glossary: GlossaryEntry[] = [
     term: 'index-free adjacency',
     def: {
       en: 'The storage technique in a native graph database where each node record physically stores a pointer to its linked list of relationships. Following a hop is a single memory dereference — O(1) per hop, independent of graph size. At 4–5 hops this is orders of magnitude faster than the equivalent JOINs in a relational database.',
-      uk: "Техніка зберігання в native graph database, де запис кожного node фізично зберігає вказівник на зв'язаний список relationships. Слідування за hop — одна операція звернення до пам'яті — O(1) на hop, незалежно від розміру графу. При 4–5 hops це на порядки швидше ніж еквівалентні JOINs у реляційній базі.",
+      uk: "Техніка зберігання в native graph database, де запис кожного node фізично зберігає вказівник на звʼязаний список relationships. Слідування за hop — одна операція звернення до памʼяті — O(1) на hop, незалежно від розміру графу. При 4–5 hops це на порядки швидше ніж еквівалентні JOINs у реляційній базі.",
     },
     seeAlso: ['graph database', 'property graph'],
   },
@@ -1086,7 +1086,7 @@ export const glossary: GlossaryEntry[] = [
     term: 'RDF (Resource Description Framework)',
     def: {
       en: 'A W3C graph data model where every fact is expressed as a subject–predicate–object triple (all URI-identified). Predicates are not objects, so edge properties require verbose reification. Queried with SPARQL. First-class support for OWL/RDFS ontology and inference. Best for linked open data, semantic web, and knowledge representation rather than operational graphs.',
-      uk: "Модель graph-даних W3C, де кожен факт виражається як subject–predicate–object triple (всі ідентифіковані URI). Предикати не є об'єктами, тому edge properties потребують докладного reification. Запити через SPARQL. Першокласна підтримка OWL/RDFS ontology та inference. Найкраще для linked open data, semantic web та представлення знань, а не operational graphs.",
+      uk: "Модель graph-даних W3C, де кожен факт виражається як subject–predicate–object triple (всі ідентифіковані URI). Предикати не є обʼєктами, тому edge properties потребують докладного reification. Запити через SPARQL. Першокласна підтримка OWL/RDFS ontology та inference. Найкраще для linked open data, semantic web та представлення знань, а не operational graphs.",
     },
     seeAlso: ['property graph', 'knowledge graph'],
   },
@@ -1095,7 +1095,7 @@ export const glossary: GlossaryEntry[] = [
     term: 'embedding',
     def: {
       en: 'A dense vector of floating-point numbers (typically 768–3072 dimensions) produced by a neural model that encodes the semantic meaning of text, image, or audio. Semantically similar objects have vectors that are geometrically close (measured by cosine, L2, or dot-product distance). Embeddings are the foundation of vector search and RAG.',
-      uk: 'Щільний вектор чисел з плаваючою комою (типово 768–3072 вимірів), виготовлений нейронною моделлю, що кодує семантичний зміст тексту, зображення або аудіо. Семантично схожі об\'єкти мають геометрично близькі вектори (вимірюється cosine, L2 або dot-product відстанню). Embeddings є основою vector search та RAG.',
+      uk: 'Щільний вектор чисел з плаваючою комою (типово 768–3072 вимірів), виготовлений нейронною моделлю, що кодує семантичний зміст тексту, зображення або аудіо. Семантично схожі обʼєкти мають геометрично близькі вектори (вимірюється cosine, L2 або dot-product відстанню). Embeddings є основою vector search та RAG.',
     },
     seeAlso: ['vector database', 'HNSW', 'RAG'],
   },

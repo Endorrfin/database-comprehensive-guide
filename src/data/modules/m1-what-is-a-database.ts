@@ -59,7 +59,7 @@ export const m1: Module = {
           },
           md: {
             en: 'Every guarantee a DBMS makes is code you would otherwise write — and get wrong — yourself: file locks, crash recovery, validation, an index, a query parser. Choosing a database is choosing not to hand-build concurrency control and durability for the hundredth time.',
-            uk: 'Кожна гарантія DBMS — це код, який інакше ви писали б (і помилялись) самі: file locks, відновлення після краху, валідація, index, парсер запитів. Обрати базу даних — це обрати не будувати вручально concurrency control і durability усоте.',
+            uk: 'Кожна гарантія DBMS — це код, який інакше ви писали б (і помилялись) самі: file locks, відновлення після краху, валідація, index, парсер запитів. Обрати базу даних — це обрати не будувати вручну concurrency control і durability усоте.',
           },
         },
       ],
