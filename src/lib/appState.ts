@@ -3,7 +3,13 @@ import type { Level } from '../data/types';
 
 export type LevelFilter = Level | 'all';
 
+// CHANGED (S22): theme. `mode` is the user's choice (persisted); `effective` is what's applied to
+// <html data-theme> after resolving 'system' against prefers-color-scheme.
+export type ThemeMode = 'system' | 'dark' | 'light';
+export type EffectiveTheme = 'dark' | 'light';
+
 export const KNOWN_KEY = 'dbguide.known';
+export const THEME_KEY = 'dbguide.theme';
 
 export type AppStateValue = {
   levelFilter: LevelFilter;
@@ -13,6 +19,9 @@ export type AppStateValue = {
   sidebarOpen: boolean;
   toggleSidebar: () => void;
   closeSidebar: () => void;
+  themeMode: ThemeMode;
+  effectiveTheme: EffectiveTheme;
+  setThemeMode: (m: ThemeMode) => void;
 };
 
 export const AppStateCtx = createContext<AppStateValue | null>(null);

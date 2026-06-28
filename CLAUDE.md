@@ -402,7 +402,22 @@ Footer: **"Vasyl Krupka · Senior Fullstack Engineer"** + 🇺🇦. Dark is prim
 - **S17 · Mastery** — M33 Security; M34 Performance engineering.
 - **S18 · Mastery + polish** — M35 Choosing the right database (+ **Database Picker**); M36 Mental
   models gallery + glossary + cheat-sheet; global search, flashcards, mobile/a11y/perf, **bilingual QA**.
-- **S19–S20 · Buffer** — extra "maximal" interactives, full UA pass, final QA; optional PDF/LinkedIn pack.
+- **S19–S20 · Buffer** — extra "maximal" interactives, full UA pass, final QA; optional PDF/LinkedIn pack. **(done)**
+- **S21 · Polish I — search & study surfaces** *(planned 2026-06-28; starts next session)* — global-search
+  **ranking** rewrite in `src/lib/search.ts` (tiered match: exact > prefix/word-boundary > substring; field
+  weights title > tagline > mentalModel > topic) + **keyboard navigation** in the TopBar results dropdown
+  (↑/↓/Enter/Esc, `aria-activedescendant`, match highlight); two new study surfaces — **Flashcards**
+  (`#/flashcards`) and **Quiz** (`#/quiz`) — built from existing data (mentalModels / glossary / decide), with
+  new routes + nav links + bilingual `ui.ts` strings + localStorage progress. *(Decisions to confirm at S21
+  start: flashcard decks, quiz format/source, whether global search also indexes glossary.)*
+- **S22 · Polish II — theme, mobile, a11y, perf** *(planned 2026-06-28)* — **light theme** (light token set in
+  `tokens.css`; wire the already-present `ui.theme` string into a TopBar toggle; follow `prefers-color-scheme`;
+  persist in localStorage; sync `<meta theme-color>`) and a **print theme** (`@media print`: drop TopBar/Sidebar/
+  Footer/search, open all `<details>` interview answers, print source URLs after links, page-break control — also
+  the groundwork for the deferred PDF booklet); a **mobile** pass (narrow-viewport sims/wide tables/code/TopBar
+  controls at ~360px, touch targets) and an **a11y** pass (route-change focus, focus rings, contrast checked in
+  BOTH themes, reduced-motion re-verify across all sims); light **perf** touches (font preconnect + `font-display:
+  swap`, optional next-module-chunk prefetch on hover).
 
 ### Backlog / deferred enhancements (agreed with user 2026-06-23)
 - **★ FLOAT-vs-numeric drift stepper (M9) — ✅ DONE S19** (sim `float-drift`; M9 figure block → sim; module flipped to signature):** promote the static `float-trap` figure into a real interactive:
@@ -1724,3 +1739,171 @@ Footer: **"Vasyl Krupka · Senior Fullstack Engineer"** + 🇺🇦. Dark is prim
   and the `@ts-ignore` was removed (no suppression needed — `process.exit` is valid, as `check-data.ts` already
   shows). Re-verified green: typecheck · lint · check:data · check:ua · test:btree · build. **Note for future
   sessions: scripts are now part of the Node TS project — keep them type-clean.**
+
+- **2026-06-28 · S21+ PLAN — guide polish** *(planning only; agreed with user, to START in a new session)* —
+  The curriculum is complete (36 modules, 21 sims + 41 figures, bilingual, lean first paint ≈ 94 KB gz). Next is
+  **product polish**, split across two sessions. No new module content. **Proposed branches:** `s21-search-flashcards-quiz`,
+  `s22-light-print-theme-a11y`.
+
+  **S21 · Search ranking + Flashcards + Quiz**
+  1. **Global-search ranking** (`src/lib/search.ts`, `components/layout/TopBar.tsx`). Today: plain substring,
+     score = (idx===0?3:1) + (title-includes?2) + (module?1). Rewrite to a **tiered match per token** — exact
+     whole-word > prefix > word-boundary > substring — times **field weights** (title > tagline > mentalModel >
+     topic title); multi-token = AND with summed tiers; length-normalized tiebreak; stable sort. Add **keyboard
+     nav** to the results dropdown (↑/↓ move an `aria-activedescendant` highlight, Enter opens it, Esc closes) and
+     **highlight the matched substring** in each hit. Keep the index sourced from **meta** only (do NOT pull the
+     480 KB content or 47 KB glossary into the eager chunk) — see decision (c).
+  2. **Flashcards** (`#/flashcards`). New lazy page + route (`lib/hashRouter.ts`) + nav link (TopBar) + bilingual
+     `ui.ts` strings. Decks from existing lazy data: **mental models** (front = module title, back = the one-line
+     model) and/or **glossary** (front = term, back = definition). Flip UI (reduced-motion safe), shuffle,
+     prev/next, per-section / per-level filter, **"knew it / review again"** with its own localStorage key
+     (separate from the module `known` flag), progress (X/N, % known), keyboard (Space flip, → next).
+  3. **Quiz** (`#/quiz`). New lazy page + route + nav + strings. Multiple-choice generator from existing data —
+     candidates: (i) match a **mental model → its module** (distractors = other modules), (ii) **which family**
+     for a workload (from `decide.ts`), (iii) **term → definition** (glossary). Immediate feedback (correct/
+     incorrect + a link to the home module), score, retry/shuffle, keyboard (1–4). ARIA radiogroup + live region.
+
+  **S22 · Light theme + Print theme + mobile/a11y/perf**
+  4. **Light theme** (`theme/tokens.css`, TopBar). Add a light token set (e.g. `:root[data-theme='light']`),
+     contrast-checked on light; verify engine-brand hex (used raw in a few figures: GuideMap/DecisionFlow/section
+     accents) read acceptably on light. Wire the existing **`ui.theme`** string into a toggle (system / dark /
+     light), default = **follow `prefers-color-scheme`** with dark as brand default, persist in localStorage, and
+     update `<meta name="theme-color">`. Components/sims already use CSS vars, so most adapt for free — audit only
+     hardcoded colors.
+  5. **Print theme** (`theme/global.css` `@media print`). Hide TopBar/Sidebar/ProgressBar/Footer/search; force all
+     `<details>` (interview) open; print `a[href]` URLs after sources; black-on-white; `break-inside: avoid` for
+     callouts/figures/code; render the current module fully. This is also the groundwork for the deferred PDF
+     booklet (§9).
+  6. **Mobile** — narrow-viewport pass (~360px): wide tables / `compare` / code blocks scroll; the DbPicker
+     wizard, the steppers and the B-Tree sim remain usable; TopBar controls (search + level seg + lang) wrap
+     cleanly; touch targets ≥ 44px. CSS-only fixes.
+  7. **a11y** — route-change focus to `#main`, visible focus rings, heading order, `aria-current` (sidebar has it),
+     re-verify `prefers-reduced-motion` across ALL sims (incl. the S19 steppers + DbPicker), and **contrast in
+     BOTH themes**. (Search keyboard nav lands in S21.)
+  8. **perf** — already lean; add font `preconnect` + `font-display: swap` to avoid FOUT/CLS; optional
+     prefetch of the next module's content chunk on nav hover. Low priority.
+
+  **Decisions to confirm at the start of S21 (AskUserQuestion):** (a) flashcard decks — mental models, glossary,
+  or both; (b) quiz format/source — (i) model→module, (ii) workload→family, (iii) term→definition, or a mix;
+  (c) does global search also index glossary terms (relevance vs keeping the eager index lean), modules+topics
+  only, or a lightweight term-only index; (d) light-theme default — follow system vs always-dark-unless-toggled.
+
+  **Constraints to preserve (every polish session):** keep first paint lean — new pages are **lazy routes**, and
+  search/nav stay on **meta** (never import `concepts`/`glossary` eagerly); every new UI string is **bilingual
+  EN+UA** in `ui.ts` (and passes `check:ua`); new sims/interactions are **reduced-motion-safe + ARIA**; new routes
+  need `hashRouter.ts` + `App.tsx` wiring + a nav link. No module metadata changes expected, so `gen:meta` should
+  stay untouched — but if any is touched, run `npm run gen:meta` (check:data enforces parity). End each session
+  green: typecheck · lint · check:data · check:ua · test:btree · build, + a render/content smoke for new surfaces.
+
+  **Next:** on user go-ahead in a new session → S21 (start by confirming decisions a–d, then build search ranking
+  + flashcards + quiz). README gets a short "Study tools / Themes" note once the features land.
+
+- **2026-06-28 · S21 Study tools — search ranking + Flashcards + Quiz** *(branch `s21-search-flashcards-quiz`)* —
+  Built the three S21-plan deliverables; no module content changed (all 36 stay authored). **User decisions
+  (AskUserQuestion):** flashcard decks = **both** (mental models + glossary); quiz source = **mix of all three**;
+  search scope = **+ glossary term names** (the recommended lean middle-ground — term strings only, definitions stay lazy).
+  • **Global-search ranking** (`src/lib/search.ts` rewritten) — tiered per-token scoring **exact-field 10 · whole-word 8 ·
+    word-prefix 5 · word-suffix 2 · mid-word substring 1**, × field weights (title 6 · topic 5 · term 6 · tagline 3 ·
+    mentalModel 2), multi-token AND, stable sort (score → kind module<topic<glossary → shorter primary field → title).
+    Results now carry **kind + ready href + a highlight `match` range**. Indexes EN+UA. **Glossary terms added via a new
+    term-ONLY generated index** `src/data/glossaryTerms.generated.ts` (187 strings, **3.9 KB** — the 47 KB bilingual
+    definitions stay the lazy glossary chunk): `gen-meta.ts` now emits it too, `check-data.ts` validates term↔glossary
+    parity, eslint ignores it.
+  • **TopBar search UX** (`components/layout/TopBar.tsx`) — keyboard nav (**↑/↓** move an `aria-activedescendant`
+    highlight, **Enter** opens it, **Esc** closes), **`<mark>` highlight** of the matched substring, per-hit **kind badge**
+    (Module/Topic/Term), combobox+listbox ARIA, routes each hit via its precomputed href. Glossary hits **deep-link**
+    `#/glossary/<term>`.
+  • **Glossary deep-link** — `hashRouter` glossary route gains an optional `term` (`#/glossary/<term>`, safe-decoded);
+    `GlossaryPage` scrolls the term into view + highlights it (reduced-motion-aware); `App.tsx` passes it.
+  • **Flashcards** (`#/flashcards`, lazy) — two decks: **mental models** (front = module title, back = the one-line model,
+    section accent + level) and **glossary terms** (front = term, back = definition). CSS-3D **flip** (reduced-motion safe),
+    **shuffle**, prev/next, **level + section filters** (models deck), **"Review again" re-queues** the card to the end of
+    the pass and un-knows it / **"Knew it"** marks known and jumps to the next un-known, a **% known** progress bar,
+    keyboard (**Space** flip · **← →** move · **1** again · **2** knew it). Own localStorage key `dbguide.flash` (separate
+    from the module `known` flag).
+  • **Quiz** (`#/quiz`, lazy) — pure, seedable generator `src/lib/quiz.ts` (`mulberry32`) mixing **three kinds round-robin**:
+    **model→module** (distractors prefer the same section), **workload→family** (single-`leansTo` `decide.ts` options ×
+    `families.ts`), **term→definition** (glossary). One MCQ at a time → reveal correct/wrong + **link to the home module**,
+    running score, **New quiz** reshuffles; keyboard **1–4** answer / **Enter** next; ARIA radiogroup + live region.
+  • **Wiring** — `ui.ts` **+27 bilingual strings** (search kinds, flashcards, quiz); `hashRouter.ts` +`flashcards`/`quiz`
+    routes + `hrefFlashcards`/`hrefQuiz`/`hrefGlossary(term)`; `App.tsx` two new lazy routes; **TopBar nav += Flashcards,
+    Quiz**; `.flash-*`/`.quiz-*`/search-highlight/kind-badge CSS appended to `components.css` (incl. a ≤560px pass).
+  **Verification (repo, linux-arm64):** `npm run gen:meta` ✓ (36 modules, 8 sections, **187 glossary terms**) ·
+  `tsc -b --noEmit` ✓ · ESLint ✓ (clean, first pass) · `check:data` ✓ (8 sections, 36 modules [36 authored], 3819
+  Localized pairs, **21 sims + 41 figures**, 187 terms, meta in sync, **glossary-index parity**) · `check:ua` ✓
+  (**3846 pairs [+27 new ui], 0 flagged** — the new strings are genuinely translated) · `test:btree` ✓ (346) ·
+  **render+content smoke** ✓ (`scripts/_smoke-s21.tsx`, **22 checks** — search ranks the exact glossary term "ACID" first
+  with `#/glossary/ACID`, MVCC surfaces, results carry a match range; quiz buildQuiz is deterministic-on-seed, 4 distinct
+  bilingual choices, answerId always present, all 3 kinds appear; Flashcards + Quiz + Glossary(term) SSR-render with the
+  expected hooks/ARIA) · `vite build` ✓ (**dist-s21**).
+  **Bundle:** eager **index 21.86 → 24.98 KB gz (+3.1)** — the search rewrite + the 3.9 KB term index + 27 ui strings are
+  legitimately eager (global search lives in the always-loaded TopBar). **Flashcards 6.3 KB / Quiz 5.1 KB are their own
+  lazy chunks; the 47 KB glossary stays lazy and is NOT in the first-paint preload set** (confirmed via `dist/index.html`:
+  only index + react-vendor + CSS). First paint ≈ index 24.98 + react-vendor 59.64 + CSS ≈ **97 KB gz**.
+  **Clean first pass** — only fix was an unused `lang` (removed); the search return was written to construct clean
+  `SearchResult` objects (no unused-destructure to trip `noUnusedLocals`). Quote convention held (no S13-class TS1005).
+  **Sandbox gotchas (§12):** built into fresh `dist-s21/` (unlink blocked; `dist-*/` gitignored). The smoke entry
+  `scripts/_smoke-s21.tsx` is **excluded from every tsconfig** (so the editor/`tsc -b` skip it) → tsx defaults to the
+  **classic JSX runtime** and React-component renders throw "React is not defined"; run it with the app tsconfig:
+  **`npx tsx --tsconfig tsconfig.app.json scripts/_smoke-s21.tsx`** (this is the documented way to run S-smokes). Smoke is
+  gitignored (`scripts/_smoke-*.tsx`). **No stale `.git/index.lock`** (avoided in-sandbox `git status`).
+  **Workflow note (carried):** `glossaryTerms.generated.ts` is **committed** like `meta.generated.ts` — after editing
+  glossary terms run `npm run gen:meta` (check:data enforces parity). `gen:meta` now writes both generated files.
+  **Next (S22 · per the plan):** **Light theme + Print theme + mobile/a11y/perf** — decision (d) light-theme default
+  (follow system vs always-dark) to confirm at the start. **Pending user:** repo is live (§11) — S21 appears live once
+  committed & **merged to `main`**; locally `npm install` (darwin-arm64) + `npm run gen:meta` + `npm run verify`; optional
+  cleanup `rm -rf dist-s21 scripts/_smoke-s21.tsx`.
+
+- **2026-06-28 · S22 Light theme + Print theme + mobile/a11y/perf** *(branch `s22-light-print-theme-a11y`)* —
+  Shipped the full S22 polish scope; no module content changed. **User decisions (AskUserQuestion):**
+  light-theme default = **follow system** (dark fallback; 3-way System/Dark/Light toggle); scope = **all four**.
+  • **Light theme** — `tokens.css` gains a contrast-checked **`:root[data-theme='light']`** block (surfaces lighten,
+    text → slate ink ~13:1, accent/semantic/level/callout hues **darkened** to keep ≥4.5:1 on white, soft tints +
+    neutral shadows, `color-scheme: light`); fonts/radii/layout/motion stay shared. **Theme state lives in
+    `appState.ts` + `AppStateProvider`**: `mode` (system|dark|light, persisted `dbguide.theme`) → resolves an
+    `effectiveTheme` via `prefers-color-scheme`, sets **`<html data-theme>`** + the `<meta theme-color>`, and a
+    matchMedia listener tracks OS changes live while on "system". **Anti-FOUC inline script** in `index.html` sets
+    `data-theme` before first paint. **TopBar** gains a **System/Dark/Light radiogroup** (◐/☾/☼, ARIA-labelled) + 3
+    bilingual `ui` strings.
+  • **Color audit (light-safe)** — only **16 raw-colour lines** total. **`GuideMap`** section colours → semantic CSS
+    tokens (identical to the old hex in dark, auto-darkened in light); **`VectorSim`** query-star stroke `white →
+    var(--surface)`; **`::selection`** gets a light override (white-on-pale was unreadable). Confirmed every
+    `color:#fff` sits on an `--accent-deep`/`--c-danger` fill (theme-safe) and `PropertyGraph`'s `#fff`/`#111` are
+    text-on-node-fill (theme-independent). **Code blocks stay intentionally dark** in both themes (deliberate, high-
+    contrast — no syntax theme to maintain).
+  • **Print theme** — `@media print` in `global.css`: an **ink-on-white token reset** (overrides whatever theme is
+    active), hides all chrome (topbar/sidebar/progress/footer/search/drawer), prints **source URLs after links**
+    (`.sources a::after { attr(href) }`), `break-inside: avoid` for callouts/figures/code/tables/sims, and expands the
+    interview `<details>` — both via CSS and a **robust `beforeprint`/`afterprint`** handler in `App` (restores state)
+    for browsers where the CSS-only expansion can't reach closed `<details>` content. Groundwork for the deferred PDF
+    booklet (§9).
+  • **Mobile (~360px)** — topbar ≤560px drops the (single-"All") level seg + tightens; ≤400px hides the brand text,
+    keeping just the mark, so search + EN/UA + theme fit one row; the Flashcard now flexes between its nav arrows
+    (was a fixed `min(560px,100%)` that overflowed). **New: the Sidebar carries a page-links group** (Overview ·
+    Mental models · Flashcards · Quiz · Glossary · Picker) so the **mobile drawer reaches every page** (top-links are
+    `display:none` < 900px — previously Flashcards/Quiz/Glossary were unreachable on phones); it enriches the desktop
+    sidebar too.
+  • **a11y + perf** — **route change moves focus to `#main`** (App effect, skips initial load); reduced-motion is
+    handled by the existing global kill-switch (the flashcard flip transition snaps); contrast designed into **both**
+    token sets. Perf: `index.html` already had font **preconnect + `display=swap`** (confirmed) — no change; skipped
+    the speculative next-chunk prefetch (low value, adds risk).
+  **Verification (repo, linux-arm64):** `gen:meta` ✓ · `tsc -b --noEmit` ✓ · ESLint ✓ (clean, first pass) ·
+  `check:data` ✓ (8 sections, 36 modules, 187 terms, meta + glossary-index in sync) · `check:ua` ✓ (**3849 pairs
+  [+3 theme strings], 0 flagged**) · `test:btree` ✓ (346) · **render+content smoke** ✓ (`scripts/_smoke-s22.tsx`,
+  **18 checks** — TopBar SSR-renders the 3-mode theme radiogroup + Flashcards/Quiz nav; `tokens.css` light block +
+  surfaces/ink; `global.css` print block + light `::selection` + `attr(href)` + break-inside; `components.css`
+  `.themeseg`/`.side-pages`/≤400px rules; Sidebar reaches Flashcards/Quiz; App route-focus + print-details; index.html
+  anti-FOUC script) · `vite build` ✓ (**dist-s22**; built CSS confirmed to carry `[data-theme=light]` + `@media print`
+  + `.themeseg` + `.side-pages`, and built `index.html` carries the theme script).
+  **Bundle:** eager **index 24.98 → 25.76 KB gz (+0.8)** for the theme provider/toggle + sidebar page links; the light
+  theme adds only to the single first-paint CSS chunk. No new lazy chunks.
+  **Clean passes** — no TS/lint/data/UA errors in the authored code.
+  **Sandbox gotchas (§12):** built into fresh `dist-s22/` (unlink blocked; `dist-*/` gitignored). Smoke
+  `scripts/_smoke-s22.tsx` is gitignored and, being excluded from every tsconfig, must run with the app tsconfig for
+  the automatic JSX runtime: **`npx tsx --tsconfig tsconfig.app.json scripts/_smoke-s22.tsx`**. **No stale
+  `.git/index.lock`** (avoided in-sandbox `git status`).
+  **Next (S23 · optional):** the guide is content-complete (36 modules), interactive (21 sims + 41 figures), bilingual,
+  lean, **themed (light/dark/system) + printable + mobile**. Remaining nice-to-haves: the deferred single PDF interview
+  booklet (now that print exists), a quiz/flashcard deep-link or share, and any real-device fine-tuning from screenshots.
+  **Pending user:** repo is live (§11) — S22 appears live once committed & **merged to `main`**; locally `npm install`
+  (darwin-arm64) + `npm run verify`; optional cleanup `rm -rf dist-s22 scripts/_smoke-s22.tsx`.

@@ -97,5 +97,65 @@
   color-scheme: dark;
 }
 
-/* Light theme is optional/future (dark is primary, CLAUDE.md §7).
-   We keep a single token set; a future [data-theme="light"] block can override. */
+/* ── Light theme (S22) ─────────────────────────────────────────────────────
+   Dark is the brand default (above). The ThemeProvider resolves system|dark|light to an
+   effective 'dark'|'light' and sets it as [data-theme] on <html>; this block overrides only the
+   tokens that must flip. Surfaces lighten, text darkens, and the bright dark-theme accents/semantic
+   hues are DARKENED so they keep ≥4.5:1 contrast on a light background (they read as fills/labels in
+   the figures + badges + callouts that consume them). Fonts, radii, layout and motion are shared. */
+:root[data-theme='light'] {
+  color-scheme: light;
+
+  /* Surfaces (cool near-white) */
+  --bg: #f5f7fa;
+  --surface: #ffffff;
+  --s2: #eef2f6;
+  --s3: #e2e8f0;
+  --line: #d8e0e8;
+  --line2: #bcc8d6;
+
+  /* Text (slate ink on light) */
+  --tx: #1a2530; /* ~13:1 on #fff */
+  --tx2: #46586a; /* ~7:1 */
+  --tx3: #6a7a8a; /* ~4.6:1 */
+
+  /* Accent — darker blue so links/headings stay legible on white */
+  --accent: #2c6fb0;
+  --accent-deep: #2a6098;
+  --accent-bright: #1c5d9e;
+  --accent-soft: rgba(44, 111, 176, 0.12);
+
+  /* Concept semantics — darkened for contrast on light */
+  --c-query: #2c6fb0;
+  --c-storage: #6b4fd0;
+  --c-commit: #2f8a3d;
+  --c-dist: #0f86bb;
+  --c-analytics: #b06a08;
+  --c-danger: #cf3b3b;
+  --c-query-soft: rgba(44, 111, 176, 0.12);
+  --c-storage-soft: rgba(107, 79, 208, 0.12);
+  --c-commit-soft: rgba(47, 138, 61, 0.13);
+  --c-dist-soft: rgba(15, 134, 187, 0.12);
+  --c-analytics-soft: rgba(176, 106, 8, 0.13);
+  --c-danger-soft: rgba(207, 59, 59, 0.12);
+
+  /* Engine chips that were too light on white */
+  --e-clickhouse: #a8850a;
+  --e-mongodb-bright: #00a14a;
+  --e-vector: #6b4fd0;
+
+  /* Level badges + callout tones (darkened to match) */
+  --lv-beginner: #2f8a3d;
+  --lv-middle: #2c6fb0;
+  --lv-senior: #b06a08;
+  --lv-staff: #6b4fd0;
+  --tone-tip: #2f8a3d;
+  --tone-warn: #b06a08;
+  --tone-senior: #6b4fd0;
+  --tone-security: #cf3b3b;
+
+  /* Soft, neutral shadows on light */
+  --shadow-1: 0 1px 2px rgba(20, 30, 45, 0.08);
+  --shadow-2: 0 8px 28px rgba(20, 30, 45, 0.12);
+  --shadow-glow: 0 0 0 1px rgba(44, 111, 176, 0.32), 0 8px 30px rgba(44, 111, 176, 0.14);
+}

@@ -1,7 +1,7 @@
 // CHANGED (S12): Route-level lazy loading — LandscapeMap, ModulePage, GlossaryPage,
 // MentalModelsPage loaded on demand via React.lazy + Suspense. TopBar/Sidebar/Footer
 // stay eager so nav and search are instant on first paint.
-import { Suspense, lazy } from 'react';
+import { Suspense, lazy, useEffect, useRef } from 'react';
 import { Footer } from './components/layout/Footer';
 import { ProgressBar } from './components/layout/ProgressBar';
 import { Sidebar } from './components/layout/Sidebar';
@@ -16,10 +16,45 @@ const GlossaryPage    = lazy(() => import('./components/pages/GlossaryPage').the
 const MentalModelsPage= lazy(() => import('./components/pages/MentalModelsPage').then(m => ({ default: m.MentalModelsPage })));
 // CHANGED (S18): the #/decide route now renders the live Database Picker (M35) instead of ComingSoon.
 const DbPicker        = lazy(() => import('./components/sims/DbPicker').then(m => ({ default: m.DbPicker })));
+// CHANGED (S21): study tools — Flashcards & Quiz are lazy routes (keep first paint lean).
+const FlashcardsPage  = lazy(() => import('./components/pages/FlashcardsPage').then(m => ({ default: m.FlashcardsPage })));
+const QuizPage        = lazy(() => import('./components/pages/QuizPage').then(m => ({ default: m.QuizPage })));
 
 export function App() {
   const route = useRoute();
   const { t } = useLang();
+  const firstRender = useRef(true);
+
+  // CHANGED (S22 a11y): move focus to the main landmark on route change (not initial load) so keyboard
+  // and screen-reader users land on the new page's content instead of staying on the previous link.
+  useEffect(() => {
+    if (firstRender.current) {
+      firstRender.current = false;
+      return;
+    }
+    document.getElementById('main')?.focus();
+  }, [route]);
+
+  // CHANGED (S22 print): expand collapsed interview <details> for printing, then restore — robust across
+  // browsers where the CSS-only @media print expansion doesn't reach the closed <details> content.
+  useEffect(() => {
+    const expand = () =>
+      document.querySelectorAll('details:not([open])').forEach((d) => {
+        d.setAttribute('open', '');
+        d.setAttribute('data-print-open', '');
+      });
+    const restore = () =>
+      document.querySelectorAll('details[data-print-open]').forEach((d) => {
+        d.removeAttribute('open');
+        d.removeAttribute('data-print-open');
+      });
+    window.addEventListener('beforeprint', expand);
+    window.addEventListener('afterprint', restore);
+    return () => {
+      window.removeEventListener('beforeprint', expand);
+      window.removeEventListener('afterprint', restore);
+    };
+  }, []);
 
   return (
     <div className="app">
@@ -47,7 +82,9 @@ export function App() {
               <ModulePage moduleId={route.moduleId} topicId={route.topicId} />
             )}
             {route.name === 'mentalModels' && <MentalModelsPage />}
-            {route.name === 'glossary' && <GlossaryPage />}
+            {route.name === 'glossary' && <GlossaryPage term={route.term} />}
+            {route.name === 'flashcards' && <FlashcardsPage />}
+            {route.name === 'quiz' && <QuizPage />}
             {route.name === 'decide' && (
               <div className="content">
                 <h1>{t(ui.decide)}</h1>

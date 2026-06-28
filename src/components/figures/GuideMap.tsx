@@ -2,18 +2,20 @@
 // on-ramp to mastery, each reduced to its core idea. A capstone overview distinct from the
 // interactive Landscape Map (which maps the database families). Static SVG, no hooks, English
 // labels; section accent colours mirror the section palette in concepts.ts.
+// CHANGED (S22): use semantic CSS tokens (identical to these hexes in the dark theme) instead of raw
+// hex so the numerals/accent bars darken for contrast in the light theme.
 
 export function GuideMap() {
   const W = 580, H = 290;
   const sections = [
-    { roman: 'I',    name: 'Foundations',        essence: 'what & which DB',     color: '#5B9BD5' },
-    { roman: 'II',   name: 'Relational & SQL',   essence: 'model & query',       color: '#86BCEA' },
-    { roman: 'III',  name: 'Storage & Indexing', essence: 'why it is fast',      color: '#A78BFA' },
-    { roman: 'IV',   name: 'Transactions',       essence: 'correct under load',  color: '#6CC24A' },
-    { roman: 'V',    name: 'Distribution',       essence: 'scale & survive',     color: '#38BDF8' },
-    { roman: 'VI',   name: 'NoSQL Families',     essence: 'beyond relational',   color: '#F2A93B' },
-    { roman: 'VII',  name: 'Modern Engines',     essence: 'the modern wave',     color: '#C084FC' },
-    { roman: 'VIII', name: 'Mastery',            essence: 'secure · fast · choose', color: '#34D399' },
+    { roman: 'I',    name: 'Foundations',        essence: 'what & which DB',     color: 'var(--c-query)' },
+    { roman: 'II',   name: 'Relational & SQL',   essence: 'model & query',       color: 'var(--accent-bright)' },
+    { roman: 'III',  name: 'Storage & Indexing', essence: 'why it is fast',      color: 'var(--c-storage)' },
+    { roman: 'IV',   name: 'Transactions',       essence: 'correct under load',  color: 'var(--c-commit)' },
+    { roman: 'V',    name: 'Distribution',       essence: 'scale & survive',     color: 'var(--c-dist)' },
+    { roman: 'VI',   name: 'NoSQL Families',     essence: 'beyond relational',   color: 'var(--c-analytics)' },
+    { roman: 'VII',  name: 'Modern Engines',     essence: 'the modern wave',     color: 'var(--lv-staff)' },
+    { roman: 'VIII', name: 'Mastery',            essence: 'secure · fast · choose', color: 'var(--c-commit)' },
   ];
 
   const cols = 4, colW = 130, gapX = 12, startX = 18;
