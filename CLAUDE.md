@@ -1907,3 +1907,61 @@ Footer: **"Vasyl Krupka · Senior Fullstack Engineer"** + 🇺🇦. Dark is prim
   booklet (now that print exists), a quiz/flashcard deep-link or share, and any real-device fine-tuning from screenshots.
   **Pending user:** repo is live (§11) — S22 appears live once committed & **merged to `main`**; locally `npm install`
   (darwin-arm64) + `npm run verify`; optional cleanup `rm -rf dist-s22 scripts/_smoke-s22.tsx`.
+
+- **2026-06-28 · S23 Test parity (cross-port Wave 2, A→B): permanent SSR/render smoke + engine golden tests**
+  *(branch `s23-smoke-engines`)* — Gave the guide the test/correctness layer the Node-js guide already had
+  (`_standard/NODEJS-DATABASE-CROSS-PORT.md` items A→B #1–3). **No module content changed**; all additive. User chose
+  the full-depth option (SSR-smoke **+** author 3–4 engines).
+  • **2.1 · Permanent SSR/render smoke** — new **committed** `scripts/smoke.ts` (plain `.ts` using `createElement`, no
+    JSX, so `tsconfig.node.json`'s `scripts` include typechecks it; **retires the orphan `_smoke-s15.tsx`** which covered
+    3 components and was wired nowhere). Wired as **`npm run smoke`** + a CI step + into `verify`. Four layers, **297
+    checks**: (A) **every sim + figure** auto-discovered from the file tree (1 component/file) and rendered **EN + UK**
+    with a **drift guard** asserting file-count == registry-key-count (**21 sims / 41 figures**); (B) the route **pages**
+    (LandscapeMap, MentalModels, Glossary, Flashcards, Quiz) EN+UK; (C) **ModulePage header/TOC/nav for all 36 modules**
+    EN+UK; (D) the eager **`<App/>` shell across 10 hashes** incl. unknown/garbage (hash-router robustness). Minimal
+    browser shim (localStorage/matchMedia/window/document) covers the providers' render-time reads.
+    **Key constraint discovered:** module *bodies* load via a client effect (`loadModuleContent`), so they **don't SSR** —
+    the smoke covers their sims/figures directly (layer A) and the header/TOC (layer C); `check:data` already proves every
+    referenced key resolves, so the smoke's job is *render* correctness, not key existence.
+  • **2.2 · Engines + golden tests** — most algorithmic sims are **hand-authored `FRAMES[]` ("Deterministic, no engine")**,
+    so for those I **authored** a pure engine that models the real algorithm (not a mechanical extract):
+    – `src/lib/sharding.ts` (the one true **extract** — `ShardingSim` now imports it) + `test-sharding.ts` (**23 checks**:
+      hash evenness, range boundaries, and the **monotonic-ID hotspot** — a stream past the top bound goes 100% to the
+      last shard under range while hash stays balanced).
+    – `src/lib/lsm.ts` — real `put/del/flush/compact/get` (newest-wins, tombstone purge at the bottom level) + `test-lsm.ts`
+      (**25 checks**: reproduces the M15 sim's exact final L1 `[a9,b2,d4,e5,f6]`, plus a **randomized property test vs an
+      authoritative `Map`** over 5 seeds).
+    – `src/lib/mvcc.ts` — PostgreSQL-style snapshot visibility (`xmin/xmax`, per-txn snapshot, self-visibility, VACUUM) +
+      `test-mvcc.ts` (**16 checks**: reproduces the M19 T1/T2 schedule — repeatable-read stability across a concurrent
+      commit, abort invisibility, ≤1 visible version, VACUUM only reclaims truly-dead tuples).
+    – `src/lib/planner.ts` — a **cost-based** planner from real PG constants (`seq_page_cost 1.0 / random_page_cost 4.0`) +
+      `test-planner.ts` (**18 checks**: reproduces all four M16 plan decisions from cost reasoning).
+    New **`test`** umbrella (`test:btree + lsm + mvcc + planner + sharding`) wired into `verify` + CI (replaces the lone
+    `test:btree` CI step).
+  • **2.3 · node-truth** — `scripts/node-truth-sharding.mjs` + `node-truth-lsm.mjs` (plain-JS **independent oracles** — they
+    do NOT import `src/lib`, so the engines are checked against a second implementation, not themselves) + **`npm run truth`**.
+    MVCC/planner goldens are **spec-derived** (the visibility rule / cost model *is* the ground truth) — documented, not faked.
+  **Two honest findings surfaced (content left to user — §10 rule 8):** (1) **Planner** — for a *broad* predicate an index
+  is irrelevant, so the real planner makes the **identical** plan for `ib` and `nb` (cost equal); the sim's `28500 ≠ 29000`
+  is arbitrary. The engine/test encode the equality. (2) **Sharding** — the sim's `outcome_range` ("all 9 newest writes →
+  Shard 3") overstates the seed (1001–1009 actually splits **3/3/3** across the ranges); the genuine hotspot is **future**
+  monotonic inserts, which the engine/test model correctly. Neither sim's user-facing text was changed.
+  **Verification (repo, linux-arm64):** `tsc -b --noEmit` ✓ · ESLint ✓ (clean; 2 self-inflicted fixes: dropped a redundant
+  `GlossaryPage(term)` render whose props tripped `createElement` inference, and a `no-useless-assignment`) · `check:data`
+  ✓ (8 sections, 36 modules, 187 terms, **21 sims + 41 figures**, meta + glossary-index in sync) · `check:ua` ✓ (no new
+  bilingual strings — engines/tests/smoke add none) · **`npm test`** ✓ (btree **346** + lsm **25** + mvcc **16** + planner
+  **18** + sharding **23**) · **`npm run smoke`** ✓ (**297**) · `vite build` ✓ (**dist-s23**, 151 modules).
+  **Files:** +`src/lib/{sharding,lsm,mvcc,planner}.ts` · +`scripts/{smoke.ts,test-{sharding,lsm,mvcc,planner}.ts,node-truth-{sharding,lsm}.mjs}` ·
+  edited `ShardingSim.tsx` (consume engine, `// CHANGED`) · `package.json` (+`test:*`, `test`, `smoke`, `truth`; `verify`
+  now runs `test` + `smoke`) · `.github/workflows/deploy.yml` (engine-tests step → `npm run test`; +SSR/render smoke step).
+  **Sandbox gotchas (§12):** built into fresh `dist-s23/` (unlink blocked; `dist-*/` gitignored — `npm run verify`'s build
+  fails in-sandbox on `unlink dist/.nojekyll`, succeeds on the user's machine). `smoke.ts` is **committed & typechecked**,
+  but must be **run** with the app tsconfig for the automatic JSX runtime — **`tsx --tsconfig tsconfig.app.json
+  scripts/smoke.ts`** (the `smoke` script does this); without it the imported `.tsx` use the classic runtime → "React is
+  not defined". The throwaway `scripts/_smoke-probe.tsx` is a gitignored stub. **No stale `.git/index.lock`** (avoided
+  in-sandbox `git status`).
+  **Next (S24 · optional):** cross-port Wave 3 (TS/build modernization B→A is already done in A; remaining is the deferred
+  PDF interview booklet, quiz/flashcard deep-links, real-device fine-tuning). The guide now has **both halves** — product
+  shell **and** a real test/correctness layer (smoke + 5 engine suites).
+  **Pending user:** repo is live (§11) — S23 appears live once committed & **merged to `main`**; locally `npm install`
+  (darwin-arm64) + `npm run verify`; optional cleanup `rm -rf dist-s23 scripts/_smoke-s15.tsx scripts/_smoke-probe.tsx`.

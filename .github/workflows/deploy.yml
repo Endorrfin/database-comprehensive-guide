@@ -43,8 +43,11 @@ jobs:
       - name: Ukrainian QA check
         run: npm run check:ua
 
-      - name: B-Tree engine tests
-        run: npm run test:btree
+      - name: Engine tests (btree · lsm · mvcc · planner · sharding)
+        run: npm run test
+
+      - name: SSR / render smoke
+        run: npm run smoke
 
       - name: Build
         run: npm run build

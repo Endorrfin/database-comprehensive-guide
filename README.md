@@ -54,7 +54,10 @@ npm run lint       # eslint
 npm run check:data # bilingual completeness, unique ids, registry + cross-link + meta/glossary-index parity
 npm run check:ua   # Ukrainian translation QA (no untranslated/identical/placeholder strings)
 npm run gen:meta   # regenerate the nav/search indexes after editing module metadata or glossary terms
-npm run verify     # typecheck + lint + check:data + check:ua + test:btree + build
+npm test           # engine golden tests: btree · lsm · mvcc · planner · sharding
+npm run smoke      # SSR/render smoke — renders every sim/figure (EN+UK), page & module header, no browser
+npm run truth      # independent node-truth oracles backing the sharding & lsm goldens
+npm run verify     # typecheck + lint + check:data + check:ua + test + smoke + build
 ```
 
 ## Project layout
