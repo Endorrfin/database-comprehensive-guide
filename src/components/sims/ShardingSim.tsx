@@ -3,27 +3,11 @@
 import { useState, useCallback } from 'react';
 import type { Localized } from '../../data/types';
 import { useLang } from '../../i18n/lang';
+// CHANGED (S23, Wave 2.2): hash/range routing extracted to the pure src/lib/sharding engine, shared
+// with scripts/test-sharding.ts so the sim and its golden tests use one source of truth.
+import { IDS, shardFor, type Strategy } from '../../lib/sharding';
 
 type Loc = Localized;
-
-type Strategy = 'hash' | 'range';
-
-// 9 inserts with IDs 1001–1009, monotonically increasing (typical IDENTITY/SERIAL)
-const IDS = [1001, 1002, 1003, 1004, 1005, 1006, 1007, 1008, 1009];
-
-// Hash routing: id % 3 → 0=S1, 1=S2, 2=S3
-function hashShard(id: number): number { return id % 3; } // 0,1,2
-
-// Range routing: <1004→S1, 1004–1006→S2, ≥1007→S3
-function rangeShard(id: number): number {
-  if (id < 1004) return 0;
-  if (id < 1007) return 1;
-  return 2;
-}
-
-function shardFor(id: number, strategy: Strategy): number {
-  return strategy === 'hash' ? hashShard(id) : rangeShard(id);
-}
 
 const SHARD_NAMES: Loc[] = [
   { en: 'Shard 1', uk: 'Shard 1' },

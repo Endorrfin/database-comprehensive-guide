@@ -17,7 +17,14 @@
     "check:data": "tsx scripts/check-data.ts",
     "check:ua": "tsx scripts/check-ua.ts",
     "test:btree": "tsx scripts/test-btree.ts",
-    "verify": "npm run typecheck && npm run lint && npm run check:data && npm run check:ua && npm run test:btree && npm run build"
+    "test:lsm": "tsx scripts/test-lsm.ts",
+    "test:mvcc": "tsx scripts/test-mvcc.ts",
+    "test:planner": "tsx scripts/test-planner.ts",
+    "test:sharding": "tsx scripts/test-sharding.ts",
+    "test": "npm run test:btree && npm run test:lsm && npm run test:mvcc && npm run test:planner && npm run test:sharding",
+    "smoke": "tsx --tsconfig tsconfig.app.json scripts/smoke.ts",
+    "truth": "node scripts/node-truth-sharding.mjs && node scripts/node-truth-lsm.mjs",
+    "verify": "npm run typecheck && npm run lint && npm run check:data && npm run check:ua && npm run test && npm run smoke && npm run build"
   },
   "dependencies": {
     "react": "^19.2.7",
